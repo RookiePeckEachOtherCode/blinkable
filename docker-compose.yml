@@ -2,7 +2,7 @@ version: "3.7"
 services:
   db:
     image: mysql
-    restart: always
+    # restart: always
     environment:
       MYSQL_ROOT_PASSWORD: blinkable
       MYSQL_DATABASE: blinkable
@@ -13,13 +13,13 @@ services:
 
   adminer:
     image: adminer
-    restart: always
+    # restart: always
     ports:
       - 18080:8080
 
   redis:
     image: redis
-    restart: always
+    # restart: always
     ports:
       - 16379:6379
 
@@ -38,7 +38,7 @@ services:
       - ./minio/data:/data
     command: server --console-address ':9001' /data
     privileged: true
-    restart: always
+    # restart: always
 
   etcd:
     image: bitnami/etcd
