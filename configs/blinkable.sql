@@ -72,6 +72,7 @@ DROP TABLE IF EXISTS `user`;
 CREATE TABLE `user` (
   `user_id` int NOT NULL AUTO_INCREMENT COMMENT '用户id',
   `user_name` varchar(40) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '用户名',
+  `password` varchar(200) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '密码',
   `avatar` varchar(200) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '头像地址',
   `articles_num` int NOT NULL COMMENT '文章数量',
   `level` int NOT NULL DEFAULT (1) COMMENT '等级',
