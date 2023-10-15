@@ -26,6 +26,12 @@ import {ref} from "vue";
 import type {FormInstance} from "element-plus";
 import {rules} from "@/rules/userinfo";
 import {loginApi} from "@/apis/login";
+import {useUserInfoStore} from "@/stores/userinfo";
+import {ElMessage} from "element-plus";
+import router from "@/router";
+
+const useUserinfoStore=useUserInfoStore();
+
 interface Form{
   username:string;
   password:string;
@@ -38,7 +44,9 @@ const form=ref<Form>({
 const formRef=ref<FormInstance>()
 const lin=async ()=>{
   const res=await loginApi(form.value);
-  console.log(res);
+  useUserinfoStore.setAuth(res.data.token)
+  ElMessage.success("登录成功")
+  router.push("/home")
 };
 const reset=()=>{
   formRef.value?.resetFields();//el自带的清空表单函数
