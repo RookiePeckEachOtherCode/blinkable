@@ -1,0 +1,12 @@
+server: 
+  name: "Blinkable-UserService"
+  host: 127.0.0.1
+  port: 10000
+
+rpc:
+  host: 127.0.0.1
+  port: 1100
+
+etcd:
+  host: 127.0.0.1
+  port: 2379

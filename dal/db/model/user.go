@@ -11,4 +11,5 @@ type User struct {
 	Signature   string    `gorm:"column:signature;not null;comment:签名" json:"signature"`                                 // 签名
 	Experience  int32     `gorm:"column:experience;not null;comment:经验值" json:"experience"`                              // 经验值
 	CreateTime  time.Time `gorm:"column:create_time;not null;default:CURRENT_TIMESTAMP;comment:创建时间" json:"create_time"` // 创建时间
+	Password    string    `gorm:"column:password;not null;comment:密码" json:"password"`                                   // 密码
 }
