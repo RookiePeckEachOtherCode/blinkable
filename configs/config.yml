@@ -1,0 +1,15 @@
+mysql:
+  host: "127.0.0.1"
+  port: 3306
+  user: "blinkable"
+  password: "blinkable"
+  dbname: "blinkable"
+
+etcd:
+  addr: "127.0.0.1:2379"
+
+servers:
+  user_service:
+   name: "Blinkable-UserService"
+   api_port: "10000"
+   rpc_port: "11000"

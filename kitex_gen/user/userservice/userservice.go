@@ -3,7 +3,7 @@
 package userservice
 
 import (
-	user "blinkable/cmd/user/kitex_gen/user"
+	user "blinkable/kitex_gen/user"
 	"context"
 	client "github.com/cloudwego/kitex/client"
 	kitex "github.com/cloudwego/kitex/pkg/serviceinfo"
@@ -24,7 +24,7 @@ func NewServiceInfo() *kitex.ServiceInfo {
 	}
 	extra := map[string]interface{}{
 		"PackageName":     "user",
-		"ServiceFilePath": `../../idl/user.thrift`,
+		"ServiceFilePath": `idl/user.thrift`,
 	}
 	svcInfo := &kitex.ServiceInfo{
 		ServiceName:     serviceName,

@@ -22,6 +22,9 @@ func init() {
 		"user-service",
 		client.WithResolver(r),
 	)
+	if err != nil {
+		panic(err)
+	}
 	userClient = _userClient
 }
 func UserLogin(ctx context.Context, c *app.RequestContext) {

@@ -2,7 +2,7 @@
 package userservice
 
 import (
-	user "blinkable/cmd/user/kitex_gen/user"
+	user "blinkable/kitex_gen/user"
 	server "github.com/cloudwego/kitex/server"
 )
 
