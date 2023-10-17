@@ -20,19 +20,16 @@
 ```
 
 定义完接口文件后，使用add-service.sh生成服务代码，如：
-*nix
+>windown下用 git bash 作为终端就能运行 bash 脚本了
 ```bash
-./add-service.sh 服务名
+sh ./add-service.sh 服务名
 ```
-windows
-```powershell
-.\add-service.sh 服务名
-```
-
 服务名就是idl/文件夹下定义的文件名
 
 例如
+定义了 idl/user.thrift 文件
 
+添加user服务
 ```bash
-./add-service.sh user
+sh ./add-service.sh user
 ```
