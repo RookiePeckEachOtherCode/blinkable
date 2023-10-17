@@ -12,3 +12,8 @@ func HandleErrWithNormal(str string, err error) {
 		log.Printf("%s: %s", str, err.Error())
 	}
 }
+func HandleErrWithFatal(str string, err error) {
+	if err != nil {
+		log.Fatalf("%s: %s", str, err.Error())
+	}
+}

@@ -3,7 +3,7 @@
 package userservice
 
 import (
-	user "blinkable/cmd/user/kitex_gen/user"
+	user "blinkable/kitex_gen/user"
 	"context"
 	client "github.com/cloudwego/kitex/client"
 	callopt "github.com/cloudwego/kitex/client/callopt"
