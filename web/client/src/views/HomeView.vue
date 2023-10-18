@@ -4,7 +4,7 @@
         <el-header>
           <HomeHeader></HomeHeader>
         </el-header>
-        <el-main>Main</el-main>
+        <el-main><RouterView></RouterView></el-main>
         <el-footer>Footer</el-footer>
       </el-container>
     </div>

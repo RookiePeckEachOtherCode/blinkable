@@ -9,7 +9,7 @@ const router = createRouter({
   routes: [
     {
       path: '/',
-      redirect:"/home"
+      redirect:"/home/main-view"
     },
     {
       path: '/home',
@@ -18,7 +18,23 @@ const router = createRouter({
       meta:{
         noAuth:true,
       },
-    },
+      children:[{
+        path:"admin-home",
+        name:"admin-home",
+        component:()=>import("@/components/adminhome/AdminHome.vue")
+      },
+        {
+          path:"main-view",
+          name:"main-view",
+          component:()=>import("@/components/Mainview/Main.vue")
+        },
+        {
+          path:"paper-list",
+          name:"paper-list",
+          component:()=>import("@/components/paper/paperlist.vue")
+        },
+
+      ]},
     {
       path: '/login',
       name: 'login',

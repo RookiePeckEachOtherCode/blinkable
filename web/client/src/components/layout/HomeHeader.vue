@@ -1,18 +1,17 @@
 <template>
   <div id="header">
     <el-menu
-        :default-active="activeIndex2"
+        :default-active="defaultAcitve"
         class="el-menu-demo"
-        @select="handleSelect"
         mode="horizontal"
+        router
     >
       <div class="logo-box">CRK菜鸟营</div>
-      <el-menu-item index="1">主页</el-menu-item>
-
+      <el-menu-item index="/home/main-view">主页</el-menu-item>
       <el-sub-menu index="2">
         <template #title>组件</template>
-        <el-menu-item index="2-1" >item one</el-menu-item>
-        <el-menu-item index="2-2">item two</el-menu-item>
+        <el-menu-item index="/home/admin-home" >管理者界面</el-menu-item>
+        <el-menu-item index="/home/paper-list">文章列表</el-menu-item>
         <el-menu-item index="2-3">item three</el-menu-item>
         <el-sub-menu index="2-4">
           <template #title>item four</template>
@@ -22,10 +21,10 @@
         </el-sub-menu>
       </el-sub-menu>
       <el-menu-item index="3" disabled>关于站点</el-menu-item>
-      <el-menu-item index="4">some else</el-menu-item>
+      <el-menu-item index="">some else</el-menu-item>
       <div class="right-box">
         <el-avatar v-if="loginstate" src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png"></el-avatar>
-        <el-menu-item index="4" v-if="!loginstate" class="custom-menu-item" >Login</el-menu-item>
+        <el-menu-item index="/login" v-if="!loginstate" class="custom-menu-item" >Login</el-menu-item>
       </div>
     </el-menu>
 
@@ -35,6 +34,8 @@
 <script setup>
 import { ref } from 'vue'
 import {useUserInfoStore} from "@/stores/userinfo";
+import router from "@/router";
+const  defaultAcitve=ref<String>(router.currentRoute.value.path)
 
 const loginstate=useUserInfoStore().authFromLocal();
 const activeIndex = ref('1')
