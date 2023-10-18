@@ -1,8 +1,8 @@
 package main
 
 import (
+	"blinkable/common/errs"
 	"blinkable/dal/db/model"
-	"blinkable/pkg/errs"
 	"blinkable/pkg/viper"
 	"fmt"
 
@@ -11,7 +11,7 @@ import (
 )
 
 func getDBConnInfo() string {
-	cfg := viper.Init("db")
+	cfg := viper.Load("db")
 	host := cfg.Viper.GetString("mysql.host")
 	port := cfg.Viper.GetInt("mysql.port")
 	user := cfg.Viper.GetString("mysql.user")

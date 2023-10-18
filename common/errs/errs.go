@@ -1,19 +1,25 @@
 package errs
 
-import "log"
+import (
+	"blinkable/pkg/zap"
+)
+
+var (
+	zlog = zap.Init()
+)
 
 func HandleErrWithPanic(str string, err error) {
 	if err != nil {
-		log.Panicf("%s: %s", str, err.Error())
+		zlog.Panicf("%s: %s", str, err.Error())
 	}
 }
 func HandleErrWithNormal(str string, err error) {
 	if err != nil {
-		log.Printf("%s: %s", str, err.Error())
+		zlog.Errorf("%s: %s", str, err.Error())
 	}
 }
 func HandleErrWithFatal(str string, err error) {
 	if err != nil {
-		log.Fatalf("%s: %s", str, err.Error())
+		zlog.Fatalf("%s: %s", str, err.Error())
 	}
 }

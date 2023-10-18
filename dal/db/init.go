@@ -1,7 +1,7 @@
 package db
 
 import (
-	"blinkable/pkg/errs"
+	"blinkable/common/errs"
 	"blinkable/pkg/viper"
 	"fmt"
 	"time"
@@ -12,7 +12,7 @@ import (
 
 var (
 	DB     *gorm.DB
-	cfg    = viper.Init("db")
+	cfg    = viper.Load("db")
 	isInit = false
 )
 
