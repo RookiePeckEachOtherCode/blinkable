@@ -17,7 +17,10 @@ func Init(configName string) Cfg {
 	v := cfg.Viper
 	v.SetConfigType("yml")
 	v.SetConfigName(configName)
+	v.AddConfigPath("./configs/")
+	v.AddConfigPath("../configs/")
 	v.AddConfigPath("../../configs/")
+	v.AddConfigPath("../../../configs/")
 
 	if err := v.ReadInConfig(); err != nil {
 		errs.HandleErrWithPanic("读取配置文件失败", err)
