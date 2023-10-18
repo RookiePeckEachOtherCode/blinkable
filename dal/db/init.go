@@ -22,7 +22,6 @@ func getDBConnInfo() string {
 	user := cfg.Viper.GetString("mysql.user")
 	password := cfg.Viper.GetString("mysql.password")
 	dbname := cfg.Viper.GetString("mysql.dbname")
-
 	return fmt.Sprintf("%s:%s@tcp(%s:%d)/%s?charset=utf8mb4&parseTime=True&loc=Local", user, password, host, port, dbname)
 }
 
