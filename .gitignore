@@ -16,8 +16,13 @@
 
 minio/*
 
+web/blinkable/client/node_modules/*
+web/blinkable/node_modules/*
+
 # Dependency directories (remove the comment below to include it)
 # vendor/
 
 # Go workspace file
 go.work
+
+logs/*
