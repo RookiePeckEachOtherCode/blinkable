@@ -36,6 +36,14 @@ const router = createRouter({
 
       ]},
     {
+      path: '/test',
+      name: 'test',
+      meta:{
+        noAuth:true,
+      },
+      component: () => import('@/components/layout/homebackground.vue')
+    },
+    {
       path: '/login',
       name: 'login',
       meta:{

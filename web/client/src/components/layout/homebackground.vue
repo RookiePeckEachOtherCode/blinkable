@@ -1,47 +1,16 @@
-<template>
-  <div class="home-background"></div>
-  <div class="home">
-    <canvas class="canvas" ref="myCanvas"></canvas>
-      <el-header>
-        <HomeHeader></HomeHeader>
-      </el-header>
-      <el-main @mousemove="onMainMouseMove"><RouterView></RouterView></el-main>
-      <el-footer>Footer</el-footer>
-     </div>
-</template>
+<script>
 
-<script lang="js">
-import HomeHeader from "@/components/layout/HomeHeader.vue";
-import { useUserInfoStore } from "@/stores/userinfo";
 // 定义星星的颜色
-  const STAR_COLOR = '#fff';
+const STAR_COLOR = '#fff';
 // 定义星星的大小
-  const STAR_SIZE = 2;
+const STAR_SIZE = 2;
 // 定义星星的最小缩放比例
-  const STAR_MIN_SCALE = 0.2;
+const STAR_MIN_SCALE = 0.2;
 // 定义溢出阈值
-  const OVERFLOW_THRESHOLD = 50;
+const OVERFLOW_THRESHOLD = 50;
 // 定义星星的数量
-  const STAR_COUNT = (window.innerWidth + window.innerHeight) / 8;
+const STAR_COUNT = (window.innerWidth + window.innerHeight) / 8;
 export default {
-  components: {
-    HomeHeader,
-  },
-  data() {
-    return {
-      loginstate: useUserInfoStore().authFromLocal(),
-      mousePosition: { x: 0, y: 0 },
-    };
-  },
-  methods: {
-    onMainMouseMove(event) {
-      const mainElement = event.currentTarget;
-      const rect = mainElement.getBoundingClientRect();
-      const x = event.clientX - rect.left;
-      const y = event.clientY - rect.top;
-      this.mousePosition = { x, y };
-    },
-  },
   mounted() {
     // 获取Canvas元素的引用
     const canvas = this.$refs.myCanvas;
@@ -57,7 +26,7 @@ export default {
 // 获取设备像素比例
       const scale = window.devicePixelRatio || 1;
 // 设置画布的宽度和高度
-      const width = window.innerWidth * scale;
+     const width = window.innerWidth * scale;
       const height = window.innerHeight * scale;
       canvas.width = width;
       canvas.height = height;
@@ -105,7 +74,9 @@ export default {
 // 当窗口大小改变时，重新调整大小
       window.onresize = resize;
 // 当鼠标在canvas上移动时，更新鼠标指针位置
-      canvas.addEventListener('mousemove', onMouseMove);
+      canvas.onmousemove = onMouseMove;
+// 当触摸屏在canvas上移动时，更新鼠标指针位置
+      canvas.ontouchmove = onTouchMove;
 // 当触摸屏离开canvas时，更新鼠标指针位置
       canvas.ontouchend = onMouseLeave;
 // 当鼠标离开文档时，更新鼠标指针位置
@@ -245,48 +216,32 @@ export default {
       console.error('Canvas element not found.');
     }
   },
-
-};
+  props:{
+    mousePosition: Object,
+  }
+}
 </script>
 
-<style lang="scss" scoped>
-.home-background {
-  position: fixed;
+<template>
+  <body>
+
+  <canvas class="canvas" ref="myCanvas"></canvas>
+
+  </body>
+</template>
+
+<style scoped lang="scss">
+
+body {
   width: 100%;
-  height: 900px;
+  height: 100vh;
+  /* 背景渐变 */
   background-image: linear-gradient(-225deg, #231557 0%, #43107a 29%, #FF1361 100%);
-  z-index: -1;
 }
 
-  .home {
-    .canvas {
-    position: fixed;
-    width: auto;
-    height: auto;
-    z-index: 0;
-
-  }
-    .el-main {
-      height: 900px;
-      display: flex;
-      flex-direction: column;
-      width: 100%;
-      z-index: 1;
-    }
-    min-height: 100vh;
-    background-size: 100% auto;
-    .el-header {
-      width: auto;
-      background-color: transparent;
-      padding: 0;
-    }
-
-    .el-footer {
-      background-color: transparent;
-      padding: 0;
-      z-index: 1;
-    }
-
-
-  }
+.canvas {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+}
 </style>
