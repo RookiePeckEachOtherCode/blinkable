@@ -1,4 +1,4 @@
-package errs
+package errno
 
 import (
 	"blinkable/pkg/zap"
