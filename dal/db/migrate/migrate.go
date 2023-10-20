@@ -1,7 +1,7 @@
 package main
 
 import (
-	"blinkable/common/errs"
+	"blinkable/common/errno"
 	"blinkable/dal/db/model"
 	"blinkable/pkg/viper"
 	"fmt"
@@ -22,12 +22,12 @@ func getDBConnInfo() string {
 
 func main() {
 	db, err := gorm.Open(mysql.Open(getDBConnInfo()), &gorm.Config{})
-	errs.HandleErrWithPanic("数据库连接错误", err)
+	errno.HandleErrWithPanic("数据库连接错误", err)
 
 	// drop table
 	// err = db.Migrator().DropTable(&model.User{}, &model.Article{}, &model.Comment{})
 	// errs.HandleErrWithFatal("drop table 失败", err)
 
 	err = db.AutoMigrate(&model.User{}, &model.Article{}, &model.Comment{})
-	errs.HandleErrWithPanic("automigate 失败", err)
+	errno.HandleErrWithPanic("automigate 失败", err)
 }
