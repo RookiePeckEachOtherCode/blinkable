@@ -1,7 +1,7 @@
 package db
 
 import (
-	"blinkable/common/errs"
+	"blinkable/common/errno"
 	"blinkable/pkg/viper"
 	"fmt"
 	"time"
@@ -11,9 +11,8 @@ import (
 )
 
 var (
-	DB     *gorm.DB
-	cfg    = viper.Load("db")
-	isInit = false
+	DB  *gorm.DB
+	cfg = viper.Load("db")
 )
 
 func getDBConnInfo() string {
@@ -31,21 +30,14 @@ func init() {
 		SkipDefaultTransaction: true, //禁用默认事务
 	})
 
-	errs.HandleErrWithPanic("数据库连接失败", err)
+	errno.HandleErrWithPanic("数据库连接失败", err)
 
 	sqldb, err := db.DB()
-	errs.HandleErrWithFatal("", err)
+	errno.HandleErrWithFatal("", err)
 
 	sqldb.SetMaxOpenConns(1000)                //设置最大连接数
 	sqldb.SetMaxIdleConns(20)                  //设置最大空闲连接数
 	sqldb.SetConnMaxLifetime(60 * time.Minute) //设置最大连接周期
 
-	isInit = true
-}
-
-func GetDB() *gorm.DB {
-	return DB
-}
-func GetIsInit() bool {
-	return isInit
+	DB = db
 }

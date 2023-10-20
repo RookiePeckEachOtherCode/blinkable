@@ -9,229 +9,6 @@ import (
 	"strings"
 )
 
-type BaseResponse struct {
-	StatusMsg  string `thrift:"status_msg,1" frugal:"1,default,string" json:'status_msg'`
-	StatusCode int32  `thrift:"status_code,2" frugal:"2,default,i32" json:'status_code'`
-}
-
-func NewBaseResponse() *BaseResponse {
-	return &BaseResponse{}
-}
-
-func (p *BaseResponse) InitDefault() {
-	*p = BaseResponse{}
-}
-
-func (p *BaseResponse) GetStatusMsg() (v string) {
-	return p.StatusMsg
-}
-
-func (p *BaseResponse) GetStatusCode() (v int32) {
-	return p.StatusCode
-}
-func (p *BaseResponse) SetStatusMsg(val string) {
-	p.StatusMsg = val
-}
-func (p *BaseResponse) SetStatusCode(val int32) {
-	p.StatusCode = val
-}
-
-var fieldIDToName_BaseResponse = map[int16]string{
-	1: "status_msg",
-	2: "status_code",
-}
-
-func (p *BaseResponse) Read(iprot thrift.TProtocol) (err error) {
-
-	var fieldTypeId thrift.TType
-	var fieldId int16
-
-	if _, err = iprot.ReadStructBegin(); err != nil {
-		goto ReadStructBeginError
-	}
-
-	for {
-		_, fieldTypeId, fieldId, err = iprot.ReadFieldBegin()
-		if err != nil {
-			goto ReadFieldBeginError
-		}
-		if fieldTypeId == thrift.STOP {
-			break
-		}
-
-		switch fieldId {
-		case 1:
-			if fieldTypeId == thrift.STRING {
-				if err = p.ReadField1(iprot); err != nil {
-					goto ReadFieldError
-				}
-			} else {
-				if err = iprot.Skip(fieldTypeId); err != nil {
-					goto SkipFieldError
-				}
-			}
-		case 2:
-			if fieldTypeId == thrift.I32 {
-				if err = p.ReadField2(iprot); err != nil {
-					goto ReadFieldError
-				}
-			} else {
-				if err = iprot.Skip(fieldTypeId); err != nil {
-					goto SkipFieldError
-				}
-			}
-		default:
-			if err = iprot.Skip(fieldTypeId); err != nil {
-				goto SkipFieldError
-			}
-		}
-
-		if err = iprot.ReadFieldEnd(); err != nil {
-			goto ReadFieldEndError
-		}
-	}
-	if err = iprot.ReadStructEnd(); err != nil {
-		goto ReadStructEndError
-	}
-
-	return nil
-ReadStructBeginError:
-	return thrift.PrependError(fmt.Sprintf("%T read struct begin error: ", p), err)
-ReadFieldBeginError:
-	return thrift.PrependError(fmt.Sprintf("%T read field %d begin error: ", p, fieldId), err)
-ReadFieldError:
-	return thrift.PrependError(fmt.Sprintf("%T read field %d '%s' error: ", p, fieldId, fieldIDToName_BaseResponse[fieldId]), err)
-SkipFieldError:
-	return thrift.PrependError(fmt.Sprintf("%T field %d skip type %d error: ", p, fieldId, fieldTypeId), err)
-
-ReadFieldEndError:
-	return thrift.PrependError(fmt.Sprintf("%T read field end error", p), err)
-ReadStructEndError:
-	return thrift.PrependError(fmt.Sprintf("%T read struct end error: ", p), err)
-}
-
-func (p *BaseResponse) ReadField1(iprot thrift.TProtocol) error {
-	if v, err := iprot.ReadString(); err != nil {
-		return err
-	} else {
-		p.StatusMsg = v
-	}
-	return nil
-}
-
-func (p *BaseResponse) ReadField2(iprot thrift.TProtocol) error {
-	if v, err := iprot.ReadI32(); err != nil {
-		return err
-	} else {
-		p.StatusCode = v
-	}
-	return nil
-}
-
-func (p *BaseResponse) Write(oprot thrift.TProtocol) (err error) {
-	var fieldId int16
-	if err = oprot.WriteStructBegin("BaseResponse"); err != nil {
-		goto WriteStructBeginError
-	}
-	if p != nil {
-		if err = p.writeField1(oprot); err != nil {
-			fieldId = 1
-			goto WriteFieldError
-		}
-		if err = p.writeField2(oprot); err != nil {
-			fieldId = 2
-			goto WriteFieldError
-		}
-
-	}
-	if err = oprot.WriteFieldStop(); err != nil {
-		goto WriteFieldStopError
-	}
-	if err = oprot.WriteStructEnd(); err != nil {
-		goto WriteStructEndError
-	}
-	return nil
-WriteStructBeginError:
-	return thrift.PrependError(fmt.Sprintf("%T write struct begin error: ", p), err)
-WriteFieldError:
-	return thrift.PrependError(fmt.Sprintf("%T write field %d error: ", p, fieldId), err)
-WriteFieldStopError:
-	return thrift.PrependError(fmt.Sprintf("%T write field stop error: ", p), err)
-WriteStructEndError:
-	return thrift.PrependError(fmt.Sprintf("%T write struct end error: ", p), err)
-}
-
-func (p *BaseResponse) writeField1(oprot thrift.TProtocol) (err error) {
-	if err = oprot.WriteFieldBegin("status_msg", thrift.STRING, 1); err != nil {
-		goto WriteFieldBeginError
-	}
-	if err := oprot.WriteString(p.StatusMsg); err != nil {
-		return err
-	}
-	if err = oprot.WriteFieldEnd(); err != nil {
-		goto WriteFieldEndError
-	}
-	return nil
-WriteFieldBeginError:
-	return thrift.PrependError(fmt.Sprintf("%T write field 1 begin error: ", p), err)
-WriteFieldEndError:
-	return thrift.PrependError(fmt.Sprintf("%T write field 1 end error: ", p), err)
-}
-
-func (p *BaseResponse) writeField2(oprot thrift.TProtocol) (err error) {
-	if err = oprot.WriteFieldBegin("status_code", thrift.I32, 2); err != nil {
-		goto WriteFieldBeginError
-	}
-	if err := oprot.WriteI32(p.StatusCode); err != nil {
-		return err
-	}
-	if err = oprot.WriteFieldEnd(); err != nil {
-		goto WriteFieldEndError
-	}
-	return nil
-WriteFieldBeginError:
-	return thrift.PrependError(fmt.Sprintf("%T write field 2 begin error: ", p), err)
-WriteFieldEndError:
-	return thrift.PrependError(fmt.Sprintf("%T write field 2 end error: ", p), err)
-}
-
-func (p *BaseResponse) String() string {
-	if p == nil {
-		return "<nil>"
-	}
-	return fmt.Sprintf("BaseResponse(%+v)", *p)
-}
-
-func (p *BaseResponse) DeepEqual(ano *BaseResponse) bool {
-	if p == ano {
-		return true
-	} else if p == nil || ano == nil {
-		return false
-	}
-	if !p.Field1DeepEqual(ano.StatusMsg) {
-		return false
-	}
-	if !p.Field2DeepEqual(ano.StatusCode) {
-		return false
-	}
-	return true
-}
-
-func (p *BaseResponse) Field1DeepEqual(src string) bool {
-
-	if strings.Compare(p.StatusMsg, src) != 0 {
-		return false
-	}
-	return true
-}
-func (p *BaseResponse) Field2DeepEqual(src int32) bool {
-
-	if p.StatusCode != src {
-		return false
-	}
-	return true
-}
-
 type UserLoginRequsts struct {
 	Username string `thrift:"username,1" frugal:"1,default,string" json:"username"`
 	Password string `thrift:"password,2" frugal:"2,default,string" json:"password"`
@@ -456,9 +233,10 @@ func (p *UserLoginRequsts) Field2DeepEqual(src string) bool {
 }
 
 type UserLoginResponse struct {
-	Token        string        `thrift:"token,1" frugal:"1,default,string" json:"token"`
-	UserId       int32         `thrift:"userId,2" frugal:"2,default,i32" json:"userId"`
-	BaseResponse *BaseResponse `thrift:"baseResponse,3" frugal:"3,default,BaseResponse" json:"baseResponse"`
+	Token      string `thrift:"token,1" frugal:"1,default,string" json:"token"`
+	UserId     int32  `thrift:"userId,2" frugal:"2,default,i32" json:"userId"`
+	StatusMsg  string `thrift:"status_msg,3" frugal:"3,default,string" json:'status_msg'`
+	StatusCode int32  `thrift:"status_code,4" frugal:"4,default,i32" json:'status_code'`
 }
 
 func NewUserLoginResponse() *UserLoginResponse {
@@ -477,13 +255,12 @@ func (p *UserLoginResponse) GetUserId() (v int32) {
 	return p.UserId
 }
 
-var UserLoginResponse_BaseResponse_DEFAULT *BaseResponse
+func (p *UserLoginResponse) GetStatusMsg() (v string) {
+	return p.StatusMsg
+}
 
-func (p *UserLoginResponse) GetBaseResponse() (v *BaseResponse) {
-	if !p.IsSetBaseResponse() {
-		return UserLoginResponse_BaseResponse_DEFAULT
-	}
-	return p.BaseResponse
+func (p *UserLoginResponse) GetStatusCode() (v int32) {
+	return p.StatusCode
 }
 func (p *UserLoginResponse) SetToken(val string) {
 	p.Token = val
@@ -491,18 +268,18 @@ func (p *UserLoginResponse) SetToken(val string) {
 func (p *UserLoginResponse) SetUserId(val int32) {
 	p.UserId = val
 }
-func (p *UserLoginResponse) SetBaseResponse(val *BaseResponse) {
-	p.BaseResponse = val
+func (p *UserLoginResponse) SetStatusMsg(val string) {
+	p.StatusMsg = val
+}
+func (p *UserLoginResponse) SetStatusCode(val int32) {
+	p.StatusCode = val
 }
 
 var fieldIDToName_UserLoginResponse = map[int16]string{
 	1: "token",
 	2: "userId",
-	3: "baseResponse",
-}
-
-func (p *UserLoginResponse) IsSetBaseResponse() bool {
-	return p.BaseResponse != nil
+	3: "status_msg",
+	4: "status_code",
 }
 
 func (p *UserLoginResponse) Read(iprot thrift.TProtocol) (err error) {
@@ -545,8 +322,18 @@ func (p *UserLoginResponse) Read(iprot thrift.TProtocol) (err error) {
 				}
 			}
 		case 3:
-			if fieldTypeId == thrift.STRUCT {
+			if fieldTypeId == thrift.STRING {
 				if err = p.ReadField3(iprot); err != nil {
+					goto ReadFieldError
+				}
+			} else {
+				if err = iprot.Skip(fieldTypeId); err != nil {
+					goto SkipFieldError
+				}
+			}
+		case 4:
+			if fieldTypeId == thrift.I32 {
+				if err = p.ReadField4(iprot); err != nil {
 					goto ReadFieldError
 				}
 			} else {
@@ -603,9 +390,19 @@ func (p *UserLoginResponse) ReadField2(iprot thrift.TProtocol) error {
 }
 
 func (p *UserLoginResponse) ReadField3(iprot thrift.TProtocol) error {
-	p.BaseResponse = NewBaseResponse()
-	if err := p.BaseResponse.Read(iprot); err != nil {
+	if v, err := iprot.ReadString(); err != nil {
 		return err
+	} else {
+		p.StatusMsg = v
+	}
+	return nil
+}
+
+func (p *UserLoginResponse) ReadField4(iprot thrift.TProtocol) error {
+	if v, err := iprot.ReadI32(); err != nil {
+		return err
+	} else {
+		p.StatusCode = v
 	}
 	return nil
 }
@@ -626,6 +423,10 @@ func (p *UserLoginResponse) Write(oprot thrift.TProtocol) (err error) {
 		}
 		if err = p.writeField3(oprot); err != nil {
 			fieldId = 3
+			goto WriteFieldError
+		}
+		if err = p.writeField4(oprot); err != nil {
+			fieldId = 4
 			goto WriteFieldError
 		}
 
@@ -682,10 +483,10 @@ WriteFieldEndError:
 }
 
 func (p *UserLoginResponse) writeField3(oprot thrift.TProtocol) (err error) {
-	if err = oprot.WriteFieldBegin("baseResponse", thrift.STRUCT, 3); err != nil {
+	if err = oprot.WriteFieldBegin("status_msg", thrift.STRING, 3); err != nil {
 		goto WriteFieldBeginError
 	}
-	if err := p.BaseResponse.Write(oprot); err != nil {
+	if err := oprot.WriteString(p.StatusMsg); err != nil {
 		return err
 	}
 	if err = oprot.WriteFieldEnd(); err != nil {
@@ -696,6 +497,23 @@ WriteFieldBeginError:
 	return thrift.PrependError(fmt.Sprintf("%T write field 3 begin error: ", p), err)
 WriteFieldEndError:
 	return thrift.PrependError(fmt.Sprintf("%T write field 3 end error: ", p), err)
+}
+
+func (p *UserLoginResponse) writeField4(oprot thrift.TProtocol) (err error) {
+	if err = oprot.WriteFieldBegin("status_code", thrift.I32, 4); err != nil {
+		goto WriteFieldBeginError
+	}
+	if err := oprot.WriteI32(p.StatusCode); err != nil {
+		return err
+	}
+	if err = oprot.WriteFieldEnd(); err != nil {
+		goto WriteFieldEndError
+	}
+	return nil
+WriteFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 4 begin error: ", p), err)
+WriteFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 4 end error: ", p), err)
 }
 
 func (p *UserLoginResponse) String() string {
@@ -717,7 +535,10 @@ func (p *UserLoginResponse) DeepEqual(ano *UserLoginResponse) bool {
 	if !p.Field2DeepEqual(ano.UserId) {
 		return false
 	}
-	if !p.Field3DeepEqual(ano.BaseResponse) {
+	if !p.Field3DeepEqual(ano.StatusMsg) {
+		return false
+	}
+	if !p.Field4DeepEqual(ano.StatusCode) {
 		return false
 	}
 	return true
@@ -737,9 +558,16 @@ func (p *UserLoginResponse) Field2DeepEqual(src int32) bool {
 	}
 	return true
 }
-func (p *UserLoginResponse) Field3DeepEqual(src *BaseResponse) bool {
+func (p *UserLoginResponse) Field3DeepEqual(src string) bool {
 
-	if !p.BaseResponse.DeepEqual(src) {
+	if strings.Compare(p.StatusMsg, src) != 0 {
+		return false
+	}
+	return true
+}
+func (p *UserLoginResponse) Field4DeepEqual(src int32) bool {
+
+	if p.StatusCode != src {
 		return false
 	}
 	return true
@@ -969,9 +797,10 @@ func (p *UserRegisterRequest) Field2DeepEqual(src string) bool {
 }
 
 type UseeRegisterResponse struct {
-	Token        string        `thrift:"token,1" frugal:"1,default,string" json:"token"`
-	UserId       int32         `thrift:"userId,2" frugal:"2,default,i32" json:"userId"`
-	BaseResponse *BaseResponse `thrift:"baseResponse,3" frugal:"3,default,BaseResponse" json:"baseResponse"`
+	Token      string `thrift:"token,1" frugal:"1,default,string" json:"token"`
+	UserId     int32  `thrift:"userId,2" frugal:"2,default,i32" json:"userId"`
+	StatusMsg  string `thrift:"status_msg,3" frugal:"3,default,string" json:'status_msg'`
+	StatusCode int32  `thrift:"status_code,4" frugal:"4,default,i32" json:'status_code'`
 }
 
 func NewUseeRegisterResponse() *UseeRegisterResponse {
@@ -990,13 +819,12 @@ func (p *UseeRegisterResponse) GetUserId() (v int32) {
 	return p.UserId
 }
 
-var UseeRegisterResponse_BaseResponse_DEFAULT *BaseResponse
+func (p *UseeRegisterResponse) GetStatusMsg() (v string) {
+	return p.StatusMsg
+}
 
-func (p *UseeRegisterResponse) GetBaseResponse() (v *BaseResponse) {
-	if !p.IsSetBaseResponse() {
-		return UseeRegisterResponse_BaseResponse_DEFAULT
-	}
-	return p.BaseResponse
+func (p *UseeRegisterResponse) GetStatusCode() (v int32) {
+	return p.StatusCode
 }
 func (p *UseeRegisterResponse) SetToken(val string) {
 	p.Token = val
@@ -1004,18 +832,18 @@ func (p *UseeRegisterResponse) SetToken(val string) {
 func (p *UseeRegisterResponse) SetUserId(val int32) {
 	p.UserId = val
 }
-func (p *UseeRegisterResponse) SetBaseResponse(val *BaseResponse) {
-	p.BaseResponse = val
+func (p *UseeRegisterResponse) SetStatusMsg(val string) {
+	p.StatusMsg = val
+}
+func (p *UseeRegisterResponse) SetStatusCode(val int32) {
+	p.StatusCode = val
 }
 
 var fieldIDToName_UseeRegisterResponse = map[int16]string{
 	1: "token",
 	2: "userId",
-	3: "baseResponse",
-}
-
-func (p *UseeRegisterResponse) IsSetBaseResponse() bool {
-	return p.BaseResponse != nil
+	3: "status_msg",
+	4: "status_code",
 }
 
 func (p *UseeRegisterResponse) Read(iprot thrift.TProtocol) (err error) {
@@ -1058,8 +886,18 @@ func (p *UseeRegisterResponse) Read(iprot thrift.TProtocol) (err error) {
 				}
 			}
 		case 3:
-			if fieldTypeId == thrift.STRUCT {
+			if fieldTypeId == thrift.STRING {
 				if err = p.ReadField3(iprot); err != nil {
+					goto ReadFieldError
+				}
+			} else {
+				if err = iprot.Skip(fieldTypeId); err != nil {
+					goto SkipFieldError
+				}
+			}
+		case 4:
+			if fieldTypeId == thrift.I32 {
+				if err = p.ReadField4(iprot); err != nil {
 					goto ReadFieldError
 				}
 			} else {
@@ -1116,9 +954,19 @@ func (p *UseeRegisterResponse) ReadField2(iprot thrift.TProtocol) error {
 }
 
 func (p *UseeRegisterResponse) ReadField3(iprot thrift.TProtocol) error {
-	p.BaseResponse = NewBaseResponse()
-	if err := p.BaseResponse.Read(iprot); err != nil {
+	if v, err := iprot.ReadString(); err != nil {
 		return err
+	} else {
+		p.StatusMsg = v
+	}
+	return nil
+}
+
+func (p *UseeRegisterResponse) ReadField4(iprot thrift.TProtocol) error {
+	if v, err := iprot.ReadI32(); err != nil {
+		return err
+	} else {
+		p.StatusCode = v
 	}
 	return nil
 }
@@ -1139,6 +987,10 @@ func (p *UseeRegisterResponse) Write(oprot thrift.TProtocol) (err error) {
 		}
 		if err = p.writeField3(oprot); err != nil {
 			fieldId = 3
+			goto WriteFieldError
+		}
+		if err = p.writeField4(oprot); err != nil {
+			fieldId = 4
 			goto WriteFieldError
 		}
 
@@ -1195,10 +1047,10 @@ WriteFieldEndError:
 }
 
 func (p *UseeRegisterResponse) writeField3(oprot thrift.TProtocol) (err error) {
-	if err = oprot.WriteFieldBegin("baseResponse", thrift.STRUCT, 3); err != nil {
+	if err = oprot.WriteFieldBegin("status_msg", thrift.STRING, 3); err != nil {
 		goto WriteFieldBeginError
 	}
-	if err := p.BaseResponse.Write(oprot); err != nil {
+	if err := oprot.WriteString(p.StatusMsg); err != nil {
 		return err
 	}
 	if err = oprot.WriteFieldEnd(); err != nil {
@@ -1209,6 +1061,23 @@ WriteFieldBeginError:
 	return thrift.PrependError(fmt.Sprintf("%T write field 3 begin error: ", p), err)
 WriteFieldEndError:
 	return thrift.PrependError(fmt.Sprintf("%T write field 3 end error: ", p), err)
+}
+
+func (p *UseeRegisterResponse) writeField4(oprot thrift.TProtocol) (err error) {
+	if err = oprot.WriteFieldBegin("status_code", thrift.I32, 4); err != nil {
+		goto WriteFieldBeginError
+	}
+	if err := oprot.WriteI32(p.StatusCode); err != nil {
+		return err
+	}
+	if err = oprot.WriteFieldEnd(); err != nil {
+		goto WriteFieldEndError
+	}
+	return nil
+WriteFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 4 begin error: ", p), err)
+WriteFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 4 end error: ", p), err)
 }
 
 func (p *UseeRegisterResponse) String() string {
@@ -1230,7 +1099,10 @@ func (p *UseeRegisterResponse) DeepEqual(ano *UseeRegisterResponse) bool {
 	if !p.Field2DeepEqual(ano.UserId) {
 		return false
 	}
-	if !p.Field3DeepEqual(ano.BaseResponse) {
+	if !p.Field3DeepEqual(ano.StatusMsg) {
+		return false
+	}
+	if !p.Field4DeepEqual(ano.StatusCode) {
 		return false
 	}
 	return true
@@ -1250,9 +1122,16 @@ func (p *UseeRegisterResponse) Field2DeepEqual(src int32) bool {
 	}
 	return true
 }
-func (p *UseeRegisterResponse) Field3DeepEqual(src *BaseResponse) bool {
+func (p *UseeRegisterResponse) Field3DeepEqual(src string) bool {
 
-	if !p.BaseResponse.DeepEqual(src) {
+	if strings.Compare(p.StatusMsg, src) != 0 {
+		return false
+	}
+	return true
+}
+func (p *UseeRegisterResponse) Field4DeepEqual(src int32) bool {
+
+	if p.StatusCode != src {
 		return false
 	}
 	return true

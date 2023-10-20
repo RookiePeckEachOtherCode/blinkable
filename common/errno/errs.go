@@ -1,4 +1,4 @@
-package errs
+package errno
 
 import (
 	"blinkable/pkg/zap"
@@ -22,4 +22,8 @@ func HandleErrWithFatal(str string, err error) {
 	if err != nil {
 		zlog.Fatalf("%s: %s", str, err.Error())
 	}
+}
+
+func Error(str string) {
+	zlog.Error(str)
 }

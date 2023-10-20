@@ -12,7 +12,7 @@ import (
 var (
 	zlog       = zap.Init()
 	cfg        = viper.Load("api")
-	serverAddr = fmt.Sprintf("%s:%s", cfg.Viper.GetString("server.host"), cfg.Viper.GetString("server.port"))
+	serverAddr = fmt.Sprintf("%s:%d", cfg.Viper.GetString("server.host"), cfg.Viper.GetInt("server.port"))
 )
 
 func InitHertz() *server.Hertz {

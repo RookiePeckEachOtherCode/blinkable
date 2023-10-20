@@ -1,9 +1,5 @@
 namespace go user
 
-struct BaseResponse{
-    1: string status_msg (go.tag="json:'status_msg'")
-    2: i32 status_code(go.tag="json:'status_code'")
-}
 struct UserLoginRequsts{
     1: string username;
     2: string password;
@@ -12,7 +8,8 @@ struct UserLoginRequsts{
 struct UserLoginResponse{
     1: string token
     2: i32 userId
-    3: BaseResponse baseResponse
+    3: string status_msg 
+    4: i32 status_code
 }
 
 struct UserRegisterRequest{
@@ -23,7 +20,8 @@ struct UserRegisterRequest{
 struct UseeRegisterResponse{
     1: string token
     2: i32 userId
-    3: BaseResponse baseResponse
+    3: string status_msg 
+    4: i32 status_code
 }
 
 service UserService{
