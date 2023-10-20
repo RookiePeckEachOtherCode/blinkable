@@ -70,7 +70,6 @@ const activeIndex2 = ref('1')
     }
   }
 
-
   .logo-box {
     width: 200px;
     text-align: center;
@@ -87,6 +86,7 @@ const activeIndex2 = ref('1')
         background-color:rgb(255,255,255,50%);
       }
     }
+    color: white;
   }
 
   .right-box {

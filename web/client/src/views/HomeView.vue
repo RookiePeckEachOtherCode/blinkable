@@ -267,9 +267,11 @@ export default {
 
   }
     .el-main {
-      height: 900px;
+      height: auto;
       display: flex;
       flex-direction: column;
+      justify-content: center;
+      align-items: center;
       width: 100%;
       z-index: 1;
     }
