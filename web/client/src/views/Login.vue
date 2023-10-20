@@ -1,15 +1,14 @@
 <template>
   <div id="login">
-    <div class="login-box" @click="mySwitch">
-      <div class="pre-box">
+    <div class="login-box" >
+      <div class="pre-box" @click="mySwitch">
         <h1>Welcome</h1>
         <p>join us</p>
         <div class="img-box">
         <img src="http://localhost:8080/image">
         </div>
       </div>
-
-      <el-form ref="formRef" :model="form" :rules="rules">
+      <el-form ref="formRef" :model="form" :rules="rules" >
         <div class="logo">
           <el-image src="https://tse1-mm.cn.bing.net/th/id/OIP-C.4dcJ_AHTJ81dikKbJ_xBtgHaGw?pid=ImgDet&rs=1" fit="fill" :lazy="true">
           </el-image>
@@ -70,13 +69,13 @@ const lin=async ()=>{
   const res=await loginApi(form.value);
   useUserinfoStore.setAuth(res.data.token)
   ElMessage.success("登录成功")
-  router.push("/home")
+  router.push("/home/main-view")
 };
 const reg=async ()=>{
   const res=await loginApi(form.value);
   useUserinfoStore.setAuth(res.data.token)
   ElMessage.success("注册成功")
-  router.push("/home")
+  router.push("/home/main-view")
 }
 const reset=()=>{
   formRef.value?.resetFields();//el自带的清空表单函数
