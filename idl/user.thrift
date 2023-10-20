@@ -8,8 +8,8 @@ struct UserLoginRequsts{
 struct UserLoginResponse{
     1: string token
     2: i32 userId
-    3: string status_msg (go.tag="json:'status_msg'")
-    4: i32 status_code(go.tag="json:'status_code'")
+    3: string status_msg 
+    4: i32 status_code
 }
 
 struct UserRegisterRequest{
@@ -20,8 +20,8 @@ struct UserRegisterRequest{
 struct UseeRegisterResponse{
     1: string token
     2: i32 userId
-    3: string status_msg (go.tag="json:'status_msg'")
-    4: i32 status_code(go.tag="json:'status_code'")
+    3: string status_msg 
+    4: i32 status_code
 }
 
 service UserService{

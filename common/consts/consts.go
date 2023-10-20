@@ -16,3 +16,8 @@ var (
 	UserServiceAPIPort = "10001"
 	UserServiceRPCPort = "11001"
 )
+
+// jwt
+var (
+	JwtKey = "114514"
+)

@@ -1,20 +1,19 @@
 package userHandler
 
 import (
-	"blinkable/cmd/api/user/rpc"
+	userpc "blinkable/cmd/api/user/rpc"
 	"blinkable/common/response"
 	"blinkable/kitex_gen/user"
 	"context"
+	"fmt"
 	"net/http"
 
 	"github.com/cloudwego/hertz/pkg/app"
 )
 
 func Login(ctx context.Context, c *app.RequestContext) {
-	// username, ok1 := c.GetQuery("username")
-	// password, ok2 := c.GetQuery("password")
-
 }
+
 func Register(ctx context.Context, c *app.RequestContext) {
 	username := c.Query("username")
 	password := c.Query("password")
@@ -43,24 +42,21 @@ func Register(ctx context.Context, c *app.RequestContext) {
 		Password: password,
 	}
 
-	resp, _ := rpc.Register(ctx, req)
+	resp, err := userpc.Register(ctx, req)
 
-	if resp.StatusCode == -1 {
-		c.JSON(http.StatusOK, response.User{
-			BaseResponse: response.BaseResponse{
-				StatusCode: 0,
-				StatusMsg:  resp.StatusMsg,
-			},
+	if err != nil {
+		c.JSON(http.StatusOK, response.BaseResponse{
+			StatusCode: -1,
+			StatusMsg:  fmt.Sprintf("register错误: %v", err),
 		})
-		return
 	}
 
 	c.JSON(http.StatusOK, response.User{
-		BaseResponse: response.BaseResponse{
-			StatusCode: 0,
-			StatusMsg:  resp.StatusMsg,
-		},
 		UserId: resp.UserId,
 		Token:  resp.Token,
+		BaseResponse: response.BaseResponse{
+			StatusCode: resp.StatusCode,
+			StatusMsg:  resp.StatusMsg,
+		},
 	})
 }

@@ -23,3 +23,7 @@ func HandleErrWithFatal(str string, err error) {
 		zlog.Fatalf("%s: %s", str, err.Error())
 	}
 }
+
+func Error(str string) {
+	zlog.Error(str)
+}

@@ -3,7 +3,6 @@ package db
 import (
 	"blinkable/common/errno"
 	"blinkable/pkg/viper"
-	"context"
 	"fmt"
 	"time"
 
@@ -12,9 +11,8 @@ import (
 )
 
 var (
-	DB     *gorm.DB
-	cfg    = viper.Load("db")
-	isInit = false
+	DB  *gorm.DB
+	cfg = viper.Load("db")
 )
 
 func getDBConnInfo() string {
@@ -41,19 +39,5 @@ func init() {
 	sqldb.SetMaxIdleConns(20)                  //设置最大空闲连接数
 	sqldb.SetConnMaxLifetime(60 * time.Minute) //设置最大连接周期
 
-	isInit = true
-}
-
-func GetDB() *gorm.DB {
-	return DB
-}
-func GetIsInit() bool {
-	return isInit
-}
-
-func GetIsExistByName(ctx context.Context, name string) bool {
-	var cnt int64 = 0
-	DB.WithContext(ctx).Where("username = ?", name).Count(&cnt)
-
-	return cnt > 0
+	DB = db
 }

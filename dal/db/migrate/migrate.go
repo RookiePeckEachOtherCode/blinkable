@@ -25,8 +25,8 @@ func main() {
 	errno.HandleErrWithPanic("数据库连接错误", err)
 
 	// drop table
-	// err = db.Migrator().DropTable(&model.User{}, &model.Article{}, &model.Comment{})
-	// errs.HandleErrWithFatal("drop table 失败", err)
+	err = db.Migrator().DropTable(&model.User{}, &model.Article{}, &model.Comment{})
+	errno.HandleErrWithFatal("drop table 失败", err)
 
 	err = db.AutoMigrate(&model.User{}, &model.Article{}, &model.Comment{})
 	errno.HandleErrWithPanic("automigate 失败", err)

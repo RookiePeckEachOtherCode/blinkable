@@ -1,31 +1,33 @@
-package jwt
+package Jwt
 
 import (
+	"blinkable/common/consts"
 	"blinkable/common/errno"
 
 	"github.com/dgrijalva/jwt-go"
 )
 
 type Jwt struct {
-	Key string
+	SigningKey []byte
 }
 
 type Claims struct {
-	Id int64
+	Id          int64
+	AuthorityId int64
 	jwt.StandardClaims
 }
 
-func NewJwt(key string) *Jwt {
-	return &Jwt{Key: key}
+func NewJwt() *Jwt {
+	return &Jwt{SigningKey: []byte(consts.JwtKey)}
 }
 
 func (j *Jwt) ReleaseToken(claim Claims) (string, error) {
-	token := jwt.NewWithClaims(jwt.SigningMethodES256, claim)
-	return token.SignedString([]byte(j.Key))
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claim)
+	return token.SignedString(j.SigningKey)
 }
 func (j *Jwt) ParseToken(tokenStr string) (*Claims, error) {
 	token, err := jwt.ParseWithClaims(tokenStr, &Claims{}, func(token *jwt.Token) (interface{}, error) {
-		return []byte(j.Key), nil
+		return j.SigningKey, nil
 	})
 
 	if err != nil {
@@ -41,8 +43,8 @@ func (j *Jwt) ParseToken(tokenStr string) (*Claims, error) {
 			}
 		}
 	}
-	if _claims, ok := token.Claims.(*Claims); ok && token.Valid { // token有效
-		return _claims, nil
+	if claims, ok := token.Claims.(*Claims); ok && token.Valid { // token有效
+		return claims, nil
 	}
 	return nil, errno.ErrTokenInvalidId
 }
