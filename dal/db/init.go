@@ -1,8 +1,9 @@
 package db
 
 import (
-	"blinkable/common/errs"
+	"blinkable/common/errno"
 	"blinkable/pkg/viper"
+	"context"
 	"fmt"
 	"time"
 
@@ -31,10 +32,10 @@ func init() {
 		SkipDefaultTransaction: true, //禁用默认事务
 	})
 
-	errs.HandleErrWithPanic("数据库连接失败", err)
+	errno.HandleErrWithPanic("数据库连接失败", err)
 
 	sqldb, err := db.DB()
-	errs.HandleErrWithFatal("", err)
+	errno.HandleErrWithFatal("", err)
 
 	sqldb.SetMaxOpenConns(1000)                //设置最大连接数
 	sqldb.SetMaxIdleConns(20)                  //设置最大空闲连接数
@@ -48,4 +49,11 @@ func GetDB() *gorm.DB {
 }
 func GetIsInit() bool {
 	return isInit
+}
+
+func GetIsExistByName(ctx context.Context, name string) bool {
+	var cnt int64 = 0
+	DB.WithContext(ctx).Where("username = ?", name).Count(&cnt)
+
+	return cnt > 0
 }
