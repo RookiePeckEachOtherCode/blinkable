@@ -234,9 +234,9 @@ func (p *UserLoginRequsts) Field2DeepEqual(src string) bool {
 
 type UserLoginResponse struct {
 	Token      string `thrift:"token,1" frugal:"1,default,string" json:"token"`
-	UserId     int32  `thrift:"userId,2" frugal:"2,default,i32" json:"userId"`
-	StatusMsg  string `thrift:"status_msg,3" frugal:"3,default,string" json:'status_msg'`
-	StatusCode int32  `thrift:"status_code,4" frugal:"4,default,i32" json:'status_code'`
+	UserId     int32  `thrift:"user_id,2" frugal:"2,default,i32" json:"user_id"`
+	StatusMsg  string `thrift:"status_msg,3" frugal:"3,default,string" json:"status_msg"`
+	StatusCode int32  `thrift:"status_code,4" frugal:"4,default,i32" json:"status_code"`
 }
 
 func NewUserLoginResponse() *UserLoginResponse {
@@ -277,7 +277,7 @@ func (p *UserLoginResponse) SetStatusCode(val int32) {
 
 var fieldIDToName_UserLoginResponse = map[int16]string{
 	1: "token",
-	2: "userId",
+	2: "user_id",
 	3: "status_msg",
 	4: "status_code",
 }
@@ -466,7 +466,7 @@ WriteFieldEndError:
 }
 
 func (p *UserLoginResponse) writeField2(oprot thrift.TProtocol) (err error) {
-	if err = oprot.WriteFieldBegin("userId", thrift.I32, 2); err != nil {
+	if err = oprot.WriteFieldBegin("user_id", thrift.I32, 2); err != nil {
 		goto WriteFieldBeginError
 	}
 	if err := oprot.WriteI32(p.UserId); err != nil {
@@ -798,9 +798,9 @@ func (p *UserRegisterRequest) Field2DeepEqual(src string) bool {
 
 type UseeRegisterResponse struct {
 	Token      string `thrift:"token,1" frugal:"1,default,string" json:"token"`
-	UserId     int32  `thrift:"userId,2" frugal:"2,default,i32" json:"userId"`
-	StatusMsg  string `thrift:"status_msg,3" frugal:"3,default,string" json:'status_msg'`
-	StatusCode int32  `thrift:"status_code,4" frugal:"4,default,i32" json:'status_code'`
+	UserId     int32  `thrift:"user_id,2" frugal:"2,default,i32" json:"user_id"`
+	StatusMsg  string `thrift:"status_msg,3" frugal:"3,default,string" json:"status_msg"`
+	StatusCode int32  `thrift:"status_code,4" frugal:"4,default,i32" json:"status_code"`
 }
 
 func NewUseeRegisterResponse() *UseeRegisterResponse {
@@ -841,7 +841,7 @@ func (p *UseeRegisterResponse) SetStatusCode(val int32) {
 
 var fieldIDToName_UseeRegisterResponse = map[int16]string{
 	1: "token",
-	2: "userId",
+	2: "user_id",
 	3: "status_msg",
 	4: "status_code",
 }
@@ -1030,7 +1030,7 @@ WriteFieldEndError:
 }
 
 func (p *UseeRegisterResponse) writeField2(oprot thrift.TProtocol) (err error) {
-	if err = oprot.WriteFieldBegin("userId", thrift.I32, 2); err != nil {
+	if err = oprot.WriteFieldBegin("user_id", thrift.I32, 2); err != nil {
 		goto WriteFieldBeginError
 	}
 	if err := oprot.WriteI32(p.UserId); err != nil {
@@ -1138,9 +1138,9 @@ func (p *UseeRegisterResponse) Field4DeepEqual(src int32) bool {
 }
 
 type UserService interface {
-	UserLogin(ctx context.Context, userLoginRequsts *UserLoginRequsts) (r *UserLoginResponse, err error)
+	UserLogin(ctx context.Context, req *UserLoginRequsts) (r *UserLoginResponse, err error)
 
-	UserRegister(ctx context.Context, userRegisterRequest *UserRegisterRequest) (r *UseeRegisterResponse, err error)
+	UserRegister(ctx context.Context, req *UserRegisterRequest) (r *UseeRegisterResponse, err error)
 }
 
 type UserServiceClient struct {
@@ -1169,18 +1169,18 @@ func (p *UserServiceClient) Client_() thrift.TClient {
 	return p.c
 }
 
-func (p *UserServiceClient) UserLogin(ctx context.Context, userLoginRequsts *UserLoginRequsts) (r *UserLoginResponse, err error) {
+func (p *UserServiceClient) UserLogin(ctx context.Context, req *UserLoginRequsts) (r *UserLoginResponse, err error) {
 	var _args UserServiceUserLoginArgs
-	_args.UserLoginRequsts = userLoginRequsts
+	_args.Req = req
 	var _result UserServiceUserLoginResult
 	if err = p.Client_().Call(ctx, "UserLogin", &_args, &_result); err != nil {
 		return
 	}
 	return _result.GetSuccess(), nil
 }
-func (p *UserServiceClient) UserRegister(ctx context.Context, userRegisterRequest *UserRegisterRequest) (r *UseeRegisterResponse, err error) {
+func (p *UserServiceClient) UserRegister(ctx context.Context, req *UserRegisterRequest) (r *UseeRegisterResponse, err error) {
 	var _args UserServiceUserRegisterArgs
-	_args.UserRegisterRequest = userRegisterRequest
+	_args.Req = req
 	var _result UserServiceUserRegisterResult
 	if err = p.Client_().Call(ctx, "UserRegister", &_args, &_result); err != nil {
 		return
@@ -1250,7 +1250,7 @@ func (p *userServiceProcessorUserLogin) Process(ctx context.Context, seqId int32
 	var err2 error
 	result := UserServiceUserLoginResult{}
 	var retval *UserLoginResponse
-	if retval, err2 = p.handler.UserLogin(ctx, args.UserLoginRequsts); err2 != nil {
+	if retval, err2 = p.handler.UserLogin(ctx, args.Req); err2 != nil {
 		x := thrift.NewTApplicationException(thrift.INTERNAL_ERROR, "Internal error processing UserLogin: "+err2.Error())
 		oprot.WriteMessageBegin("UserLogin", thrift.EXCEPTION, seqId)
 		x.Write(oprot)
@@ -1298,7 +1298,7 @@ func (p *userServiceProcessorUserRegister) Process(ctx context.Context, seqId in
 	var err2 error
 	result := UserServiceUserRegisterResult{}
 	var retval *UseeRegisterResponse
-	if retval, err2 = p.handler.UserRegister(ctx, args.UserRegisterRequest); err2 != nil {
+	if retval, err2 = p.handler.UserRegister(ctx, args.Req); err2 != nil {
 		x := thrift.NewTApplicationException(thrift.INTERNAL_ERROR, "Internal error processing UserRegister: "+err2.Error())
 		oprot.WriteMessageBegin("UserRegister", thrift.EXCEPTION, seqId)
 		x.Write(oprot)
@@ -1327,7 +1327,7 @@ func (p *userServiceProcessorUserRegister) Process(ctx context.Context, seqId in
 }
 
 type UserServiceUserLoginArgs struct {
-	UserLoginRequsts *UserLoginRequsts `thrift:"userLoginRequsts,1" frugal:"1,default,UserLoginRequsts" json:"userLoginRequsts"`
+	Req *UserLoginRequsts `thrift:"req,1" frugal:"1,default,UserLoginRequsts" json:"req"`
 }
 
 func NewUserServiceUserLoginArgs() *UserServiceUserLoginArgs {
@@ -1338,24 +1338,24 @@ func (p *UserServiceUserLoginArgs) InitDefault() {
 	*p = UserServiceUserLoginArgs{}
 }
 
-var UserServiceUserLoginArgs_UserLoginRequsts_DEFAULT *UserLoginRequsts
+var UserServiceUserLoginArgs_Req_DEFAULT *UserLoginRequsts
 
-func (p *UserServiceUserLoginArgs) GetUserLoginRequsts() (v *UserLoginRequsts) {
-	if !p.IsSetUserLoginRequsts() {
-		return UserServiceUserLoginArgs_UserLoginRequsts_DEFAULT
+func (p *UserServiceUserLoginArgs) GetReq() (v *UserLoginRequsts) {
+	if !p.IsSetReq() {
+		return UserServiceUserLoginArgs_Req_DEFAULT
 	}
-	return p.UserLoginRequsts
+	return p.Req
 }
-func (p *UserServiceUserLoginArgs) SetUserLoginRequsts(val *UserLoginRequsts) {
-	p.UserLoginRequsts = val
+func (p *UserServiceUserLoginArgs) SetReq(val *UserLoginRequsts) {
+	p.Req = val
 }
 
 var fieldIDToName_UserServiceUserLoginArgs = map[int16]string{
-	1: "userLoginRequsts",
+	1: "req",
 }
 
-func (p *UserServiceUserLoginArgs) IsSetUserLoginRequsts() bool {
-	return p.UserLoginRequsts != nil
+func (p *UserServiceUserLoginArgs) IsSetReq() bool {
+	return p.Req != nil
 }
 
 func (p *UserServiceUserLoginArgs) Read(iprot thrift.TProtocol) (err error) {
@@ -1418,8 +1418,8 @@ ReadStructEndError:
 }
 
 func (p *UserServiceUserLoginArgs) ReadField1(iprot thrift.TProtocol) error {
-	p.UserLoginRequsts = NewUserLoginRequsts()
-	if err := p.UserLoginRequsts.Read(iprot); err != nil {
+	p.Req = NewUserLoginRequsts()
+	if err := p.Req.Read(iprot); err != nil {
 		return err
 	}
 	return nil
@@ -1455,10 +1455,10 @@ WriteStructEndError:
 }
 
 func (p *UserServiceUserLoginArgs) writeField1(oprot thrift.TProtocol) (err error) {
-	if err = oprot.WriteFieldBegin("userLoginRequsts", thrift.STRUCT, 1); err != nil {
+	if err = oprot.WriteFieldBegin("req", thrift.STRUCT, 1); err != nil {
 		goto WriteFieldBeginError
 	}
-	if err := p.UserLoginRequsts.Write(oprot); err != nil {
+	if err := p.Req.Write(oprot); err != nil {
 		return err
 	}
 	if err = oprot.WriteFieldEnd(); err != nil {
@@ -1484,7 +1484,7 @@ func (p *UserServiceUserLoginArgs) DeepEqual(ano *UserServiceUserLoginArgs) bool
 	} else if p == nil || ano == nil {
 		return false
 	}
-	if !p.Field1DeepEqual(ano.UserLoginRequsts) {
+	if !p.Field1DeepEqual(ano.Req) {
 		return false
 	}
 	return true
@@ -1492,7 +1492,7 @@ func (p *UserServiceUserLoginArgs) DeepEqual(ano *UserServiceUserLoginArgs) bool
 
 func (p *UserServiceUserLoginArgs) Field1DeepEqual(src *UserLoginRequsts) bool {
 
-	if !p.UserLoginRequsts.DeepEqual(src) {
+	if !p.Req.DeepEqual(src) {
 		return false
 	}
 	return true
@@ -1673,7 +1673,7 @@ func (p *UserServiceUserLoginResult) Field0DeepEqual(src *UserLoginResponse) boo
 }
 
 type UserServiceUserRegisterArgs struct {
-	UserRegisterRequest *UserRegisterRequest `thrift:"userRegisterRequest,1" frugal:"1,default,UserRegisterRequest" json:"userRegisterRequest"`
+	Req *UserRegisterRequest `thrift:"req,1" frugal:"1,default,UserRegisterRequest" json:"req"`
 }
 
 func NewUserServiceUserRegisterArgs() *UserServiceUserRegisterArgs {
@@ -1684,24 +1684,24 @@ func (p *UserServiceUserRegisterArgs) InitDefault() {
 	*p = UserServiceUserRegisterArgs{}
 }
 
-var UserServiceUserRegisterArgs_UserRegisterRequest_DEFAULT *UserRegisterRequest
+var UserServiceUserRegisterArgs_Req_DEFAULT *UserRegisterRequest
 
-func (p *UserServiceUserRegisterArgs) GetUserRegisterRequest() (v *UserRegisterRequest) {
-	if !p.IsSetUserRegisterRequest() {
-		return UserServiceUserRegisterArgs_UserRegisterRequest_DEFAULT
+func (p *UserServiceUserRegisterArgs) GetReq() (v *UserRegisterRequest) {
+	if !p.IsSetReq() {
+		return UserServiceUserRegisterArgs_Req_DEFAULT
 	}
-	return p.UserRegisterRequest
+	return p.Req
 }
-func (p *UserServiceUserRegisterArgs) SetUserRegisterRequest(val *UserRegisterRequest) {
-	p.UserRegisterRequest = val
+func (p *UserServiceUserRegisterArgs) SetReq(val *UserRegisterRequest) {
+	p.Req = val
 }
 
 var fieldIDToName_UserServiceUserRegisterArgs = map[int16]string{
-	1: "userRegisterRequest",
+	1: "req",
 }
 
-func (p *UserServiceUserRegisterArgs) IsSetUserRegisterRequest() bool {
-	return p.UserRegisterRequest != nil
+func (p *UserServiceUserRegisterArgs) IsSetReq() bool {
+	return p.Req != nil
 }
 
 func (p *UserServiceUserRegisterArgs) Read(iprot thrift.TProtocol) (err error) {
@@ -1764,8 +1764,8 @@ ReadStructEndError:
 }
 
 func (p *UserServiceUserRegisterArgs) ReadField1(iprot thrift.TProtocol) error {
-	p.UserRegisterRequest = NewUserRegisterRequest()
-	if err := p.UserRegisterRequest.Read(iprot); err != nil {
+	p.Req = NewUserRegisterRequest()
+	if err := p.Req.Read(iprot); err != nil {
 		return err
 	}
 	return nil
@@ -1801,10 +1801,10 @@ WriteStructEndError:
 }
 
 func (p *UserServiceUserRegisterArgs) writeField1(oprot thrift.TProtocol) (err error) {
-	if err = oprot.WriteFieldBegin("userRegisterRequest", thrift.STRUCT, 1); err != nil {
+	if err = oprot.WriteFieldBegin("req", thrift.STRUCT, 1); err != nil {
 		goto WriteFieldBeginError
 	}
-	if err := p.UserRegisterRequest.Write(oprot); err != nil {
+	if err := p.Req.Write(oprot); err != nil {
 		return err
 	}
 	if err = oprot.WriteFieldEnd(); err != nil {
@@ -1830,7 +1830,7 @@ func (p *UserServiceUserRegisterArgs) DeepEqual(ano *UserServiceUserRegisterArgs
 	} else if p == nil || ano == nil {
 		return false
 	}
-	if !p.Field1DeepEqual(ano.UserRegisterRequest) {
+	if !p.Field1DeepEqual(ano.Req) {
 		return false
 	}
 	return true
@@ -1838,7 +1838,7 @@ func (p *UserServiceUserRegisterArgs) DeepEqual(ano *UserServiceUserRegisterArgs
 
 func (p *UserServiceUserRegisterArgs) Field1DeepEqual(src *UserRegisterRequest) bool {
 
-	if !p.UserRegisterRequest.DeepEqual(src) {
+	if !p.Req.DeepEqual(src) {
 		return false
 	}
 	return true

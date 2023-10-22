@@ -40,7 +40,7 @@ func NewServiceInfo() *kitex.ServiceInfo {
 func userLoginHandler(ctx context.Context, handler interface{}, arg, result interface{}) error {
 	realArg := arg.(*user.UserServiceUserLoginArgs)
 	realResult := result.(*user.UserServiceUserLoginResult)
-	success, err := handler.(user.UserService).UserLogin(ctx, realArg.UserLoginRequsts)
+	success, err := handler.(user.UserService).UserLogin(ctx, realArg.Req)
 	if err != nil {
 		return err
 	}
@@ -58,7 +58,7 @@ func newUserServiceUserLoginResult() interface{} {
 func userRegisterHandler(ctx context.Context, handler interface{}, arg, result interface{}) error {
 	realArg := arg.(*user.UserServiceUserRegisterArgs)
 	realResult := result.(*user.UserServiceUserRegisterResult)
-	success, err := handler.(user.UserService).UserRegister(ctx, realArg.UserRegisterRequest)
+	success, err := handler.(user.UserService).UserRegister(ctx, realArg.Req)
 	if err != nil {
 		return err
 	}
@@ -83,9 +83,9 @@ func newServiceClient(c client.Client) *kClient {
 	}
 }
 
-func (p *kClient) UserLogin(ctx context.Context, userLoginRequsts *user.UserLoginRequsts) (r *user.UserLoginResponse, err error) {
+func (p *kClient) UserLogin(ctx context.Context, req *user.UserLoginRequsts) (r *user.UserLoginResponse, err error) {
 	var _args user.UserServiceUserLoginArgs
-	_args.UserLoginRequsts = userLoginRequsts
+	_args.Req = req
 	var _result user.UserServiceUserLoginResult
 	if err = p.c.Call(ctx, "UserLogin", &_args, &_result); err != nil {
 		return
@@ -93,9 +93,9 @@ func (p *kClient) UserLogin(ctx context.Context, userLoginRequsts *user.UserLogi
 	return _result.GetSuccess(), nil
 }
 
-func (p *kClient) UserRegister(ctx context.Context, userRegisterRequest *user.UserRegisterRequest) (r *user.UseeRegisterResponse, err error) {
+func (p *kClient) UserRegister(ctx context.Context, req *user.UserRegisterRequest) (r *user.UseeRegisterResponse, err error) {
 	var _args user.UserServiceUserRegisterArgs
-	_args.UserRegisterRequest = userRegisterRequest
+	_args.Req = req
 	var _result user.UserServiceUserRegisterResult
 	if err = p.c.Call(ctx, "UserRegister", &_args, &_result); err != nil {
 		return
