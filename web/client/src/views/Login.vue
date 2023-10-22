@@ -49,6 +49,7 @@ import {ref} from "vue";
 import type {FormInstance} from "element-plus";
 import {rules} from "@/rules/userinfo";
 import {loginApi} from "@/apis/login";
+import  {registerApi} from "@/apis/registe";
 import {useUserInfoStore} from "@/stores/userinfo";
 import {ElMessage} from "element-plus";
 import router from "@/router";
@@ -72,7 +73,7 @@ const lin=async ()=>{
   router.push("/home/main-view")
 };
 const reg=async ()=>{
-  const res=await loginApi(form.value);
+  const res=await registerApi(form.value);
   useUserinfoStore.setAuth(res.data.token)
   ElMessage.success("注册成功")
   router.push("/home/main-view")

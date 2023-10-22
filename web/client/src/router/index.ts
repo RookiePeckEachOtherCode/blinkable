@@ -1,5 +1,4 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import HomeView from '../views/HomeView.vue'
 import {useUserInfoStore} from "@/stores/userinfo";
 import pinia from "@/stores/pinia";
 
@@ -14,7 +13,7 @@ const router = createRouter({
     {
       path: '/home',
       name: 'home',
-      component: HomeView,
+      component: ()=>import("../views/HomeView.vue"),
       meta:{
         noAuth:true,
       },
@@ -35,14 +34,6 @@ const router = createRouter({
         },
 
       ]},
-    {
-      path: '/test',
-      name: 'test',
-      meta:{
-        noAuth:true,
-      },
-      component: () => import('@/components/layout/homebackground.vue')
-    },
     {
       path: '/login',
       name: 'login',
