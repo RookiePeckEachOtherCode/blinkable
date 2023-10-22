@@ -30,10 +30,14 @@ func init() {
 		SkipDefaultTransaction: true, //禁用默认事务
 	})
 
-	errno.HandleErrWithPanic("数据库连接失败", err)
+	if err != nil {
+		errno.HandleErrWithPanic("query", "数据库连接失败", err)
+	}
 
 	sqldb, err := db.DB()
-	errno.HandleErrWithFatal("", err)
+	if err != nil {
+		errno.HandleErrWithFatal("query", "sqldb", err)
+	}
 
 	sqldb.SetMaxOpenConns(1000)                //设置最大连接数
 	sqldb.SetMaxIdleConns(20)                  //设置最大空闲连接数

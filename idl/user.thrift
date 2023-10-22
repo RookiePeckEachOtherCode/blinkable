@@ -7,7 +7,7 @@ struct UserLoginRequsts{
 
 struct UserLoginResponse{
     1: string token
-    2: i32 userId
+    2: i32 user_id
     3: string status_msg 
     4: i32 status_code
 }
@@ -19,12 +19,12 @@ struct UserRegisterRequest{
 
 struct UseeRegisterResponse{
     1: string token
-    2: i32 userId
+    2: i32 user_id
     3: string status_msg 
     4: i32 status_code
 }
 
 service UserService{
-    UserLoginResponse UserLogin(1:UserLoginRequsts userLoginRequsts);
-    UseeRegisterResponse UserRegister(1:UserRegisterRequest userRegisterRequest);
+    UserLoginResponse UserLogin(1:UserLoginRequsts req);
+    UseeRegisterResponse UserRegister(1:UserRegisterRequest req);
 }

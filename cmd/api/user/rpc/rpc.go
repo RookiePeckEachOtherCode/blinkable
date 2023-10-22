@@ -9,7 +9,6 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/cloudwego/hertz/pkg/app"
 	"github.com/cloudwego/kitex/client"
 	"github.com/cloudwego/kitex/pkg/rpcinfo"
 	etcd "github.com/kitex-contrib/registry-etcd"
@@ -24,8 +23,13 @@ var (
 var userClient userservice.Client
 
 func init() {
+	where := "api_user_rpc"
+
 	r, err := etcd.NewEtcdResolver([]string{etcdAddr})
-	errno.HandleErrWithPanic("用户客户端初始化失败", err)
+
+	if err != nil {
+		errno.HandleErrWithPanic(where, "用户客户端初始化失败", err)
+	}
 
 	_userClient, err := userservice.NewClient(
 		serverName,
@@ -38,12 +42,13 @@ func init() {
 	)
 
 	if err != nil {
-		errno.HandleErrWithPanic("用户客户端初始化失败", err)
+		errno.HandleErrWithPanic(where, "用户客户端初始化失败", err)
 	}
 	userClient = _userClient
 }
 
-func Login(ctx context.Context, c *app.RequestContext) {
+func Login(ctx context.Context, req *user.UserLoginRequsts) (*user.UserLoginResponse, error) {
+	return userClient.UserLogin(ctx, req)
 }
 
 func Register(ctx context.Context, req *user.UserRegisterRequest) (*user.UseeRegisterResponse, error) {
