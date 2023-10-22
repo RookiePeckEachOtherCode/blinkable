@@ -20,13 +20,18 @@ var (
 )
 
 func main() {
+	where := "server_user"
 	r, err := etcd.NewEtcdRegistry([]string{etcdAddr})
 
-	errno.HandleErrWithPanic("etcd registry", err)
+	if err != nil {
+		errno.HandleErrWithPanic(where, "etcd registry", err)
+	}
 
 	addr, err := net.ResolveTCPAddr("tcp", serverAddr)
 
-	errno.HandleErrWithPanic("server host port", err)
+	if err != nil {
+		errno.HandleErrWithPanic(where, "server host port", err)
+	}
 
 	svr := user.NewServer(
 		new(UserServiceImpl),
@@ -40,6 +45,6 @@ func main() {
 	err = svr.Run()
 
 	if err != nil {
-		errno.HandleErrWithPanic("server run", err)
+		errno.HandleErrWithPanic(where, "server run", err)
 	}
 }

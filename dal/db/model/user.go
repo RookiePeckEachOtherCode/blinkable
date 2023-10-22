@@ -9,4 +9,5 @@ type User struct {
 	Signature       *string `gorm:"type: varchar(150);comment:个性签名"`                      //个性签名
 	Experience      uint32  `gorm:"comment:个性签名"`                                         //经验值
 	BackgroundImage *string `gorm:"type: varchar(150);comment: 个人简介图片"`                   //个人简介图片
+	Level           uint32  `gorm:"comment: 等级"`                                          //等级
 }

@@ -414,7 +414,7 @@ func (p *UserLoginResponse) fastWriteField1(buf []byte, binaryWriter bthrift.Bin
 
 func (p *UserLoginResponse) fastWriteField2(buf []byte, binaryWriter bthrift.BinaryWriter) int {
 	offset := 0
-	offset += bthrift.Binary.WriteFieldBegin(buf[offset:], "userId", thrift.I32, 2)
+	offset += bthrift.Binary.WriteFieldBegin(buf[offset:], "user_id", thrift.I32, 2)
 	offset += bthrift.Binary.WriteI32(buf[offset:], p.UserId)
 
 	offset += bthrift.Binary.WriteFieldEnd(buf[offset:])
@@ -450,7 +450,7 @@ func (p *UserLoginResponse) field1Length() int {
 
 func (p *UserLoginResponse) field2Length() int {
 	l := 0
-	l += bthrift.Binary.FieldBeginLength("userId", thrift.I32, 2)
+	l += bthrift.Binary.FieldBeginLength("user_id", thrift.I32, 2)
 	l += bthrift.Binary.I32Length(p.UserId)
 
 	l += bthrift.Binary.FieldEndLength()
@@ -866,7 +866,7 @@ func (p *UseeRegisterResponse) fastWriteField1(buf []byte, binaryWriter bthrift.
 
 func (p *UseeRegisterResponse) fastWriteField2(buf []byte, binaryWriter bthrift.BinaryWriter) int {
 	offset := 0
-	offset += bthrift.Binary.WriteFieldBegin(buf[offset:], "userId", thrift.I32, 2)
+	offset += bthrift.Binary.WriteFieldBegin(buf[offset:], "user_id", thrift.I32, 2)
 	offset += bthrift.Binary.WriteI32(buf[offset:], p.UserId)
 
 	offset += bthrift.Binary.WriteFieldEnd(buf[offset:])
@@ -902,7 +902,7 @@ func (p *UseeRegisterResponse) field1Length() int {
 
 func (p *UseeRegisterResponse) field2Length() int {
 	l := 0
-	l += bthrift.Binary.FieldBeginLength("userId", thrift.I32, 2)
+	l += bthrift.Binary.FieldBeginLength("user_id", thrift.I32, 2)
 	l += bthrift.Binary.I32Length(p.UserId)
 
 	l += bthrift.Binary.FieldEndLength()
@@ -1007,7 +1007,7 @@ func (p *UserServiceUserLoginArgs) FastReadField1(buf []byte) (int, error) {
 	} else {
 		offset += l
 	}
-	p.UserLoginRequsts = tmp
+	p.Req = tmp
 	return offset, nil
 }
 
@@ -1040,16 +1040,16 @@ func (p *UserServiceUserLoginArgs) BLength() int {
 
 func (p *UserServiceUserLoginArgs) fastWriteField1(buf []byte, binaryWriter bthrift.BinaryWriter) int {
 	offset := 0
-	offset += bthrift.Binary.WriteFieldBegin(buf[offset:], "userLoginRequsts", thrift.STRUCT, 1)
-	offset += p.UserLoginRequsts.FastWriteNocopy(buf[offset:], binaryWriter)
+	offset += bthrift.Binary.WriteFieldBegin(buf[offset:], "req", thrift.STRUCT, 1)
+	offset += p.Req.FastWriteNocopy(buf[offset:], binaryWriter)
 	offset += bthrift.Binary.WriteFieldEnd(buf[offset:])
 	return offset
 }
 
 func (p *UserServiceUserLoginArgs) field1Length() int {
 	l := 0
-	l += bthrift.Binary.FieldBeginLength("userLoginRequsts", thrift.STRUCT, 1)
-	l += p.UserLoginRequsts.BLength()
+	l += bthrift.Binary.FieldBeginLength("req", thrift.STRUCT, 1)
+	l += p.Req.BLength()
 	l += bthrift.Binary.FieldEndLength()
 	return l
 }
@@ -1265,7 +1265,7 @@ func (p *UserServiceUserRegisterArgs) FastReadField1(buf []byte) (int, error) {
 	} else {
 		offset += l
 	}
-	p.UserRegisterRequest = tmp
+	p.Req = tmp
 	return offset, nil
 }
 
@@ -1298,16 +1298,16 @@ func (p *UserServiceUserRegisterArgs) BLength() int {
 
 func (p *UserServiceUserRegisterArgs) fastWriteField1(buf []byte, binaryWriter bthrift.BinaryWriter) int {
 	offset := 0
-	offset += bthrift.Binary.WriteFieldBegin(buf[offset:], "userRegisterRequest", thrift.STRUCT, 1)
-	offset += p.UserRegisterRequest.FastWriteNocopy(buf[offset:], binaryWriter)
+	offset += bthrift.Binary.WriteFieldBegin(buf[offset:], "req", thrift.STRUCT, 1)
+	offset += p.Req.FastWriteNocopy(buf[offset:], binaryWriter)
 	offset += bthrift.Binary.WriteFieldEnd(buf[offset:])
 	return offset
 }
 
 func (p *UserServiceUserRegisterArgs) field1Length() int {
 	l := 0
-	l += bthrift.Binary.FieldBeginLength("userRegisterRequest", thrift.STRUCT, 1)
-	l += p.UserRegisterRequest.BLength()
+	l += bthrift.Binary.FieldBeginLength("req", thrift.STRUCT, 1)
+	l += p.Req.BLength()
 	l += bthrift.Binary.FieldEndLength()
 	return l
 }
@@ -1444,7 +1444,7 @@ func (p *UserServiceUserRegisterResult) field0Length() int {
 }
 
 func (p *UserServiceUserLoginArgs) GetFirstArgument() interface{} {
-	return p.UserLoginRequsts
+	return p.Req
 }
 
 func (p *UserServiceUserLoginResult) GetResult() interface{} {
@@ -1452,7 +1452,7 @@ func (p *UserServiceUserLoginResult) GetResult() interface{} {
 }
 
 func (p *UserServiceUserRegisterArgs) GetFirstArgument() interface{} {
-	return p.UserRegisterRequest
+	return p.Req
 }
 
 func (p *UserServiceUserRegisterResult) GetResult() interface{} {
