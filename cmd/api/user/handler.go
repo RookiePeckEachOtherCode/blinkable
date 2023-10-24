@@ -9,28 +9,27 @@ import (
 	"net/http"
 
 	"github.com/cloudwego/hertz/pkg/app"
+	"go.uber.org/zap"
 )
 
 func Login(ctx context.Context, c *app.RequestContext) {
-	where := "api_user_login"
-
 	username := c.Query("username")
 	password := c.Query("password")
 
 	if len(username) == 0 || len(password) == 0 {
-		msg := "用户名或密码不能为空"
-		c.JSON(http.StatusBadRequest, response.BuildBase(-1, msg))
-		errno.HandleErrWithError(where, msg, nil)
+		err := errno.ErrUserNameOrPasswordIsEmpty
+		c.JSON(http.StatusBadRequest, response.BuildBase(-1, err.Error()))
+		zap.S().Error(err)
 		return
 	}
 	if len(username) > 40 || len(password) > 40 {
-		msg := "用户名或密码过长"
-		c.JSON(http.StatusBadRequest, response.BuildBase(-1, msg))
-		errno.HandleErrWithError(where, msg, nil)
+		err := errno.ErrUserNameOrPasswordIsLong
+		c.JSON(http.StatusBadRequest, response.BuildBase(-1, err.Error()))
+		zap.S().Error(err)
 		return
 	}
 
-	req := &user.UserLoginRequsts{
+	req := &user.UserLoginRequest{
 		Username: username,
 		Password: password,
 	}
@@ -38,29 +37,40 @@ func Login(ctx context.Context, c *app.RequestContext) {
 	resp, err := userpc.Login(ctx, req)
 
 	if err != nil {
-		c.JSON(http.StatusOK, response.BuildBase(-1, resp.StatusMsg))
-		errno.HandleErrWithError(where, resp.StatusMsg, err)
+		c.JSON(http.StatusOK, response.BuildBase(-1, err.Error()))
 		return
 	}
+	if resp == nil {
+		c.JSON(http.StatusOK, response.BuildBase(-1, "resp is nil"))
+	}
+
+	// if resp == nil {
+	// 	c.JSON(http.StatusOK, response.BuildBase(-1, "resp is nil"))
+	// 	return
+	// } else if err != nil {
+	// 	c.JSON(http.StatusOK, response.BuildBase(-1, err.Error()))
+	// 	return
+	// } else if resp == nil && err == nil {
+	// 	c.JSON(http.StatusOK, response.BuildBase(-1, "resp is nil and err is nil"))
+	// }
 
 	c.JSON(http.StatusOK, resp)
 }
 
 func Register(ctx context.Context, c *app.RequestContext) {
-	where := "api_user_register"
 	username := c.Query("username")
 	password := c.Query("password")
 
 	if len(username) == 0 || len(password) == 0 {
-		msg := "用户名或密码不能为空"
-		c.JSON(http.StatusBadRequest, response.BuildBase(-1, msg))
-		errno.HandleErrWithError(where, msg, nil)
+		err := errno.ErrUserNameOrPasswordIsEmpty
+		c.JSON(http.StatusBadRequest, response.BuildBase(-1, err.Error()))
+		zap.S().Error(err)
 		return
 	}
 	if len(username) > 40 || len(password) > 40 {
-		msg := "用户名或密码过长"
-		c.JSON(http.StatusBadRequest, response.BuildBase(-1, msg))
-		errno.HandleErrWithError(where, msg, nil)
+		err := errno.ErrUserNameOrPasswordIsLong
+		c.JSON(http.StatusBadRequest, response.BuildBase(-1, err.Error()))
+		zap.S().Error(err)
 		return
 	}
 
@@ -73,7 +83,7 @@ func Register(ctx context.Context, c *app.RequestContext) {
 
 	if err != nil {
 		c.JSON(http.StatusOK, response.BuildBase(-1, resp.StatusMsg))
-		errno.HandleErrWithError(where, resp.StatusMsg, err)
+		zap.S().Errorf("%v ===> %v", resp.StatusMsg, err)
 		return
 	}
 

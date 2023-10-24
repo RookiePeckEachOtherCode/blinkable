@@ -1,4 +1,4 @@
-package zap
+package zlog
 
 import (
 	"blinkable/pkg/viper"
@@ -13,12 +13,15 @@ var (
 	cfg       = viper.Load("log")
 	infoPath  = cfg.Viper.GetString("info_path")
 	errorPath = cfg.Viper.GetString("error_path")
-	devPath   = cfg.Viper.GetString("dev_path")
 	mod       = cfg.Viper.GetString("mod")
+	isInit    = false
 )
 
 // InitLogger 初始化zap
-func Init() *zap.SugaredLogger {
+func Init() {
+	if isInit {
+		return
+	}
 	highPriority := zap.LevelEnablerFunc(func(l zapcore.Level) bool {
 		return l >= zap.ErrorLevel
 	})
@@ -50,9 +53,8 @@ func Init() *zap.SugaredLogger {
 	}
 
 	logger := zap.New(core, zap.AddCaller())
-	sugarLogger := logger.Sugar()
-
-	return sugarLogger
+	zap.ReplaceGlobals(logger)
+	isInit = true
 }
 
 // 自定义日志输出格式

@@ -1,11 +1,12 @@
 package db
 
 import (
-	"blinkable/common/errno"
 	"blinkable/pkg/viper"
+	zlog "blinkable/pkg/zap"
 	"fmt"
 	"time"
 
+	"go.uber.org/zap"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 )
@@ -25,18 +26,20 @@ func getDBConnInfo() string {
 }
 
 func init() {
+	zlog.Init()
+
 	db, err := gorm.Open(mysql.Open(getDBConnInfo()), &gorm.Config{
 		PrepareStmt:            true, //开启预编译
 		SkipDefaultTransaction: true, //禁用默认事务
 	})
 
 	if err != nil {
-		errno.HandleErrWithPanic("query", "数据库连接失败", err)
+		zap.S().Panicf("数据库连接错误 ===>  %v", err)
 	}
 
 	sqldb, err := db.DB()
 	if err != nil {
-		errno.HandleErrWithFatal("query", "sqldb", err)
+		zap.S().Fatal("get sqldb error")
 	}
 
 	sqldb.SetMaxOpenConns(1000)                //设置最大连接数

@@ -1,15 +1,16 @@
 package main
 
 import (
-	"blinkable/common/errno"
 	user "blinkable/kitex_gen/user/userservice"
 	"blinkable/pkg/viper"
+	zlog "blinkable/pkg/zap"
 	"fmt"
 	"net"
 
 	"github.com/cloudwego/kitex/pkg/rpcinfo"
 	"github.com/cloudwego/kitex/server"
 	etcd "github.com/kitex-contrib/registry-etcd"
+	"go.uber.org/zap"
 )
 
 var (
@@ -20,17 +21,18 @@ var (
 )
 
 func main() {
-	where := "server_user"
+	zlog.Init()
+
 	r, err := etcd.NewEtcdRegistry([]string{etcdAddr})
 
 	if err != nil {
-		errno.HandleErrWithPanic(where, "etcd registry", err)
+		zap.S().Panicf("%v ===> %v", "etcd registry", err)
 	}
 
 	addr, err := net.ResolveTCPAddr("tcp", serverAddr)
 
 	if err != nil {
-		errno.HandleErrWithPanic(where, "server host port", err)
+		zap.S().Panicf("%v ===> %v", "server host port", err)
 	}
 
 	svr := user.NewServer(
@@ -45,6 +47,6 @@ func main() {
 	err = svr.Run()
 
 	if err != nil {
-		errno.HandleErrWithPanic(where, "server run", err)
+		zap.S().Panicf("%v ===> %v", "server run", err)
 	}
 }

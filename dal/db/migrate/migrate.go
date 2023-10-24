@@ -1,11 +1,12 @@
 package main
 
 import (
-	"blinkable/common/errno"
 	"blinkable/dal/db/model"
 	"blinkable/pkg/viper"
+	zlog "blinkable/pkg/zap"
 	"fmt"
 
+	"go.uber.org/zap"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 )
@@ -21,21 +22,21 @@ func getDBConnInfo() string {
 }
 
 func main() {
-	where := "migrate"
+	zlog.Init()
 
 	db, err := gorm.Open(mysql.Open(getDBConnInfo()), &gorm.Config{})
 	if err != nil {
-		errno.HandleErrWithPanic(where, "数据库连接错误", err)
+		zap.S().Panicf("数据库连接错误 ===>  %v", err)
 	}
 
 	// drop table
 	err = db.Migrator().DropTable(&model.User{}, &model.Article{}, &model.Comment{})
 	if err != nil {
-		errno.HandleErrWithFatal(where, "drop table 失败", err)
+		zap.S().Fatalf("drop table 失败 ===>  %v", err)
 	}
 
 	err = db.AutoMigrate(&model.User{}, &model.Article{}, &model.Comment{})
 	if err != nil {
-		errno.HandleErrWithPanic(where, "automigate 失败", err)
+		zap.S().Panicf("automigate 失败 ===>  %v", err)
 	}
 }

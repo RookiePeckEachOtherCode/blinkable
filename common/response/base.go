@@ -5,8 +5,8 @@ type BaseResponse struct {
 	StatusMsg  string `json:"status_msg"`
 }
 
-func BuildBase(statusCode int32, statusMsg string) BaseResponse {
-	return BaseResponse{
+func BuildBase(statusCode int32, statusMsg string) *BaseResponse {
+	return &BaseResponse{
 		StatusCode: statusCode,
 		StatusMsg:  statusMsg,
 	}
