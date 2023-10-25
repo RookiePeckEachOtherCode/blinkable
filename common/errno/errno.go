@@ -1,6 +1,8 @@
 package errno
 
-import "errors"
+import (
+	"errors"
+)
 
 // JWT
 var (
@@ -21,4 +23,11 @@ var (
 	ErrHashPasswordIsWrong       = errors.New("密码加密失败")
 	ErrCreateUserIsWrong         = errors.New("创建用户失败")
 	ErrFindUserIsWrong           = errors.New("查找用户失败")
+	ErrLogin                     = errors.New("登录失败")
+	ErrRegister                  = errors.New("注册失败")
+)
+
+// Server
+var (
+	ErrInternalServerError = errors.New("服务内部错误")
 )
