@@ -7,6 +7,7 @@ require (
 	github.com/cloudwego/hertz v0.7.1
 	github.com/cloudwego/kitex v0.7.2
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
+	github.com/hertz-contrib/gzip v0.0.1
 	github.com/kitex-contrib/registry-etcd v0.2.0
 	github.com/natefinch/lumberjack v2.0.0+incompatible
 	github.com/spf13/viper v1.17.0

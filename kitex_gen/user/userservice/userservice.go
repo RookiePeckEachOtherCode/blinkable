@@ -83,7 +83,7 @@ func newServiceClient(c client.Client) *kClient {
 	}
 }
 
-func (p *kClient) UserLogin(ctx context.Context, req *user.UserLoginRequsts) (r *user.UserLoginResponse, err error) {
+func (p *kClient) UserLogin(ctx context.Context, req *user.UserLoginRequest) (r *user.UserLoginResponse, err error) {
 	var _args user.UserServiceUserLoginArgs
 	_args.Req = req
 	var _result user.UserServiceUserLoginResult

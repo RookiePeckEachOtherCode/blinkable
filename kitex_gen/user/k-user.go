@@ -23,7 +23,7 @@ var (
 	_ = bthrift.BinaryWriter(nil)
 )
 
-func (p *UserLoginRequsts) FastRead(buf []byte) (int, error) {
+func (p *UserLoginRequest) FastRead(buf []byte) (int, error) {
 	var err error
 	var offset int
 	var l int
@@ -99,7 +99,7 @@ ReadStructBeginError:
 ReadFieldBeginError:
 	return offset, thrift.PrependError(fmt.Sprintf("%T read field %d begin error: ", p, fieldId), err)
 ReadFieldError:
-	return offset, thrift.PrependError(fmt.Sprintf("%T read field %d '%s' error: ", p, fieldId, fieldIDToName_UserLoginRequsts[fieldId]), err)
+	return offset, thrift.PrependError(fmt.Sprintf("%T read field %d '%s' error: ", p, fieldId, fieldIDToName_UserLoginRequest[fieldId]), err)
 SkipFieldError:
 	return offset, thrift.PrependError(fmt.Sprintf("%T field %d skip type %d error: ", p, fieldId, fieldTypeId), err)
 ReadFieldEndError:
@@ -108,7 +108,7 @@ ReadStructEndError:
 	return offset, thrift.PrependError(fmt.Sprintf("%T read struct end error: ", p), err)
 }
 
-func (p *UserLoginRequsts) FastReadField1(buf []byte) (int, error) {
+func (p *UserLoginRequest) FastReadField1(buf []byte) (int, error) {
 	offset := 0
 
 	if v, l, err := bthrift.Binary.ReadString(buf[offset:]); err != nil {
@@ -122,7 +122,7 @@ func (p *UserLoginRequsts) FastReadField1(buf []byte) (int, error) {
 	return offset, nil
 }
 
-func (p *UserLoginRequsts) FastReadField2(buf []byte) (int, error) {
+func (p *UserLoginRequest) FastReadField2(buf []byte) (int, error) {
 	offset := 0
 
 	if v, l, err := bthrift.Binary.ReadString(buf[offset:]); err != nil {
@@ -137,13 +137,13 @@ func (p *UserLoginRequsts) FastReadField2(buf []byte) (int, error) {
 }
 
 // for compatibility
-func (p *UserLoginRequsts) FastWrite(buf []byte) int {
+func (p *UserLoginRequest) FastWrite(buf []byte) int {
 	return 0
 }
 
-func (p *UserLoginRequsts) FastWriteNocopy(buf []byte, binaryWriter bthrift.BinaryWriter) int {
+func (p *UserLoginRequest) FastWriteNocopy(buf []byte, binaryWriter bthrift.BinaryWriter) int {
 	offset := 0
-	offset += bthrift.Binary.WriteStructBegin(buf[offset:], "UserLoginRequsts")
+	offset += bthrift.Binary.WriteStructBegin(buf[offset:], "UserLoginRequest")
 	if p != nil {
 		offset += p.fastWriteField1(buf[offset:], binaryWriter)
 		offset += p.fastWriteField2(buf[offset:], binaryWriter)
@@ -153,9 +153,9 @@ func (p *UserLoginRequsts) FastWriteNocopy(buf []byte, binaryWriter bthrift.Bina
 	return offset
 }
 
-func (p *UserLoginRequsts) BLength() int {
+func (p *UserLoginRequest) BLength() int {
 	l := 0
-	l += bthrift.Binary.StructBeginLength("UserLoginRequsts")
+	l += bthrift.Binary.StructBeginLength("UserLoginRequest")
 	if p != nil {
 		l += p.field1Length()
 		l += p.field2Length()
@@ -165,7 +165,7 @@ func (p *UserLoginRequsts) BLength() int {
 	return l
 }
 
-func (p *UserLoginRequsts) fastWriteField1(buf []byte, binaryWriter bthrift.BinaryWriter) int {
+func (p *UserLoginRequest) fastWriteField1(buf []byte, binaryWriter bthrift.BinaryWriter) int {
 	offset := 0
 	offset += bthrift.Binary.WriteFieldBegin(buf[offset:], "username", thrift.STRING, 1)
 	offset += bthrift.Binary.WriteStringNocopy(buf[offset:], binaryWriter, p.Username)
@@ -174,7 +174,7 @@ func (p *UserLoginRequsts) fastWriteField1(buf []byte, binaryWriter bthrift.Bina
 	return offset
 }
 
-func (p *UserLoginRequsts) fastWriteField2(buf []byte, binaryWriter bthrift.BinaryWriter) int {
+func (p *UserLoginRequest) fastWriteField2(buf []byte, binaryWriter bthrift.BinaryWriter) int {
 	offset := 0
 	offset += bthrift.Binary.WriteFieldBegin(buf[offset:], "password", thrift.STRING, 2)
 	offset += bthrift.Binary.WriteStringNocopy(buf[offset:], binaryWriter, p.Password)
@@ -183,7 +183,7 @@ func (p *UserLoginRequsts) fastWriteField2(buf []byte, binaryWriter bthrift.Bina
 	return offset
 }
 
-func (p *UserLoginRequsts) field1Length() int {
+func (p *UserLoginRequest) field1Length() int {
 	l := 0
 	l += bthrift.Binary.FieldBeginLength("username", thrift.STRING, 1)
 	l += bthrift.Binary.StringLengthNocopy(p.Username)
@@ -192,7 +192,7 @@ func (p *UserLoginRequsts) field1Length() int {
 	return l
 }
 
-func (p *UserLoginRequsts) field2Length() int {
+func (p *UserLoginRequest) field2Length() int {
 	l := 0
 	l += bthrift.Binary.FieldBeginLength("password", thrift.STRING, 2)
 	l += bthrift.Binary.StringLengthNocopy(p.Password)
@@ -1001,7 +1001,7 @@ ReadStructEndError:
 func (p *UserServiceUserLoginArgs) FastReadField1(buf []byte) (int, error) {
 	offset := 0
 
-	tmp := NewUserLoginRequsts()
+	tmp := NewUserLoginRequest()
 	if l, err := tmp.FastRead(buf[offset:]); err != nil {
 		return offset, err
 	} else {

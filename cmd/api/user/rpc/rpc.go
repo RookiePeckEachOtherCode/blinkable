@@ -1,7 +1,6 @@
 package rpc
 
 import (
-	"blinkable/common/errno"
 	"blinkable/kitex_gen/user"
 	"blinkable/kitex_gen/user/userservice"
 	"blinkable/pkg/viper"
@@ -12,6 +11,7 @@ import (
 	"github.com/cloudwego/kitex/client"
 	"github.com/cloudwego/kitex/pkg/rpcinfo"
 	etcd "github.com/kitex-contrib/registry-etcd"
+	"go.uber.org/zap"
 )
 
 var (
@@ -23,12 +23,10 @@ var (
 var userClient userservice.Client
 
 func init() {
-	where := "api_user_rpc"
-
 	r, err := etcd.NewEtcdResolver([]string{etcdAddr})
 
 	if err != nil {
-		errno.HandleErrWithPanic(where, "用户客户端初始化失败", err)
+		zap.S().Panicf("%v ===> %v", "etcd resolver", err)
 	}
 
 	_userClient, err := userservice.NewClient(
@@ -42,12 +40,12 @@ func init() {
 	)
 
 	if err != nil {
-		errno.HandleErrWithPanic(where, "用户客户端初始化失败", err)
+		zap.S().Panicf("%v ===> %v", "用户客户端初始化失败", err)
 	}
 	userClient = _userClient
 }
 
-func Login(ctx context.Context, req *user.UserLoginRequsts) (*user.UserLoginResponse, error) {
+func Login(ctx context.Context, req *user.UserLoginRequest) (*user.UserLoginResponse, error) {
 	return userClient.UserLogin(ctx, req)
 }
 
