@@ -140,3 +140,34 @@ func (s *UserServiceImpl) UserRegister(ctx context.Context, req *user.UserRegist
 	}
 	return resp, nil
 }
+
+// UserInfo implements the UserServiceImpl interface.
+func (s *UserServiceImpl) UserInfo(ctx context.Context, req *user.UserInfoRequest) (resp *user.UserInfoResponse, err error) {
+	ud := query.Q.User
+
+	userInfo, err := ud.WithContext(ctx).Where(ud.ID.Eq(uint32(req.UserId))).Select().First()
+
+	if err != nil {
+		resp = &user.UserInfoResponse{
+			StatusCode: -1,
+			StatusMsg:  errno.ErrInternalServerError.Error(),
+		}
+		zap.S().Errorf("%v ===> %v ===> %v", errno.ErrUserNotFound, resp.StatusMsg, err)
+		return resp, nil
+	}
+
+	resp = &user.UserInfoResponse{
+		StatusCode:    0,
+		StatusMsg:     "success",
+		Username:      userInfo.Usernmae,
+		UserId:        userInfo.ID,
+		Avatar:        userInfo.Avatar,
+		BackgroundImg: userInfo.BackgroundImage,
+		Signature:     userInfo.Signature,
+		Level:         userInfo.Level,
+		Experience:    userInfo.Experience,
+		ArticlesNum:   userInfo.ArticlesNum,
+	}
+
+	return resp, nil
+}
