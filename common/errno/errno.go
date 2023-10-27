@@ -11,6 +11,7 @@ var (
 	ErrTokenNotValidYet = errors.New("token is not valid yet") // 令牌尚未生效
 	ErrTokenInvalidId   = errors.New("token has invalid id")   // 令牌的 ID 无效
 	ErrTokenRelease     = errors.New("token release failed")   // 令牌颁发失败
+	ErrTokenParse       = errors.New("token parse failed")     // 令牌解析失败
 )
 
 // User
@@ -25,9 +26,12 @@ var (
 	ErrFindUserIsWrong           = errors.New("查找用户失败")
 	ErrLogin                     = errors.New("登录失败")
 	ErrRegister                  = errors.New("注册失败")
+	ErrUserNotFound              = errors.New("用户没有找到")
+	ErrUserInfo                  = errors.New("获取用户信息失败")
 )
 
 // Server
 var (
-	ErrInternalServerError = errors.New("服务内部错误")
+	ErrInternalServerError  = errors.New("服务内部错误")
+	ErrRequestParamsIsWrong = errors.New("请求参数错误")
 )
