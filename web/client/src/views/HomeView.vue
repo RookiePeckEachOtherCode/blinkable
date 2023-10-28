@@ -270,9 +270,9 @@ export default {
       height: auto;
       display: flex;
       flex-direction: column;
-      justify-content: center;
+      justify-content:left;
       align-items: center;
-      width: 100%;
+      width: 70%;
       z-index: 1;
     }
     min-height: 100vh;

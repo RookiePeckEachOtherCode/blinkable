@@ -76,7 +76,10 @@ const activeIndex2 = ref('1')
     line-height: 60px;
     font-size: 22px;
     font-weight: bold;
-    color: #2fd0be;
+    filter: brightness(110%);
+    text-shadow: 0 0 5px #fff, 0 0 10px #fff, 0 0 15px #fff, 0 0 20px #31b2e3, 0 0 35px #31b2e3, 0 0 40px #31b2e3, 0 0 50px #31b2e3, 0 0 75px #31b2e3;
+    animation: pink 1.5s ease-in-out infinite alternate;
+
   }
 
   .el-menu-item {
