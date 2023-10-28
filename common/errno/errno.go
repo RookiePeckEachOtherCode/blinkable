@@ -35,3 +35,12 @@ var (
 	ErrInternalServerError  = errors.New("服务内部错误")
 	ErrRequestParamsIsWrong = errors.New("请求参数错误")
 )
+
+// minio
+var (
+	ErrNewBucketIsWrong              = errors.New("创建 bucket 失败")
+	ErrBucketNameIsEmpty             = errors.New("bucket name 不能为空")
+	ErrBucketNameOrObjectNameIsEmpty = errors.New("bucket name 或 object name 不能为空")
+	ErrGetTemporarilyUrlIsWrong      = errors.New("获取临时 url 失败")
+	ErrUploadFile                    = errors.New("上传文件失败")
+)

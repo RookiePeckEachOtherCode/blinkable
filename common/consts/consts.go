@@ -21,3 +21,9 @@ var (
 var (
 	JwtKey = "114514"
 )
+
+// minio
+var (
+	ImgTypeJpeg = "image/jpeg"
+	ImgTypePng  = "image/png"
+)
