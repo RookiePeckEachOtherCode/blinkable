@@ -143,6 +143,25 @@ func (s *UserServiceImpl) UserRegister(ctx context.Context, req *user.UserRegist
 
 // UserInfo implements the UserServiceImpl interface.
 func (s *UserServiceImpl) UserInfo(ctx context.Context, req *user.UserInfoRequest) (resp *user.UserInfoResponse, err error) {
+	claims, err := Jwt.NewJwt().ParseToken(req.Token)
+
+	if err != nil {
+		resp = &user.UserInfoResponse{
+			StatusCode: -1,
+			StatusMsg:  errno.ErrTokenParse.Error(),
+		}
+		zap.S().Errorf("%v ===> %v ===> %v", errno.ErrTokenParse, resp.StatusMsg, err)
+		return resp, nil
+	}
+	if claims.Id != int64(req.UserId) {
+		resp = &user.UserInfoResponse{
+			StatusCode: -1,
+			StatusMsg:  errno.ErrTokenInvalidId.Error(),
+		}
+		zap.S().Errorf("%v ===> %v", errno.ErrTokenInvalidId, resp.StatusMsg)
+		return resp, nil
+	}
+
 	ud := query.Q.User
 
 	userInfo, err := ud.WithContext(ctx).Where(ud.ID.Eq(uint32(req.UserId))).Select().First()
