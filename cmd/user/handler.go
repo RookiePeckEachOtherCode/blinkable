@@ -67,7 +67,6 @@ func (s *UserServiceImpl) UserLogin(ctx context.Context, req *user.UserLoginRequ
 
 // UserRegister implements the UserServiceImpl interface.
 func (s *UserServiceImpl) UserRegister(ctx context.Context, req *user.UserRegisterRequest) (resp *user.UseeRegisterResponse, err error) {
-	resp = new(user.UseeRegisterResponse)
 	ud := query.Q.User
 
 	dbUser, err := ud.WithContext(ctx).Where(ud.Usernmae.Eq(req.Username)).Select().Find()
@@ -170,4 +169,30 @@ func (s *UserServiceImpl) UserInfo(ctx context.Context, req *user.UserInfoReques
 	}
 
 	return resp, nil
+}
+
+// UserInfoUpdate implements the UserServiceImpl interface.
+func (s *UserServiceImpl) UserInfoUpdate(ctx context.Context, req *user.UserInfoUpdateRequest) (resp *user.UserInfoUpdateResponse, err error) {
+	claims, err := Jwt.NewJwt().ParseToken(req.Token)
+	if err != nil {
+		resp = &user.UserInfoUpdateResponse{
+			StatusCode: -1,
+			StatusMsg:  errno.ErrTokenParse.Error(),
+		}
+		zap.S().Errorf("%v ===> %v ===> %v", errno.ErrTokenParse, resp.StatusMsg, err)
+		return resp, nil
+	}
+
+	if claims.Id != int64(req.UserId) {
+		resp = &user.UserInfoUpdateResponse{
+			StatusCode: -1,
+			StatusMsg:  errno.ErrTokenParse.Error(),
+		}
+		zap.S().Errorf("%v ===> %v ===> %v", errno.ErrTokenParse, resp.StatusMsg, err)
+		return resp, nil
+	}
+
+	// ud := query.Q.User
+
+	return
 }

@@ -56,3 +56,7 @@ func Register(ctx context.Context, req *user.UserRegisterRequest) (*user.UseeReg
 func Info(ctx context.Context, req *user.UserInfoRequest) (*user.UserInfoResponse, error) {
 	return userClient.UserInfo(ctx, req)
 }
+
+func UserInfoUpdate(ctx context.Context, req *user.UserInfoUpdateRequest) (*user.UserInfoUpdateResponse, error) {
+	return userClient.UserInfoUpdate(ctx, req)
+}

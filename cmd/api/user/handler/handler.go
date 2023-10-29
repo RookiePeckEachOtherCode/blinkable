@@ -6,8 +6,11 @@ import (
 	"blinkable/common/response"
 	"blinkable/kitex_gen/user"
 	Jwt "blinkable/pkg/jwt"
+	"bytes"
 	"context"
+	"io"
 	"net/http"
+	"path"
 	"strconv"
 
 	"github.com/cloudwego/hertz/pkg/app"
@@ -125,6 +128,90 @@ func Info(ctx context.Context, c *app.RequestContext) {
 	if resp.StatusCode == -1 {
 		c.JSON(http.StatusOK, response.BuildBase(-1, resp.StatusMsg))
 		zap.S().Errorf("%v ===> %v", errno.ErrUserInfo, resp.StatusMsg)
+		return
+	}
+
+	c.JSON(http.StatusOK, resp)
+}
+
+func UserInfoUpdate(ctx context.Context, c *app.RequestContext) {
+	_userId := c.Query("user_id")
+	token := c.Query("token")
+
+	if len(_userId) == 0 || len(token) == 0 {
+		c.JSON(http.StatusBadRequest, response.BaseResponse{
+			StatusCode: -1,
+			StatusMsg:  errno.ErrRequestParamsIsWrong.Error(),
+		})
+		zap.S().Error(errno.ErrRequestParamsIsWrong)
+		return
+	}
+
+	userId, _ := strconv.Atoi(_userId)
+
+	avatarImg, err := c.FormFile("avatar")
+	if err != nil {
+		zap.S().Errorf("%v ===> %v", errno.ErrUserUpdateInfo, err.Error())
+		c.JSON(http.StatusBadRequest, response.BuildBase(-1, err.Error()))
+		return
+	}
+	avatarImgSuffix := path.Ext(avatarImg.Filename)
+
+	backgroundImg, err := c.FormFile("background_img")
+	if err != nil {
+		zap.S().Errorf("%v ===> %v", errno.ErrUserUpdateInfo, err.Error())
+		c.JSON(http.StatusBadRequest, response.BuildBase(-1, err.Error()))
+		return
+	}
+	backgroundImgSuffix := path.Ext(backgroundImg.Filename)
+
+	avatarImgData, err := avatarImg.Open()
+
+	if err != nil {
+		zap.S().Errorf("%v ===> %v", errno.ErrUserUpdateInfo, err.Error())
+		c.JSON(http.StatusBadRequest, response.BuildBase(-1, err.Error()))
+		return
+	}
+
+	avatarBuf := bytes.NewBuffer(nil)
+	defer avatarImgData.Close()
+
+	if _, err := io.Copy(avatarBuf, avatarImgData); err != nil {
+		zap.S().Errorf("%v ===> %v", errno.ErrUserUpdateInfo, err.Error())
+		c.JSON(http.StatusBadRequest, response.BuildBase(-1, err.Error()))
+		return
+	}
+
+	backgroundImgData, err := backgroundImg.Open()
+	if err != nil {
+		zap.S().Errorf("%v ===> %v", errno.ErrUserUpdateInfo, err.Error())
+		c.JSON(http.StatusBadRequest, response.BuildBase(-1, err.Error()))
+		return
+	}
+
+	backgroundBuf := bytes.NewBuffer(nil)
+	defer backgroundImgData.Close()
+
+	if _, err := io.Copy(backgroundBuf, backgroundImgData); err != nil {
+		zap.S().Errorf("%v ===> %v", errno.ErrUserUpdateInfo, err.Error())
+		c.JSON(http.StatusBadRequest, response.BuildBase(-1, err.Error()))
+		return
+	}
+
+	req := &user.UserInfoUpdateRequest{
+		UserId:            int32(userId),
+		Token:             token,
+		Avatar:            avatarBuf.Bytes(),
+		AvatarType:        avatarImgSuffix,
+		BackgroundImg:     backgroundBuf.Bytes(),
+		BackgroundImgType: backgroundImgSuffix,
+	}
+
+	resp, _ := rpc.UserInfoUpdate(ctx, req)
+
+	if resp.StatusCode == -1 {
+		c.JSON(http.StatusOK, response.BuildBase(-1, resp.StatusMsg))
+		zap.S().Errorf("%v ===> %v", errno.ErrUserUpdateInfo, resp.StatusMsg)
 		return
 	}
 

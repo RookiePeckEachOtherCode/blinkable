@@ -24,6 +24,7 @@ var (
 
 // minio
 var (
+	ImgTypeJpg  = "image/jpg"
 	ImgTypeJpeg = "image/jpeg"
 	ImgTypePng  = "image/png"
 )

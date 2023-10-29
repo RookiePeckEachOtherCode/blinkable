@@ -42,8 +42,25 @@ struct UserInfoResponse{
      10: i32 articles_num
 }
 
+
+struct UserInfoUpdateRequest{
+    1: i32 user_id
+    2: string token
+    3: binary  avatar
+    4: string avatar_type
+    5: binary  background_img
+    6: string background_img_type
+
+}
+
+struct UserInfoUpdateResponse{
+    1: string status_msg 
+    2: i32 status_code
+}
+
 service UserService{
     UserLoginResponse UserLogin(1:UserLoginRequest req);
     UseeRegisterResponse UserRegister(1:UserRegisterRequest req);
     UserInfoResponse UserInfo(1: UserInfoRequest req);
+    UserInfoUpdateResponse UserInfoUpdate(1: UserInfoUpdateRequest req)
 }
