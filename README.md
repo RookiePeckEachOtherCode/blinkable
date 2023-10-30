@@ -14,6 +14,13 @@
 │   └── response           //响应模型 
 ├── configs                 //配置文件
 ├── dal                     //数据访问层
+│   └── db
+│       ├── gen            // gorm gen模式
+│       ├── init.go        //初始化
+│       ├── migrate        //根据model自动创建表
+│       ├── model          //model
+│       └── query          // gorm gen生成的代码
+│
 ├── doc                     //文档
 ├── docker-compose.yml  
 ├── go.mod 
