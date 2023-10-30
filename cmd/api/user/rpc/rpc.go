@@ -24,7 +24,6 @@ var userClient userservice.Client
 
 func init() {
 	r, err := etcd.NewEtcdResolver([]string{etcdAddr})
-
 	if err != nil {
 		zap.S().Panicf("%v ===> %v", "etcd resolver", err)
 	}
@@ -38,7 +37,6 @@ func init() {
 			ServiceName: serverName,
 		}),
 	)
-
 	if err != nil {
 		zap.S().Panicf("%v ===> %v", "用户客户端初始化失败", err)
 	}

@@ -1,12 +1,12 @@
 package minio
 
 import (
-	"blinkable/common/consts"
 	"blinkable/common/errno"
 	"blinkable/pkg/viper"
 	zlog "blinkable/pkg/zap"
 	"bytes"
 	"context"
+	"fmt"
 	"io"
 	"time"
 
@@ -86,25 +86,28 @@ func UpLoadFile(bucketName string, fileName string, reader io.Reader, size int64
 	return uploadInfo.Size, nil
 }
 
+// 上传图片，返回图片的url和错误
 func UpLoadImg(bucketName string, data []byte, typ string) (string, error) {
 	reader := bytes.NewReader(data)
 	var contentType string
 
+	zap.S().Debugf("typ: %v", typ)
+	zap.S().Debugf("bucketName: %v", bucketName)
+
 	switch typ {
-	case "jpg":
-		contentType = consts.ImgTypeJpg
-	case "jpeg":
-		contentType = consts.ImgTypeJpeg
-	case "png":
-		contentType = consts.ImgTypePng
+	case ".jpeg":
+		contentType = "image/jpeg"
+	case ".jpg":
+		contentType = "image/jpg"
+	case ".png":
+		contentType = "image/png"
 	default:
-		return "", errno.ErrUploadImgTypeIsWrong
+		return "", fmt.Errorf("%v: [%v]", errno.ErrUploadImgTypeIsWrong, typ)
 	}
 
-	fileName := time.Now().Format("2011-04-05-14-01-01") + "." + contentType
+	fileName := time.Now().Format("2006-01-02-15-04-05") + typ // eg. [2006-01-02-15-04-05.jpg]
 
 	_, err := UpLoadFile(bucketName, fileName, reader, int64(len(data)), contentType)
-
 	if err != nil {
 		zap.S().Errorf("%v ===> %v", errno.ErrUploadFile, err)
 		return "", err

@@ -1,5 +1,7 @@
 package consts
 
+import "blinkable/pkg/viper"
+
 // API
 var (
 	API_PORT = "8080"
@@ -24,7 +26,7 @@ var (
 
 // minio
 var (
-	ImgTypeJpg  = "image/jpg"
-	ImgTypeJpeg = "image/jpeg"
-	ImgTypePng  = "image/png"
+	cfg                  = viper.Load("oss").Viper
+	AvatarBucketName     = cfg.GetString("bucket.avatar.name")
+	BackgroundBucketName = cfg.GetString("bucket.background.name")
 )

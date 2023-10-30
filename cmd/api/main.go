@@ -34,7 +34,7 @@ func Register(h *server.Hertz) {
 			user.POST("/login", handler.Login)
 			user.POST("/register", handler.Register)
 			user.GET("/info", handler.Info)
-			user.POST("/update")
+			user.POST("/update", handler.UserInfoUpdate)
 
 		}
 	}

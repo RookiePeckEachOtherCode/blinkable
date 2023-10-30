@@ -1773,6 +1773,20 @@ func (p *UserInfoUpdateRequest) FastRead(buf []byte) (int, error) {
 					goto SkipFieldError
 				}
 			}
+		case 7:
+			if fieldTypeId == thrift.STRING {
+				l, err = p.FastReadField7(buf[offset:])
+				offset += l
+				if err != nil {
+					goto ReadFieldError
+				}
+			} else {
+				l, err = bthrift.Binary.Skip(buf[offset:], fieldTypeId)
+				offset += l
+				if err != nil {
+					goto SkipFieldError
+				}
+			}
 		default:
 			l, err = bthrift.Binary.Skip(buf[offset:], fieldTypeId)
 			offset += l
@@ -1892,6 +1906,20 @@ func (p *UserInfoUpdateRequest) FastReadField6(buf []byte) (int, error) {
 	return offset, nil
 }
 
+func (p *UserInfoUpdateRequest) FastReadField7(buf []byte) (int, error) {
+	offset := 0
+
+	if v, l, err := bthrift.Binary.ReadString(buf[offset:]); err != nil {
+		return offset, err
+	} else {
+		offset += l
+
+		p.Signature = v
+
+	}
+	return offset, nil
+}
+
 // for compatibility
 func (p *UserInfoUpdateRequest) FastWrite(buf []byte) int {
 	return 0
@@ -1907,6 +1935,7 @@ func (p *UserInfoUpdateRequest) FastWriteNocopy(buf []byte, binaryWriter bthrift
 		offset += p.fastWriteField4(buf[offset:], binaryWriter)
 		offset += p.fastWriteField5(buf[offset:], binaryWriter)
 		offset += p.fastWriteField6(buf[offset:], binaryWriter)
+		offset += p.fastWriteField7(buf[offset:], binaryWriter)
 	}
 	offset += bthrift.Binary.WriteFieldStop(buf[offset:])
 	offset += bthrift.Binary.WriteStructEnd(buf[offset:])
@@ -1923,6 +1952,7 @@ func (p *UserInfoUpdateRequest) BLength() int {
 		l += p.field4Length()
 		l += p.field5Length()
 		l += p.field6Length()
+		l += p.field7Length()
 	}
 	l += bthrift.Binary.FieldStopLength()
 	l += bthrift.Binary.StructEndLength()
@@ -1983,6 +2013,15 @@ func (p *UserInfoUpdateRequest) fastWriteField6(buf []byte, binaryWriter bthrift
 	return offset
 }
 
+func (p *UserInfoUpdateRequest) fastWriteField7(buf []byte, binaryWriter bthrift.BinaryWriter) int {
+	offset := 0
+	offset += bthrift.Binary.WriteFieldBegin(buf[offset:], "signature", thrift.STRING, 7)
+	offset += bthrift.Binary.WriteStringNocopy(buf[offset:], binaryWriter, p.Signature)
+
+	offset += bthrift.Binary.WriteFieldEnd(buf[offset:])
+	return offset
+}
+
 func (p *UserInfoUpdateRequest) field1Length() int {
 	l := 0
 	l += bthrift.Binary.FieldBeginLength("user_id", thrift.I32, 1)
@@ -2032,6 +2071,15 @@ func (p *UserInfoUpdateRequest) field6Length() int {
 	l := 0
 	l += bthrift.Binary.FieldBeginLength("background_img_type", thrift.STRING, 6)
 	l += bthrift.Binary.StringLengthNocopy(p.BackgroundImgType)
+
+	l += bthrift.Binary.FieldEndLength()
+	return l
+}
+
+func (p *UserInfoUpdateRequest) field7Length() int {
+	l := 0
+	l += bthrift.Binary.FieldBeginLength("signature", thrift.STRING, 7)
+	l += bthrift.Binary.StringLengthNocopy(p.Signature)
 
 	l += bthrift.Binary.FieldEndLength()
 	return l

@@ -2063,6 +2063,7 @@ type UserInfoUpdateRequest struct {
 	AvatarType        string `thrift:"avatar_type,4" frugal:"4,default,string" json:"avatar_type"`
 	BackgroundImg     []byte `thrift:"background_img,5" frugal:"5,default,binary" json:"background_img"`
 	BackgroundImgType string `thrift:"background_img_type,6" frugal:"6,default,string" json:"background_img_type"`
+	Signature         string `thrift:"signature,7" frugal:"7,default,string" json:"signature"`
 }
 
 func NewUserInfoUpdateRequest() *UserInfoUpdateRequest {
@@ -2096,6 +2097,10 @@ func (p *UserInfoUpdateRequest) GetBackgroundImg() (v []byte) {
 func (p *UserInfoUpdateRequest) GetBackgroundImgType() (v string) {
 	return p.BackgroundImgType
 }
+
+func (p *UserInfoUpdateRequest) GetSignature() (v string) {
+	return p.Signature
+}
 func (p *UserInfoUpdateRequest) SetUserId(val int32) {
 	p.UserId = val
 }
@@ -2114,6 +2119,9 @@ func (p *UserInfoUpdateRequest) SetBackgroundImg(val []byte) {
 func (p *UserInfoUpdateRequest) SetBackgroundImgType(val string) {
 	p.BackgroundImgType = val
 }
+func (p *UserInfoUpdateRequest) SetSignature(val string) {
+	p.Signature = val
+}
 
 var fieldIDToName_UserInfoUpdateRequest = map[int16]string{
 	1: "user_id",
@@ -2122,6 +2130,7 @@ var fieldIDToName_UserInfoUpdateRequest = map[int16]string{
 	4: "avatar_type",
 	5: "background_img",
 	6: "background_img_type",
+	7: "signature",
 }
 
 func (p *UserInfoUpdateRequest) Read(iprot thrift.TProtocol) (err error) {
@@ -2196,6 +2205,16 @@ func (p *UserInfoUpdateRequest) Read(iprot thrift.TProtocol) (err error) {
 		case 6:
 			if fieldTypeId == thrift.STRING {
 				if err = p.ReadField6(iprot); err != nil {
+					goto ReadFieldError
+				}
+			} else {
+				if err = iprot.Skip(fieldTypeId); err != nil {
+					goto SkipFieldError
+				}
+			}
+		case 7:
+			if fieldTypeId == thrift.STRING {
+				if err = p.ReadField7(iprot); err != nil {
 					goto ReadFieldError
 				}
 			} else {
@@ -2287,6 +2306,15 @@ func (p *UserInfoUpdateRequest) ReadField6(iprot thrift.TProtocol) error {
 	return nil
 }
 
+func (p *UserInfoUpdateRequest) ReadField7(iprot thrift.TProtocol) error {
+	if v, err := iprot.ReadString(); err != nil {
+		return err
+	} else {
+		p.Signature = v
+	}
+	return nil
+}
+
 func (p *UserInfoUpdateRequest) Write(oprot thrift.TProtocol) (err error) {
 	var fieldId int16
 	if err = oprot.WriteStructBegin("UserInfoUpdateRequest"); err != nil {
@@ -2315,6 +2343,10 @@ func (p *UserInfoUpdateRequest) Write(oprot thrift.TProtocol) (err error) {
 		}
 		if err = p.writeField6(oprot); err != nil {
 			fieldId = 6
+			goto WriteFieldError
+		}
+		if err = p.writeField7(oprot); err != nil {
+			fieldId = 7
 			goto WriteFieldError
 		}
 
@@ -2438,6 +2470,23 @@ WriteFieldEndError:
 	return thrift.PrependError(fmt.Sprintf("%T write field 6 end error: ", p), err)
 }
 
+func (p *UserInfoUpdateRequest) writeField7(oprot thrift.TProtocol) (err error) {
+	if err = oprot.WriteFieldBegin("signature", thrift.STRING, 7); err != nil {
+		goto WriteFieldBeginError
+	}
+	if err := oprot.WriteString(p.Signature); err != nil {
+		return err
+	}
+	if err = oprot.WriteFieldEnd(); err != nil {
+		goto WriteFieldEndError
+	}
+	return nil
+WriteFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 7 begin error: ", p), err)
+WriteFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 7 end error: ", p), err)
+}
+
 func (p *UserInfoUpdateRequest) String() string {
 	if p == nil {
 		return "<nil>"
@@ -2467,6 +2516,9 @@ func (p *UserInfoUpdateRequest) DeepEqual(ano *UserInfoUpdateRequest) bool {
 		return false
 	}
 	if !p.Field6DeepEqual(ano.BackgroundImgType) {
+		return false
+	}
+	if !p.Field7DeepEqual(ano.Signature) {
 		return false
 	}
 	return true
@@ -2510,6 +2562,13 @@ func (p *UserInfoUpdateRequest) Field5DeepEqual(src []byte) bool {
 func (p *UserInfoUpdateRequest) Field6DeepEqual(src string) bool {
 
 	if strings.Compare(p.BackgroundImgType, src) != 0 {
+		return false
+	}
+	return true
+}
+func (p *UserInfoUpdateRequest) Field7DeepEqual(src string) bool {
+
+	if strings.Compare(p.Signature, src) != 0 {
 		return false
 	}
 	return true

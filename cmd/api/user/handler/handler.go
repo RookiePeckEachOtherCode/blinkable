@@ -137,6 +137,7 @@ func Info(ctx context.Context, c *app.RequestContext) {
 func UserInfoUpdate(ctx context.Context, c *app.RequestContext) {
 	_userId := c.Query("user_id")
 	token := c.Query("token")
+	signature := c.Query("signature")
 
 	if len(_userId) == 0 || len(token) == 0 {
 		c.JSON(http.StatusBadRequest, response.BaseResponse{
@@ -155,6 +156,7 @@ func UserInfoUpdate(ctx context.Context, c *app.RequestContext) {
 		c.JSON(http.StatusBadRequest, response.BuildBase(-1, err.Error()))
 		return
 	}
+	//获取头像的后缀名  eg. [.jpg]
 	avatarImgSuffix := path.Ext(avatarImg.Filename)
 
 	backgroundImg, err := c.FormFile("background_img")
@@ -163,10 +165,11 @@ func UserInfoUpdate(ctx context.Context, c *app.RequestContext) {
 		c.JSON(http.StatusBadRequest, response.BuildBase(-1, err.Error()))
 		return
 	}
+	//获取背景图片的后缀名  eg. [.jpg]
 	backgroundImgSuffix := path.Ext(backgroundImg.Filename)
+	zap.S().Debugf("backgroundImgSuffix: %v", backgroundImgSuffix)
 
 	avatarImgData, err := avatarImg.Open()
-
 	if err != nil {
 		zap.S().Errorf("%v ===> %v", errno.ErrUserUpdateInfo, err.Error())
 		c.JSON(http.StatusBadRequest, response.BuildBase(-1, err.Error()))
@@ -175,7 +178,6 @@ func UserInfoUpdate(ctx context.Context, c *app.RequestContext) {
 
 	avatarBuf := bytes.NewBuffer(nil)
 	defer avatarImgData.Close()
-
 	if _, err := io.Copy(avatarBuf, avatarImgData); err != nil {
 		zap.S().Errorf("%v ===> %v", errno.ErrUserUpdateInfo, err.Error())
 		c.JSON(http.StatusBadRequest, response.BuildBase(-1, err.Error()))
@@ -191,7 +193,6 @@ func UserInfoUpdate(ctx context.Context, c *app.RequestContext) {
 
 	backgroundBuf := bytes.NewBuffer(nil)
 	defer backgroundImgData.Close()
-
 	if _, err := io.Copy(backgroundBuf, backgroundImgData); err != nil {
 		zap.S().Errorf("%v ===> %v", errno.ErrUserUpdateInfo, err.Error())
 		c.JSON(http.StatusBadRequest, response.BuildBase(-1, err.Error()))
@@ -205,6 +206,7 @@ func UserInfoUpdate(ctx context.Context, c *app.RequestContext) {
 		AvatarType:        avatarImgSuffix,
 		BackgroundImg:     backgroundBuf.Bytes(),
 		BackgroundImgType: backgroundImgSuffix,
+		Signature:         signature,
 	}
 
 	resp, _ := rpc.UserInfoUpdate(ctx, req)

@@ -50,6 +50,7 @@ struct UserInfoUpdateRequest{
     4: string avatar_type
     5: binary  background_img
     6: string background_img_type
+    7: string signature
 
 }
 
