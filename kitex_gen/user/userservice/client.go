@@ -14,6 +14,7 @@ type Client interface {
 	UserLogin(ctx context.Context, req *user.UserLoginRequest, callOptions ...callopt.Option) (r *user.UserLoginResponse, err error)
 	UserRegister(ctx context.Context, req *user.UserRegisterRequest, callOptions ...callopt.Option) (r *user.UseeRegisterResponse, err error)
 	UserInfo(ctx context.Context, req *user.UserInfoRequest, callOptions ...callopt.Option) (r *user.UserInfoResponse, err error)
+	UserInfoUpdate(ctx context.Context, req *user.UserInfoUpdateRequest, callOptions ...callopt.Option) (r *user.UserInfoUpdateResponse, err error)
 }
 
 // NewClient creates a client for the service defined in IDL.
@@ -58,4 +59,9 @@ func (p *kUserServiceClient) UserRegister(ctx context.Context, req *user.UserReg
 func (p *kUserServiceClient) UserInfo(ctx context.Context, req *user.UserInfoRequest, callOptions ...callopt.Option) (r *user.UserInfoResponse, err error) {
 	ctx = client.NewCtxWithCallOptions(ctx, callOptions)
 	return p.kClient.UserInfo(ctx, req)
+}
+
+func (p *kUserServiceClient) UserInfoUpdate(ctx context.Context, req *user.UserInfoUpdateRequest, callOptions ...callopt.Option) (r *user.UserInfoUpdateResponse, err error) {
+	ctx = client.NewCtxWithCallOptions(ctx, callOptions)
+	return p.kClient.UserInfoUpdate(ctx, req)
 }

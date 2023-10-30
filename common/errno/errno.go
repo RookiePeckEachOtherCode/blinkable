@@ -28,6 +28,7 @@ var (
 	ErrRegister                  = errors.New("注册失败")
 	ErrUserNotFound              = errors.New("用户没有找到")
 	ErrUserInfo                  = errors.New("获取用户信息失败")
+	ErrUserUpdateInfo            = errors.New("更新用户信息失败")
 )
 
 // Server
@@ -43,4 +44,5 @@ var (
 	ErrBucketNameOrObjectNameIsEmpty = errors.New("bucket name 或 object name 不能为空")
 	ErrGetTemporarilyUrlIsWrong      = errors.New("获取临时 url 失败")
 	ErrUploadFile                    = errors.New("上传文件失败")
+	ErrUploadImgTypeIsWrong          = errors.New("上传图片类型错误")
 )

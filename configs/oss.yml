@@ -3,3 +3,9 @@ accessKeyID : "blinkableKey"
 secretAccessKey : "blinkableKey"
 expireTime: 3600
 useSSL : false
+
+bucket:
+  avatar:
+    name: "blinkable-avatar"
+  background:
+    name: "blinkable-background"

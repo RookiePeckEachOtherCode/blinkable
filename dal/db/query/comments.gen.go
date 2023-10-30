@@ -28,7 +28,7 @@ func newComment(db *gorm.DB, opts ...gen.DOOption) comment {
 
 	tableName := _comment.commentDo.TableName()
 	_comment.ALL = field.NewAsterisk(tableName)
-	_comment.ID = field.NewUint32(tableName, "id")
+	_comment.ID = field.NewInt32(tableName, "id")
 	_comment.CreateAt = field.NewTime(tableName, "create_at")
 	_comment.UpdateAt = field.NewTime(tableName, "update_at")
 	_comment.AuthorID = field.NewUint32(tableName, "author_id")
@@ -44,7 +44,7 @@ type comment struct {
 	commentDo
 
 	ALL       field.Asterisk
-	ID        field.Uint32
+	ID        field.Int32
 	CreateAt  field.Time
 	UpdateAt  field.Time
 	AuthorID  field.Uint32
@@ -66,7 +66,7 @@ func (c comment) As(alias string) *comment {
 
 func (c *comment) updateTableName(table string) *comment {
 	c.ALL = field.NewAsterisk(table)
-	c.ID = field.NewUint32(table, "id")
+	c.ID = field.NewInt32(table, "id")
 	c.CreateAt = field.NewTime(table, "create_at")
 	c.UpdateAt = field.NewTime(table, "update_at")
 	c.AuthorID = field.NewUint32(table, "author_id")

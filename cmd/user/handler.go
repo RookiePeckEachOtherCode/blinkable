@@ -1,6 +1,7 @@
 package main
 
 import (
+	"blinkable/common/consts"
 	"blinkable/common/errno"
 	"blinkable/dal/db"
 	"blinkable/dal/db/model"
@@ -8,6 +9,7 @@ import (
 	user "blinkable/kitex_gen/user"
 	"blinkable/pkg/hash"
 	Jwt "blinkable/pkg/jwt"
+	"blinkable/pkg/minio"
 	"context"
 	"time"
 
@@ -67,7 +69,6 @@ func (s *UserServiceImpl) UserLogin(ctx context.Context, req *user.UserLoginRequ
 
 // UserRegister implements the UserServiceImpl interface.
 func (s *UserServiceImpl) UserRegister(ctx context.Context, req *user.UserRegisterRequest) (resp *user.UseeRegisterResponse, err error) {
-	resp = new(user.UseeRegisterResponse)
 	ud := query.Q.User
 
 	dbUser, err := ud.WithContext(ctx).Where(ud.Usernmae.Eq(req.Username)).Select().Find()
@@ -164,7 +165,7 @@ func (s *UserServiceImpl) UserInfo(ctx context.Context, req *user.UserInfoReques
 
 	ud := query.Q.User
 
-	userInfo, err := ud.WithContext(ctx).Where(ud.ID.Eq(uint32(req.UserId))).Select().First()
+	userInfo, err := ud.WithContext(ctx).Where(ud.ID.Eq(req.UserId)).Select().First()
 
 	if err != nil {
 		resp = &user.UserInfoResponse{
@@ -186,6 +187,68 @@ func (s *UserServiceImpl) UserInfo(ctx context.Context, req *user.UserInfoReques
 		Level:         userInfo.Level,
 		Experience:    userInfo.Experience,
 		ArticlesNum:   userInfo.ArticlesNum,
+	}
+
+	return resp, nil
+}
+
+// UserInfoUpdate implements the UserServiceImpl interface.
+func (s *UserServiceImpl) UserInfoUpdate(ctx context.Context, req *user.UserInfoUpdateRequest) (resp *user.UserInfoUpdateResponse, err error) {
+	claims, err := Jwt.NewJwt().ParseToken(req.Token)
+	if err != nil {
+		resp = &user.UserInfoUpdateResponse{
+			StatusCode: -1,
+			StatusMsg:  errno.ErrTokenParse.Error(),
+		}
+		zap.S().Errorf("%v ===> %v", resp.StatusMsg, err)
+		return resp, nil
+	}
+
+	if claims.Id != int64(req.UserId) {
+		resp = &user.UserInfoUpdateResponse{
+			StatusCode: -1,
+			StatusMsg:  errno.ErrTokenParse.Error(),
+		}
+		zap.S().Errorf("%v ===> %v", resp.StatusMsg, err)
+		return resp, nil
+	}
+
+	avatarUrl, err := minio.UpLoadImg(consts.AvatarBucketName, req.Avatar, req.AvatarType)
+	if err != nil {
+		resp = &user.UserInfoUpdateResponse{
+			StatusCode: -1,
+			StatusMsg:  errno.ErrUploadImgTypeIsWrong.Error(),
+		}
+		zap.S().Errorf("%v ===> %v", resp.StatusMsg, err)
+		return resp, nil
+	}
+
+	backgroundImgUrl, err := minio.UpLoadImg(consts.BackgroundBucketName, req.BackgroundImg, req.BackgroundImgType)
+	if err != nil {
+		resp = &user.UserInfoUpdateResponse{
+			StatusCode: -1,
+			StatusMsg:  errno.ErrUploadImgTypeIsWrong.Error(),
+		}
+		zap.S().Errorf("%v ===> %v", resp.StatusMsg, err)
+		return resp, nil
+	}
+
+	ud := query.Q.User
+
+	_, err = ud.WithContext(ctx).Where(ud.ID.Eq(req.UserId)).UpdateSimple(ud.Avatar.Value(avatarUrl), ud.BackgroundImage.Value(backgroundImgUrl), ud.Signature.Value(req.Signature))
+
+	if err != nil {
+		resp = &user.UserInfoUpdateResponse{
+			StatusCode: -1,
+			StatusMsg:  errno.ErrInternalServerError.Error(),
+		}
+		zap.S().Errorf("%v ===> %v", resp.StatusMsg, err)
+		return resp, nil
+	}
+
+	resp = &user.UserInfoUpdateResponse{
+		StatusCode: 0,
+		StatusMsg:  "success",
 	}
 
 	return resp, nil
