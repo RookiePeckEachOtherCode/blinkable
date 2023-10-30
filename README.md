@@ -4,19 +4,29 @@
 .
 ├── LICENSE
 ├── README.md
-├── add-service.sh      //服务生成脚本
-├── cmd                 //微服务
-├── common              //公共模块，如一些常量
-├── configs             //配置文件
-├── dal                 //数据访问层
-├── doc                 //文档
+├── add-service.sh          //服务生成脚本
+├── cmd                     //微服务
+│   ├── api                //api服务
+│   └── user               //user服务
+├── common                  //公共模块，如一些常量
+│   ├── consts             //常量
+│   ├── errno              //错误信息
+│   └── response           //响应模型 
+├── configs                 //配置文件
+├── dal                     //数据访问层
+├── doc                     //文档
 ├── docker-compose.yml  
 ├── go.mod 
 ├── go.sum
-├── idl                 //接口定义
+├── idl                     //接口定义
 ├── kitex_gen
-├── pkg                 //公共模块
-└── web                 //web服务
+├── pkg                     //公共模块
+│   ├── hash               //密码加密
+│   ├── jwt                //token
+│   ├── minio              //对象存储
+│   ├── viper              //加载配置文件
+│   └── zap                //打印日志
+└── web                     //web服务
 ```
 
 定义完接口文件后，使用add-service.sh生成服务代码，如：
