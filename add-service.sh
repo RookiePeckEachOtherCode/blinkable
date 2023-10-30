@@ -1,7 +1,7 @@
 moduleName="blinkable"
 
 if ! command -v thriftgo &>/dev/null; then
-	echo '错误：protoc命令未安装或者不在环境变量'
+	echo '错误：thriftgo未安装或者不在环境变量'
 	echo '尝试安装thriftgo'
 	go install github.com/cloudwego/thriftgo@latest
 fi
