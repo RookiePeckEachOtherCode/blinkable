@@ -47,7 +47,7 @@ func Login(ctx context.Context, req *user.UserLoginRequest) (*user.UserLoginResp
 	return userClient.UserLogin(ctx, req)
 }
 
-func Register(ctx context.Context, req *user.UserRegisterRequest) (*user.UseeRegisterResponse, error) {
+func Register(ctx context.Context, req *user.UserRegisterRequest) (*user.UserRegisterResponse, error) {
 	return userClient.UserRegister(ctx, req)
 }
 

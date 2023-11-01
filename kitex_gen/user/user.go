@@ -797,57 +797,57 @@ func (p *UserRegisterRequest) Field2DeepEqual(src string) bool {
 	return true
 }
 
-type UseeRegisterResponse struct {
+type UserRegisterResponse struct {
 	Token      string `thrift:"token,1" frugal:"1,default,string" json:"token"`
 	UserId     int32  `thrift:"user_id,2" frugal:"2,default,i32" json:"user_id"`
 	StatusMsg  string `thrift:"status_msg,3" frugal:"3,default,string" json:"status_msg"`
 	StatusCode int32  `thrift:"status_code,4" frugal:"4,default,i32" json:"status_code"`
 }
 
-func NewUseeRegisterResponse() *UseeRegisterResponse {
-	return &UseeRegisterResponse{}
+func NewUserRegisterResponse() *UserRegisterResponse {
+	return &UserRegisterResponse{}
 }
 
-func (p *UseeRegisterResponse) InitDefault() {
-	*p = UseeRegisterResponse{}
+func (p *UserRegisterResponse) InitDefault() {
+	*p = UserRegisterResponse{}
 }
 
-func (p *UseeRegisterResponse) GetToken() (v string) {
+func (p *UserRegisterResponse) GetToken() (v string) {
 	return p.Token
 }
 
-func (p *UseeRegisterResponse) GetUserId() (v int32) {
+func (p *UserRegisterResponse) GetUserId() (v int32) {
 	return p.UserId
 }
 
-func (p *UseeRegisterResponse) GetStatusMsg() (v string) {
+func (p *UserRegisterResponse) GetStatusMsg() (v string) {
 	return p.StatusMsg
 }
 
-func (p *UseeRegisterResponse) GetStatusCode() (v int32) {
+func (p *UserRegisterResponse) GetStatusCode() (v int32) {
 	return p.StatusCode
 }
-func (p *UseeRegisterResponse) SetToken(val string) {
+func (p *UserRegisterResponse) SetToken(val string) {
 	p.Token = val
 }
-func (p *UseeRegisterResponse) SetUserId(val int32) {
+func (p *UserRegisterResponse) SetUserId(val int32) {
 	p.UserId = val
 }
-func (p *UseeRegisterResponse) SetStatusMsg(val string) {
+func (p *UserRegisterResponse) SetStatusMsg(val string) {
 	p.StatusMsg = val
 }
-func (p *UseeRegisterResponse) SetStatusCode(val int32) {
+func (p *UserRegisterResponse) SetStatusCode(val int32) {
 	p.StatusCode = val
 }
 
-var fieldIDToName_UseeRegisterResponse = map[int16]string{
+var fieldIDToName_UserRegisterResponse = map[int16]string{
 	1: "token",
 	2: "user_id",
 	3: "status_msg",
 	4: "status_code",
 }
 
-func (p *UseeRegisterResponse) Read(iprot thrift.TProtocol) (err error) {
+func (p *UserRegisterResponse) Read(iprot thrift.TProtocol) (err error) {
 
 	var fieldTypeId thrift.TType
 	var fieldId int16
@@ -926,7 +926,7 @@ ReadStructBeginError:
 ReadFieldBeginError:
 	return thrift.PrependError(fmt.Sprintf("%T read field %d begin error: ", p, fieldId), err)
 ReadFieldError:
-	return thrift.PrependError(fmt.Sprintf("%T read field %d '%s' error: ", p, fieldId, fieldIDToName_UseeRegisterResponse[fieldId]), err)
+	return thrift.PrependError(fmt.Sprintf("%T read field %d '%s' error: ", p, fieldId, fieldIDToName_UserRegisterResponse[fieldId]), err)
 SkipFieldError:
 	return thrift.PrependError(fmt.Sprintf("%T field %d skip type %d error: ", p, fieldId, fieldTypeId), err)
 
@@ -936,7 +936,7 @@ ReadStructEndError:
 	return thrift.PrependError(fmt.Sprintf("%T read struct end error: ", p), err)
 }
 
-func (p *UseeRegisterResponse) ReadField1(iprot thrift.TProtocol) error {
+func (p *UserRegisterResponse) ReadField1(iprot thrift.TProtocol) error {
 	if v, err := iprot.ReadString(); err != nil {
 		return err
 	} else {
@@ -945,7 +945,7 @@ func (p *UseeRegisterResponse) ReadField1(iprot thrift.TProtocol) error {
 	return nil
 }
 
-func (p *UseeRegisterResponse) ReadField2(iprot thrift.TProtocol) error {
+func (p *UserRegisterResponse) ReadField2(iprot thrift.TProtocol) error {
 	if v, err := iprot.ReadI32(); err != nil {
 		return err
 	} else {
@@ -954,7 +954,7 @@ func (p *UseeRegisterResponse) ReadField2(iprot thrift.TProtocol) error {
 	return nil
 }
 
-func (p *UseeRegisterResponse) ReadField3(iprot thrift.TProtocol) error {
+func (p *UserRegisterResponse) ReadField3(iprot thrift.TProtocol) error {
 	if v, err := iprot.ReadString(); err != nil {
 		return err
 	} else {
@@ -963,7 +963,7 @@ func (p *UseeRegisterResponse) ReadField3(iprot thrift.TProtocol) error {
 	return nil
 }
 
-func (p *UseeRegisterResponse) ReadField4(iprot thrift.TProtocol) error {
+func (p *UserRegisterResponse) ReadField4(iprot thrift.TProtocol) error {
 	if v, err := iprot.ReadI32(); err != nil {
 		return err
 	} else {
@@ -972,9 +972,9 @@ func (p *UseeRegisterResponse) ReadField4(iprot thrift.TProtocol) error {
 	return nil
 }
 
-func (p *UseeRegisterResponse) Write(oprot thrift.TProtocol) (err error) {
+func (p *UserRegisterResponse) Write(oprot thrift.TProtocol) (err error) {
 	var fieldId int16
-	if err = oprot.WriteStructBegin("UseeRegisterResponse"); err != nil {
+	if err = oprot.WriteStructBegin("UserRegisterResponse"); err != nil {
 		goto WriteStructBeginError
 	}
 	if p != nil {
@@ -1013,7 +1013,7 @@ WriteStructEndError:
 	return thrift.PrependError(fmt.Sprintf("%T write struct end error: ", p), err)
 }
 
-func (p *UseeRegisterResponse) writeField1(oprot thrift.TProtocol) (err error) {
+func (p *UserRegisterResponse) writeField1(oprot thrift.TProtocol) (err error) {
 	if err = oprot.WriteFieldBegin("token", thrift.STRING, 1); err != nil {
 		goto WriteFieldBeginError
 	}
@@ -1030,7 +1030,7 @@ WriteFieldEndError:
 	return thrift.PrependError(fmt.Sprintf("%T write field 1 end error: ", p), err)
 }
 
-func (p *UseeRegisterResponse) writeField2(oprot thrift.TProtocol) (err error) {
+func (p *UserRegisterResponse) writeField2(oprot thrift.TProtocol) (err error) {
 	if err = oprot.WriteFieldBegin("user_id", thrift.I32, 2); err != nil {
 		goto WriteFieldBeginError
 	}
@@ -1047,7 +1047,7 @@ WriteFieldEndError:
 	return thrift.PrependError(fmt.Sprintf("%T write field 2 end error: ", p), err)
 }
 
-func (p *UseeRegisterResponse) writeField3(oprot thrift.TProtocol) (err error) {
+func (p *UserRegisterResponse) writeField3(oprot thrift.TProtocol) (err error) {
 	if err = oprot.WriteFieldBegin("status_msg", thrift.STRING, 3); err != nil {
 		goto WriteFieldBeginError
 	}
@@ -1064,7 +1064,7 @@ WriteFieldEndError:
 	return thrift.PrependError(fmt.Sprintf("%T write field 3 end error: ", p), err)
 }
 
-func (p *UseeRegisterResponse) writeField4(oprot thrift.TProtocol) (err error) {
+func (p *UserRegisterResponse) writeField4(oprot thrift.TProtocol) (err error) {
 	if err = oprot.WriteFieldBegin("status_code", thrift.I32, 4); err != nil {
 		goto WriteFieldBeginError
 	}
@@ -1081,14 +1081,14 @@ WriteFieldEndError:
 	return thrift.PrependError(fmt.Sprintf("%T write field 4 end error: ", p), err)
 }
 
-func (p *UseeRegisterResponse) String() string {
+func (p *UserRegisterResponse) String() string {
 	if p == nil {
 		return "<nil>"
 	}
-	return fmt.Sprintf("UseeRegisterResponse(%+v)", *p)
+	return fmt.Sprintf("UserRegisterResponse(%+v)", *p)
 }
 
-func (p *UseeRegisterResponse) DeepEqual(ano *UseeRegisterResponse) bool {
+func (p *UserRegisterResponse) DeepEqual(ano *UserRegisterResponse) bool {
 	if p == ano {
 		return true
 	} else if p == nil || ano == nil {
@@ -1109,28 +1109,28 @@ func (p *UseeRegisterResponse) DeepEqual(ano *UseeRegisterResponse) bool {
 	return true
 }
 
-func (p *UseeRegisterResponse) Field1DeepEqual(src string) bool {
+func (p *UserRegisterResponse) Field1DeepEqual(src string) bool {
 
 	if strings.Compare(p.Token, src) != 0 {
 		return false
 	}
 	return true
 }
-func (p *UseeRegisterResponse) Field2DeepEqual(src int32) bool {
+func (p *UserRegisterResponse) Field2DeepEqual(src int32) bool {
 
 	if p.UserId != src {
 		return false
 	}
 	return true
 }
-func (p *UseeRegisterResponse) Field3DeepEqual(src string) bool {
+func (p *UserRegisterResponse) Field3DeepEqual(src string) bool {
 
 	if strings.Compare(p.StatusMsg, src) != 0 {
 		return false
 	}
 	return true
 }
-func (p *UseeRegisterResponse) Field4DeepEqual(src int32) bool {
+func (p *UserRegisterResponse) Field4DeepEqual(src int32) bool {
 
 	if p.StatusCode != src {
 		return false
@@ -2800,7 +2800,7 @@ func (p *UserInfoUpdateResponse) Field2DeepEqual(src int32) bool {
 type UserService interface {
 	UserLogin(ctx context.Context, req *UserLoginRequest) (r *UserLoginResponse, err error)
 
-	UserRegister(ctx context.Context, req *UserRegisterRequest) (r *UseeRegisterResponse, err error)
+	UserRegister(ctx context.Context, req *UserRegisterRequest) (r *UserRegisterResponse, err error)
 
 	UserInfo(ctx context.Context, req *UserInfoRequest) (r *UserInfoResponse, err error)
 
@@ -2842,7 +2842,7 @@ func (p *UserServiceClient) UserLogin(ctx context.Context, req *UserLoginRequest
 	}
 	return _result.GetSuccess(), nil
 }
-func (p *UserServiceClient) UserRegister(ctx context.Context, req *UserRegisterRequest) (r *UseeRegisterResponse, err error) {
+func (p *UserServiceClient) UserRegister(ctx context.Context, req *UserRegisterRequest) (r *UserRegisterResponse, err error) {
 	var _args UserServiceUserRegisterArgs
 	_args.Req = req
 	var _result UserServiceUserRegisterResult
@@ -2981,7 +2981,7 @@ func (p *userServiceProcessorUserRegister) Process(ctx context.Context, seqId in
 	iprot.ReadMessageEnd()
 	var err2 error
 	result := UserServiceUserRegisterResult{}
-	var retval *UseeRegisterResponse
+	var retval *UserRegisterResponse
 	if retval, err2 = p.handler.UserRegister(ctx, args.Req); err2 != nil {
 		x := thrift.NewTApplicationException(thrift.INTERNAL_ERROR, "Internal error processing UserRegister: "+err2.Error())
 		oprot.WriteMessageBegin("UserRegister", thrift.EXCEPTION, seqId)
@@ -3625,7 +3625,7 @@ func (p *UserServiceUserRegisterArgs) Field1DeepEqual(src *UserRegisterRequest) 
 }
 
 type UserServiceUserRegisterResult struct {
-	Success *UseeRegisterResponse `thrift:"success,0,optional" frugal:"0,optional,UseeRegisterResponse" json:"success,omitempty"`
+	Success *UserRegisterResponse `thrift:"success,0,optional" frugal:"0,optional,UserRegisterResponse" json:"success,omitempty"`
 }
 
 func NewUserServiceUserRegisterResult() *UserServiceUserRegisterResult {
@@ -3636,16 +3636,16 @@ func (p *UserServiceUserRegisterResult) InitDefault() {
 	*p = UserServiceUserRegisterResult{}
 }
 
-var UserServiceUserRegisterResult_Success_DEFAULT *UseeRegisterResponse
+var UserServiceUserRegisterResult_Success_DEFAULT *UserRegisterResponse
 
-func (p *UserServiceUserRegisterResult) GetSuccess() (v *UseeRegisterResponse) {
+func (p *UserServiceUserRegisterResult) GetSuccess() (v *UserRegisterResponse) {
 	if !p.IsSetSuccess() {
 		return UserServiceUserRegisterResult_Success_DEFAULT
 	}
 	return p.Success
 }
 func (p *UserServiceUserRegisterResult) SetSuccess(x interface{}) {
-	p.Success = x.(*UseeRegisterResponse)
+	p.Success = x.(*UserRegisterResponse)
 }
 
 var fieldIDToName_UserServiceUserRegisterResult = map[int16]string{
@@ -3716,7 +3716,7 @@ ReadStructEndError:
 }
 
 func (p *UserServiceUserRegisterResult) ReadField0(iprot thrift.TProtocol) error {
-	p.Success = NewUseeRegisterResponse()
+	p.Success = NewUserRegisterResponse()
 	if err := p.Success.Read(iprot); err != nil {
 		return err
 	}
@@ -3790,7 +3790,7 @@ func (p *UserServiceUserRegisterResult) DeepEqual(ano *UserServiceUserRegisterRe
 	return true
 }
 
-func (p *UserServiceUserRegisterResult) Field0DeepEqual(src *UseeRegisterResponse) bool {
+func (p *UserServiceUserRegisterResult) Field0DeepEqual(src *UserRegisterResponse) bool {
 
 	if !p.Success.DeepEqual(src) {
 		return false

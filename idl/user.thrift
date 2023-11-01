@@ -17,7 +17,7 @@ struct UserRegisterRequest{
     2: string password;
 }
 
-struct UseeRegisterResponse{
+struct UserRegisterResponse{
     1: string token
     2: i32 user_id
     3: string status_msg 
@@ -61,7 +61,7 @@ struct UserInfoUpdateResponse{
 
 service UserService{
     UserLoginResponse UserLogin(1:UserLoginRequest req);
-    UseeRegisterResponse UserRegister(1:UserRegisterRequest req);
+    UserRegisterResponse UserRegister(1:UserRegisterRequest req);
     UserInfoResponse UserInfo(1: UserInfoRequest req);
     UserInfoUpdateResponse UserInfoUpdate(1: UserInfoUpdateRequest req)
 }

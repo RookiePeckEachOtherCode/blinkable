@@ -68,13 +68,13 @@ func (s *UserServiceImpl) UserLogin(ctx context.Context, req *user.UserLoginRequ
 }
 
 // UserRegister implements the UserServiceImpl interface.
-func (s *UserServiceImpl) UserRegister(ctx context.Context, req *user.UserRegisterRequest) (resp *user.UseeRegisterResponse, err error) {
+func (s *UserServiceImpl) UserRegister(ctx context.Context, req *user.UserRegisterRequest) (resp *user.UserRegisterResponse, err error) {
 	ud := query.Q.User
 
 	dbUser, err := ud.WithContext(ctx).Where(ud.Usernmae.Eq(req.Username)).Select().Find()
 
 	if err != nil {
-		resp = &user.UseeRegisterResponse{
+		resp = &user.UserRegisterResponse{
 			StatusCode: -1,
 			StatusMsg:  errno.ErrInternalServerError.Error(),
 		}
@@ -83,7 +83,7 @@ func (s *UserServiceImpl) UserRegister(ctx context.Context, req *user.UserRegist
 	}
 
 	if len(dbUser) > 0 {
-		resp = &user.UseeRegisterResponse{
+		resp = &user.UserRegisterResponse{
 			StatusCode: -1,
 			StatusMsg:  errno.ErrUserIsExist.Error(),
 		}
@@ -94,7 +94,7 @@ func (s *UserServiceImpl) UserRegister(ctx context.Context, req *user.UserRegist
 	hashPassword, err := hash.HashPassword(req.Password)
 
 	if err != nil {
-		resp = &user.UseeRegisterResponse{
+		resp = &user.UserRegisterResponse{
 			StatusCode: -1,
 			StatusMsg:  errno.ErrHashPasswordIsWrong.Error(),
 		}
@@ -114,7 +114,7 @@ func (s *UserServiceImpl) UserRegister(ctx context.Context, req *user.UserRegist
 	err = ud.WithContext(ctx).Create(newUser)
 
 	if err != nil {
-		resp = &user.UseeRegisterResponse{
+		resp = &user.UserRegisterResponse{
 			StatusCode: -1,
 			StatusMsg:  errno.ErrCreateUserIsWrong.Error(),
 		}
@@ -125,7 +125,7 @@ func (s *UserServiceImpl) UserRegister(ctx context.Context, req *user.UserRegist
 	token, err := Jwt.NewJwt().ReleaseToken(Jwt.Claims{Id: int64(newUser.ID)})
 
 	if err != nil {
-		resp = &user.UseeRegisterResponse{
+		resp = &user.UserRegisterResponse{
 			StatusCode: -1,
 			StatusMsg:  errno.ErrTokenRelease.Error(),
 		}
@@ -133,7 +133,7 @@ func (s *UserServiceImpl) UserRegister(ctx context.Context, req *user.UserRegist
 		return resp, nil
 	}
 
-	resp = &user.UseeRegisterResponse{
+	resp = &user.UserRegisterResponse{
 		StatusCode: 0,
 		StatusMsg:  "success",
 		Token:      token,

@@ -131,7 +131,7 @@ func (p *kClient) UserLogin(ctx context.Context, req *user.UserLoginRequest) (r 
 	return _result.GetSuccess(), nil
 }
 
-func (p *kClient) UserRegister(ctx context.Context, req *user.UserRegisterRequest) (r *user.UseeRegisterResponse, err error) {
+func (p *kClient) UserRegister(ctx context.Context, req *user.UserRegisterRequest) (r *user.UserRegisterResponse, err error) {
 	var _args user.UserServiceUserRegisterArgs
 	_args.Req = req
 	var _result user.UserServiceUserRegisterResult
