@@ -2,6 +2,12 @@
   import $ from 'jquery';
   import {Lock ,Message,Notebook,Comment} from "@element-plus/icons-vue";
   import {Getcards} from "@/apis/getcards";
+  import {Likeapi} from "@/apis/likeaction";
+  import {guestbookApi} from "@/apis/guestaction";
+  import {useUserInfoStore} from "@/stores/userinfo";
+  import router from "@/router";
+  import {ElMessage, FormInstance} from "element-plus";
+  import { ref, defineProps } from 'vue';
   export interface Admin {
     admin_id: number;
     image_url: string;
@@ -19,7 +25,26 @@
     user_id: number;
     user_name:string;
   }
+
+  export  interface Guestbookfrom{
+    user_id:number;
+    admin_id:number;
+    context:string;
+  }
+
   export default {
+    setup(props, context) {
+      const guestbookfrom = ref({
+        user_id: Number(useUserInfoStore().getUserId()),
+        admin_id: 1,
+        context: 'cin',
+      });
+      const whoguest="admin"
+      return {
+        whoguest,
+        guestbookfrom,
+      };
+    },
     computed: {
       Notebook() {
         return Notebook;
@@ -47,6 +72,25 @@
         } else if (id == 3) {
          this.table3 = !this.table3;
         }
+      },
+       async likebut(adimin_id:number){
+        const user_id=Number(useUserInfoStore().getUserId());
+        if(!user_id){
+          router.push("/login");
+        return;
+        }
+        const form={
+          admin_id:adimin_id,
+          user_id:user_id,
+        }
+        const res=await Likeapi(form)
+       if(res.status_code==1)  ElMessage.success("点赞成功")
+         return;
+      },
+      async guestbookbut(){
+        const res=await guestbookApi(this.guestbookfrom);
+        if(res.status_code==1)ElMessage.success("留言成功")
+        return;
       },
       async getcard() {
         const res=await Getcards();
@@ -134,6 +178,8 @@
          table1:false,
          table2:false,
          table3:false,
+         dialogVisible:false,
+
       };
     },
      async created() {
@@ -149,6 +195,22 @@
 
   <template>
     <div v-if="admins.length">
+      <el-dialog
+          v-model="dialogVisible"
+          :title="'cin>>'+whoguest+'>>endl;'"
+          width="30%"
+          style="background-color:rgb(258,258,258)"
+      >
+        <el-input  v-model="guestbookfrom.context"></el-input>
+        <template #footer>
+      <span class="dialog-footer">
+        <el-button @click="dialogVisible = false">Cancel</el-button>
+        <el-button type="primary" @click="dialogVisible = false;guestbookbut()">
+          Confirm
+        </el-button>
+      </span>
+        </template>
+      </el-dialog>
     <div class="card" :style="{ 'background-image': 'url('+admins[0].image_url+')' }" >
       <div class="xbox">
       <el-image :src="admins[0].icon_url" fit="fill" :lazy="true" >
@@ -170,17 +232,15 @@
         </div>
       <div class="sing-box">{{admins[0].signature}}</div>
       </div>
-      <div class="xbox">
+      <div class="xbox" style="width: 400px">
         <el-button type="primary" class="hide" id="1-1" style="display: none" color="#2e5496"><svg width="24" height="26.666666666666664" viewBox="0 0 18 20" fill="none"><path fill-rule="evenodd" clip-rule="evenodd" d="M15.882 9.285c.266.33.535.69.653.94l.024.052c.263.555.5 1.054.843 2.069.354 1.046.917 2.977 0 3.31-.867.313-2.035-1.59-2.035-1.59 0 1.147-.64 2.645-2.02 3.726.51.042 1.204.215 1.609.473.405.259.405.628.183.866-.221.238-1.562.23-3.057.217-1.283-.012-2.615-.081-3.239-.146-.656.068-2.06.15-3.368.155-1.385.006-2.467 0-2.745-.226-.277-.226-.228-.593.079-.83s.993-.445 1.53-.507c-1.382-1.083-2.02-2.58-2.02-3.729 0 0-.67 1.896-1.687 1.59-.754-.227-.57-2.271-.275-3.31.24-.839.43-1.27.647-1.758l.158-.362c.107-.25.32-.556.546-.844 1.206.828 2.701 1.109 2.701 1.109l-.15 1.149a.904.904 0 001.787.264l.19-1.15c5.005.475 8.26-.769 9.646-1.468zm-.692-1.14c.003-.115.005-.237.005-.325 0-3.601-1.835-7.22-6.35-7.22C4.327.6 2.49 4.219 2.49 7.819c0 .085.002.201.004.312.68.23 6.853 2.204 12.696.014z" fill="#6FADFF"/></svg></el-button>
         <el-button type="primary" class="hide" id="1-2" style="display: none" :icon="Notebook" color="#2e5496"></el-button>
-        <el-button type="primary" class="hide" id="1-3" style="display: none" :icon="Comment" color="#2e5496"></el-button>
-        <el-button type="primary" class="hide" id="1-4" style="display: none" color="#2e5496"><svg width="24" height="25.2" viewBox="0 0 20 21" fill="none">
+        <el-button type="primary" class="hide" id="1-3" style="display: none" :icon="Comment" color="#2e5496" @click="dialogVisible=true;whoguest=admins[0].title;guestbookfrom.user_id=1"></el-button>
+        <el-button type="primary" class="hide" id="1-4" style="display: none" color="#2e5496" @click="likebut(0)"><svg width="24" height="25.2" viewBox="0 0 20 21" fill="none">
           <path fill-rule="evenodd" clip-rule="evenodd" d="M8.95 2.563l-1.726 3.98-1.158.008v13.748h-.648l6.462.047c3.079-.297 5.037-1.813 5.807-4.473.805-3.99 1.317-6.347 1.538-7.075.366-1.207-.032-2.178-1.235-2.178h-4.699l-.03-3.273c0-1.552-.77-2.358-2.207-2.358-.98 0-1.714.574-2.105 1.574zM4.765 20.294V6.56l-2.14.015a1.8 1.8 0 00-1.788 1.8v10.105a1.8 1.8 0 001.787 1.8l2.14.015z" fill="#FF6880"/>
         </svg></el-button>
-
       </div>
     </div>
-
       <el-table
           v-if="table1"
           :data="admins[0].gestbooks"
@@ -252,8 +312,8 @@
       <div class="xbox">
         <el-button type="primary" class="hide" id="2-1" style="display: none" color="#5f962e" ><svg width="24" height="26.666666666666664" viewBox="0 0 18 20" fill="none"><path fill-rule="evenodd" clip-rule="evenodd" d="M15.882 9.285c.266.33.535.69.653.94l.024.052c.263.555.5 1.054.843 2.069.354 1.046.917 2.977 0 3.31-.867.313-2.035-1.59-2.035-1.59 0 1.147-.64 2.645-2.02 3.726.51.042 1.204.215 1.609.473.405.259.405.628.183.866-.221.238-1.562.23-3.057.217-1.283-.012-2.615-.081-3.239-.146-.656.068-2.06.15-3.368.155-1.385.006-2.467 0-2.745-.226-.277-.226-.228-.593.079-.83s.993-.445 1.53-.507c-1.382-1.083-2.02-2.58-2.02-3.729 0 0-.67 1.896-1.687 1.59-.754-.227-.57-2.271-.275-3.31.24-.839.43-1.27.647-1.758l.158-.362c.107-.25.32-.556.546-.844 1.206.828 2.701 1.109 2.701 1.109l-.15 1.149a.904.904 0 001.787.264l.19-1.15c5.005.475 8.26-.769 9.646-1.468zm-.692-1.14c.003-.115.005-.237.005-.325 0-3.601-1.835-7.22-6.35-7.22C4.327.6 2.49 4.219 2.49 7.819c0 .085.002.201.004.312.68.23 6.853 2.204 12.696.014z" fill="#6FADFF"/></svg></el-button>
         <el-button type="primary" class="hide" id="2-2" style="display: none" :icon="Notebook" color="#5f962e"></el-button>
-        <el-button type="primary" class="hide" id="2-3" style="display: none" :icon="Comment" color="#5f962e"></el-button>
-        <el-button type="primary" class="hide" id="2-4" style="display: none" color="#5f962e"><svg width="24" height="25.2" viewBox="0 0 20 21" fill="none">
+        <el-button type="primary" class="hide" id="2-3" style="display: none" :icon="Comment" color="#5f962e" @click="dialogVisible=true;whoguest=admins[1].title;guestbookfrom.user_id=2"></el-button>
+        <el-button type="primary" class="hide" id="2-4" style="display: none" color="#5f962e" @click="likebut(1)"><svg width="24" height="25.2" viewBox="0 0 20 21" fill="none">
           <path fill-rule="evenodd" clip-rule="evenodd" d="M8.95 2.563l-1.726 3.98-1.158.008v13.748h-.648l6.462.047c3.079-.297 5.037-1.813 5.807-4.473.805-3.99 1.317-6.347 1.538-7.075.366-1.207-.032-2.178-1.235-2.178h-4.699l-.03-3.273c0-1.552-.77-2.358-2.207-2.358-.98 0-1.714.574-2.105 1.574zM4.765 20.294V6.56l-2.14.015a1.8 1.8 0 00-1.788 1.8v10.105a1.8 1.8 0 001.787 1.8l2.14.015z" fill="#FF6880"/>
         </svg></el-button>
 
@@ -328,8 +388,8 @@
         <div class="xbox">
           <el-button type="primary" class="hide" id="3-1" style="display: none" color="#ff661a" ><svg width="24" height="26.666666666666664" viewBox="0 0 18 20" fill="none"><path fill-rule="evenodd" clip-rule="evenodd" d="M15.882 9.285c.266.33.535.69.653.94l.024.052c.263.555.5 1.054.843 2.069.354 1.046.917 2.977 0 3.31-.867.313-2.035-1.59-2.035-1.59 0 1.147-.64 2.645-2.02 3.726.51.042 1.204.215 1.609.473.405.259.405.628.183.866-.221.238-1.562.23-3.057.217-1.283-.012-2.615-.081-3.239-.146-.656.068-2.06.15-3.368.155-1.385.006-2.467 0-2.745-.226-.277-.226-.228-.593.079-.83s.993-.445 1.53-.507c-1.382-1.083-2.02-2.58-2.02-3.729 0 0-.67 1.896-1.687 1.59-.754-.227-.57-2.271-.275-3.31.24-.839.43-1.27.647-1.758l.158-.362c.107-.25.32-.556.546-.844 1.206.828 2.701 1.109 2.701 1.109l-.15 1.149a.904.904 0 001.787.264l.19-1.15c5.005.475 8.26-.769 9.646-1.468zm-.692-1.14c.003-.115.005-.237.005-.325 0-3.601-1.835-7.22-6.35-7.22C4.327.6 2.49 4.219 2.49 7.819c0 .085.002.201.004.312.68.23 6.853 2.204 12.696.014z" fill="#6FADFF"/></svg></el-button>
           <el-button type="primary" class="hide" id="3-2" style="display: none" :icon="Notebook" color="#ff661a"></el-button>
-          <el-button type="primary" class="hide" id="3-3" style="display: none" :icon="Comment" color="#ff661a"></el-button>
-          <el-button type="primary" class="hide" id="3-4" style="display: none" color="#ff661a"><svg width="24" height="25.2" viewBox="0 0 20 21" fill="none">
+          <el-button type="primary" class="hide" id="3-3" style="display: none" :icon="Comment" color="#ff661a" @click="dialogVisible=true;whoguest=admins[2].title;guestbookfrom.user_id=3"></el-button>
+          <el-button type="primary" class="hide" id="3-4" style="display: none" color="#ff661a" @click="likebut(2)"><svg width="24" height="25.2" viewBox="0 0 20 21" fill="none">
             <path fill-rule="evenodd" clip-rule="evenodd" d="M8.95 2.563l-1.726 3.98-1.158.008v13.748h-.648l6.462.047c3.079-.297 5.037-1.813 5.807-4.473.805-3.99 1.317-6.347 1.538-7.075.366-1.207-.032-2.178-1.235-2.178h-4.699l-.03-3.273c0-1.552-.77-2.358-2.207-2.358-.98 0-1.714.574-2.105 1.574zM4.765 20.294V6.56l-2.14.015a1.8 1.8 0 00-1.788 1.8v10.105a1.8 1.8 0 001.787 1.8l2.14.015z" fill="#FF6880"/>
           </svg></el-button>
 
@@ -400,6 +460,22 @@
     100% {
       transform: translateX(0);
     }
+  }
+  .overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5); /* 半透明黑色背景 */
+    z-index: 1;
+    opacity: 0; /* 默认情况下不可见 */
+    pointer-events: none; /* 不可交互 */
+    transition: opacity 0.3s;
+  }
+  .overlay.active {
+    opacity: 1; /* 遮罩层激活时可见 */
+    pointer-events: auto; /* 可交互 */
   }
   @font-face {
     font-family: ggbond;

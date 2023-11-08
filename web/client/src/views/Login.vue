@@ -68,13 +68,16 @@ const form=ref<Form>({
 const formRef=ref<FormInstance>()
 const lin=async ()=>{
   const res=await loginApi(form.value);
-  useUserinfoStore.setAuth(res.data.token)
+ const user_id= res.data.user_id.toString()
+  // useUserinfoStore.setAuth(res.data.token,user_id)
+  useUserinfoStore.setAuth("114514","114514")
   ElMessage.success("登录成功")
   router.push("/home/main-view")
 };
 const reg=async ()=>{
   const res=await registerApi(form.value);
-  useUserinfoStore.setAuth(res.data.token)
+  const user_id=res.data.user_id.toString()
+  useUserinfoStore.setAuth(res.data.token,user_id)
   ElMessage.success("注册成功")
   router.push("/home/main-view")
 }
