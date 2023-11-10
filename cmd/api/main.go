@@ -1,8 +1,7 @@
 package main
 
 import (
-	mainviewhandler "blinkable/cmd/api/mainview/handler"
-	userhandler "blinkable/cmd/api/user/handler"
+	"blinkable/cmd/api/user/handler"
 	"blinkable/pkg/viper"
 	zlog "blinkable/pkg/zap"
 
@@ -32,18 +31,11 @@ func Register(h *server.Hertz) {
 	{
 		user := blinkable.Group("/user")
 		{
-
 			user.POST("/login", handler.Login)
 			user.POST("/register", handler.Register)
 			user.GET("/info", handler.Info)
 			user.POST("/update", handler.UserInfoUpdate)
 
-		}
-		mainview := blinkable.Group("/Main")
-		{
-			mainview.GET("", mainviewhandler.Getmainview)
-			mainview.POST("/like", mainviewhandler.LikeAction)
-			mainview.POST("/addguestbook", mainviewhandler.AddGuestbook)
 		}
 	}
 }
