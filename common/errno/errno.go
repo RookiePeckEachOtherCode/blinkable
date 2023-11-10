@@ -25,6 +25,7 @@ var (
 	ErrCreateUserIsWrong         = errors.New("创建用户失败")
 	ErrFindUserIsWrong           = errors.New("查找用户失败")
 	ErrLogin                     = errors.New("登录失败")
+	ErrLike                      = errors.New("点赞失败")
 	ErrRegister                  = errors.New("注册失败")
 	ErrUserNotFound              = errors.New("用户没有找到")
 	ErrUserInfo                  = errors.New("获取用户信息失败")
