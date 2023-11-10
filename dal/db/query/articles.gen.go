@@ -28,7 +28,7 @@ func newArticle(db *gorm.DB, opts ...gen.DOOption) article {
 
 	tableName := _article.articleDo.TableName()
 	_article.ALL = field.NewAsterisk(tableName)
-	_article.ID = field.NewUint32(tableName, "id")
+	_article.ID = field.NewInt32(tableName, "id")
 	_article.CreateAt = field.NewTime(tableName, "create_at")
 	_article.UpdateAt = field.NewTime(tableName, "update_at")
 	_article.AuthorID = field.NewUint32(tableName, "author_id")
@@ -46,7 +46,7 @@ type article struct {
 	articleDo
 
 	ALL      field.Asterisk
-	ID       field.Uint32
+	ID       field.Int32
 	CreateAt field.Time
 	UpdateAt field.Time
 	AuthorID field.Uint32
@@ -70,7 +70,7 @@ func (a article) As(alias string) *article {
 
 func (a *article) updateTableName(table string) *article {
 	a.ALL = field.NewAsterisk(table)
-	a.ID = field.NewUint32(table, "id")
+	a.ID = field.NewInt32(table, "id")
 	a.CreateAt = field.NewTime(table, "create_at")
 	a.UpdateAt = field.NewTime(table, "update_at")
 	a.AuthorID = field.NewUint32(table, "author_id")
