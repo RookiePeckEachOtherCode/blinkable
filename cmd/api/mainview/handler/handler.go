@@ -57,7 +57,7 @@ func LikeAction(ctx context.Context, c *app.RequestContext) {
 	resp, _ := rpc.LikeAction(ctx, req)
 	if resp.StatusCode == -1 {
 		c.JSON(http.StatusOK, response.BuildBase(-1, resp.StatusMsg))
-		zap.S().Errorf("%v ===> %v", errno.ErrLogin, resp.StatusMsg)
+		zap.S().Errorf("%v ===> %v", errno.ErrLike, resp.StatusMsg)
 		return
 	}
 	c.JSON(http.StatusOK, resp)
