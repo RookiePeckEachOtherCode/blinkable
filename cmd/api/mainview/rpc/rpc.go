@@ -6,15 +6,16 @@ import (
 	"blinkable/pkg/viper"
 	"context"
 	"fmt"
+	"time"
+
 	"github.com/cloudwego/kitex/client"
 	"github.com/cloudwego/kitex/pkg/rpcinfo"
 	etcd "github.com/kitex-contrib/registry-etcd"
 	"go.uber.org/zap"
-	"time"
 )
 
 var (
-	cfg        = viper.Load("mianview_service")
+	cfg        = viper.Load("mainview_service")
 	serverName = cfg.Viper.GetString("server.name")
 	etcdAddr   = fmt.Sprintf("%s:%d", cfg.Viper.GetString("etcd.host"), cfg.Viper.GetInt("etcd.port"))
 )

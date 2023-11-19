@@ -5,11 +5,12 @@ import (
 	"blinkable/pkg/viper"
 	zlog "blinkable/pkg/zap"
 	"fmt"
+	"net"
+
 	"github.com/cloudwego/kitex/pkg/rpcinfo"
 	"github.com/cloudwego/kitex/server"
 	etcd "github.com/kitex-contrib/registry-etcd"
 	"go.uber.org/zap"
-	"net"
 )
 
 var (
@@ -29,7 +30,7 @@ func main() {
 	if err != nil {
 		zap.S().Panicf("%v ===> %v", "server host port", err)
 	}
-	MianviewServer := mainview.NewServer(
+	MainviewServer := mainview.NewServer(
 		new(MainviewServiceImpl),
 		server.WithServiceAddr(addr),
 		server.WithRegistry(r),
@@ -37,7 +38,7 @@ func main() {
 			ServiceName: serverName,
 		}),
 	)
-	err = MianviewServer.Run()
+	err = MainviewServer.Run()
 	if err != nil {
 		zap.S().Panicf("%v ===> %v", "server run", err)
 	}
