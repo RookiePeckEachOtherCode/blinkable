@@ -30,6 +30,8 @@ var (
 	ErrUserNotFound              = errors.New("用户没有找到")
 	ErrUserInfo                  = errors.New("获取用户信息失败")
 	ErrUserUpdateInfo            = errors.New("更新用户信息失败")
+	ErrAddGuestbook              = errors.New("无法添加留言")
+	ErrGetAdmins                 = errors.New("未能正确获取管理员信息")
 )
 
 // Server

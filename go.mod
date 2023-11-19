@@ -5,7 +5,7 @@ go 1.21.3
 require (
 	github.com/apache/thrift v0.13.0
 	github.com/cloudwego/hertz v0.7.1
-	github.com/cloudwego/kitex v0.7.2
+	github.com/cloudwego/kitex v0.7.3
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/hertz-contrib/gzip v0.0.1
 	github.com/kitex-contrib/registry-etcd v0.2.0
@@ -32,8 +32,8 @@ require (
 	github.com/cloudwego/fastpb v0.0.4 // indirect
 	github.com/cloudwego/frugal v0.1.8 // indirect
 	github.com/cloudwego/localsession v0.0.2 // indirect
-	github.com/cloudwego/netpoll v0.5.0 // indirect
-	github.com/cloudwego/thriftgo v0.3.0 // indirect
+	github.com/cloudwego/netpoll v0.5.1 // indirect
+	github.com/cloudwego/thriftgo v0.3.2-0.20230828085742-edaddf2c17af // indirect
 	github.com/coreos/go-semver v0.3.0 // indirect
 	github.com/coreos/go-systemd/v22 v22.3.2 // indirect
 	github.com/davecgh/go-spew v1.1.2-0.20180830191138-d8f796af33cc // indirect

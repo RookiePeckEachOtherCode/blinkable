@@ -33,10 +33,10 @@ func Register(h *server.Hertz) {
 		user := blinkable.Group("/user")
 		{
 
-			user.POST("/login", handler.Login)
-			user.POST("/register", handler.Register)
-			user.GET("/info", handler.Info)
-			user.POST("/update", handler.UserInfoUpdate)
+			user.POST("/login", userhandler.Login)
+			user.POST("/register", userhandler.Register)
+			user.GET("/info", userhandler.Info)
+			user.POST("/update", userhandler.UserInfoUpdate)
 
 		}
 		mainview := blinkable.Group("/Main")
