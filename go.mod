@@ -7,6 +7,7 @@ require (
 	github.com/cloudwego/hertz v0.7.1
 	github.com/cloudwego/kitex v0.7.3
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
+	github.com/google/uuid v1.3.0
 	github.com/hertz-contrib/gzip v0.0.1
 	github.com/kitex-contrib/registry-etcd v0.2.0
 	github.com/minio/minio-go/v7 v7.0.63
@@ -46,7 +47,6 @@ require (
 	github.com/gogo/protobuf v1.3.2 // indirect
 	github.com/golang/protobuf v1.5.3 // indirect
 	github.com/google/pprof v0.0.0-20220608213341-c488b8fa1db3 // indirect
-	github.com/google/uuid v1.3.0 // indirect
 	github.com/hashicorp/hcl v1.0.0 // indirect
 	github.com/henrylee2cn/ameda v1.4.10 // indirect
 	github.com/henrylee2cn/goutil v0.0.0-20210127050712-89660552f6f8 // indirect

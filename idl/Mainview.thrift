@@ -54,8 +54,23 @@ struct AddGuestbookResponse{
 3:bool succed;
 }
 
+struct ChangeCardRequest{
+1: binary icon;
+2: binary image;
+3: i32 admin_id;
+4: string title;
+5: string signature;
+}
+struct ChangeCardResponse{
+1:i32 status_code;
+2:string status_msg;
+3:bool succed;
+}
+
+
 service MainviewService{
  LikeResponse LikeAction(1:LikeRequest req);
  GetMainviewResponse GetMainview(1:GetMainvewRequest req);
  AddGuestbookResponse AddGuestbook(1:AddGuestbookRequest req);
+ ChangeCardResponse ChangeCard(1:ChangeCardRequest req);
 }

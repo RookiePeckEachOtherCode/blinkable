@@ -2,7 +2,7 @@
 package mainviewservice
 
 import (
-	"blinkable/kitex_gen/Mainview"
+	mainview "blinkable/kitex_gen/Mainview"
 	server "github.com/cloudwego/kitex/server"
 )
 

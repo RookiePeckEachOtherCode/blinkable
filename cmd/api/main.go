@@ -44,6 +44,7 @@ func Register(h *server.Hertz) {
 			mainview.GET("", mainviewhandler.Getmainview)
 			mainview.POST("/like", mainviewhandler.LikeAction)
 			mainview.POST("/addguestbook", mainviewhandler.AddGuestbook)
+			mainview.POST("/changecard", mainviewhandler.ChangeCard)
 		}
 	}
 }

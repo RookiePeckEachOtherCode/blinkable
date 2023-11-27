@@ -55,3 +55,6 @@ func LikeAction(ctx context.Context, req *mainview.LikeRequest) (*mainview.LikeR
 func AddGuestbook(ctx context.Context, req *mainview.AddGuestbookRequest) (*mainview.AddGuestbookResponse, error) {
 	return mainviewClient.AddGuestbook(ctx, req)
 }
+func ChangeCard(ctx context.Context, req *mainview.ChangeCardRequest) (*mainview.ChangeCardResponse, error) {
+	return mainviewClient.ChangeCard(ctx, req)
+}

@@ -3,7 +3,7 @@
 package mainviewservice
 
 import (
-	"blinkable/kitex_gen/Mainview"
+	mainview "blinkable/kitex_gen/Mainview"
 	"context"
 	client "github.com/cloudwego/kitex/client"
 	kitex "github.com/cloudwego/kitex/pkg/serviceinfo"
@@ -22,10 +22,11 @@ func NewServiceInfo() *kitex.ServiceInfo {
 		"LikeAction":   kitex.NewMethodInfo(likeActionHandler, newMainviewServiceLikeActionArgs, newMainviewServiceLikeActionResult, false),
 		"GetMainview":  kitex.NewMethodInfo(getMainviewHandler, newMainviewServiceGetMainviewArgs, newMainviewServiceGetMainviewResult, false),
 		"AddGuestbook": kitex.NewMethodInfo(addGuestbookHandler, newMainviewServiceAddGuestbookArgs, newMainviewServiceAddGuestbookResult, false),
+		"ChangeCard":   kitex.NewMethodInfo(changeCardHandler, newMainviewServiceChangeCardArgs, newMainviewServiceChangeCardResult, false),
 	}
 	extra := map[string]interface{}{
 		"PackageName":     "mainview",
-		"ServiceFilePath": `..\..\idl\Mainview.thrift`,
+		"ServiceFilePath": `idl/Mainview.thrift`,
 	}
 	svcInfo := &kitex.ServiceInfo{
 		ServiceName:     serviceName,
@@ -92,6 +93,24 @@ func newMainviewServiceAddGuestbookResult() interface{} {
 	return mainview.NewMainviewServiceAddGuestbookResult()
 }
 
+func changeCardHandler(ctx context.Context, handler interface{}, arg, result interface{}) error {
+	realArg := arg.(*mainview.MainviewServiceChangeCardArgs)
+	realResult := result.(*mainview.MainviewServiceChangeCardResult)
+	success, err := handler.(mainview.MainviewService).ChangeCard(ctx, realArg.Req)
+	if err != nil {
+		return err
+	}
+	realResult.Success = success
+	return nil
+}
+func newMainviewServiceChangeCardArgs() interface{} {
+	return mainview.NewMainviewServiceChangeCardArgs()
+}
+
+func newMainviewServiceChangeCardResult() interface{} {
+	return mainview.NewMainviewServiceChangeCardResult()
+}
+
 type kClient struct {
 	c client.Client
 }
@@ -127,6 +146,16 @@ func (p *kClient) AddGuestbook(ctx context.Context, req *mainview.AddGuestbookRe
 	_args.Req = req
 	var _result mainview.MainviewServiceAddGuestbookResult
 	if err = p.c.Call(ctx, "AddGuestbook", &_args, &_result); err != nil {
+		return
+	}
+	return _result.GetSuccess(), nil
+}
+
+func (p *kClient) ChangeCard(ctx context.Context, req *mainview.ChangeCardRequest) (r *mainview.ChangeCardResponse, err error) {
+	var _args mainview.MainviewServiceChangeCardArgs
+	_args.Req = req
+	var _result mainview.MainviewServiceChangeCardResult
+	if err = p.c.Call(ctx, "ChangeCard", &_args, &_result); err != nil {
 		return
 	}
 	return _result.GetSuccess(), nil

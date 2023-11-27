@@ -3,7 +3,7 @@
 package mainviewservice
 
 import (
-	"blinkable/kitex_gen/Mainview"
+	mainview "blinkable/kitex_gen/Mainview"
 	"context"
 	client "github.com/cloudwego/kitex/client"
 	callopt "github.com/cloudwego/kitex/client/callopt"
@@ -14,6 +14,7 @@ type Client interface {
 	LikeAction(ctx context.Context, req *mainview.LikeRequest, callOptions ...callopt.Option) (r *mainview.LikeResponse, err error)
 	GetMainview(ctx context.Context, req *mainview.GetMainvewRequest, callOptions ...callopt.Option) (r *mainview.GetMainviewResponse, err error)
 	AddGuestbook(ctx context.Context, req *mainview.AddGuestbookRequest, callOptions ...callopt.Option) (r *mainview.AddGuestbookResponse, err error)
+	ChangeCard(ctx context.Context, req *mainview.ChangeCardRequest, callOptions ...callopt.Option) (r *mainview.ChangeCardResponse, err error)
 }
 
 // NewClient creates a client for the service defined in IDL.
@@ -58,4 +59,9 @@ func (p *kMainviewServiceClient) GetMainview(ctx context.Context, req *mainview.
 func (p *kMainviewServiceClient) AddGuestbook(ctx context.Context, req *mainview.AddGuestbookRequest, callOptions ...callopt.Option) (r *mainview.AddGuestbookResponse, err error) {
 	ctx = client.NewCtxWithCallOptions(ctx, callOptions)
 	return p.kClient.AddGuestbook(ctx, req)
+}
+
+func (p *kMainviewServiceClient) ChangeCard(ctx context.Context, req *mainview.ChangeCardRequest, callOptions ...callopt.Option) (r *mainview.ChangeCardResponse, err error) {
+	ctx = client.NewCtxWithCallOptions(ctx, callOptions)
+	return p.kClient.ChangeCard(ctx, req)
 }

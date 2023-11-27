@@ -32,6 +32,11 @@ var (
 	ErrUserUpdateInfo            = errors.New("更新用户信息失败")
 	ErrAddGuestbook              = errors.New("无法添加留言")
 	ErrGetAdmins                 = errors.New("未能正确获取管理员信息")
+	ErrChangeCard                = errors.New("未能变更卡片")
+	ErrMinioInit                 = errors.New("minio对象初始化失败")
+	ErrMinioBuket                = errors.New("查询桶时出现错误")
+	Errupload                    = errors.New("未能正确上传到桶")
+	Errsave                      = errors.New("桶未能储存数据")
 )
 
 // Server

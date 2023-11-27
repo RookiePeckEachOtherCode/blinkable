@@ -8,7 +8,9 @@ import (
 	"context"
 	"github.com/cloudwego/hertz/pkg/app"
 	"go.uber.org/zap"
+	"io"
 	"net/http"
+	"os"
 	"strconv"
 )
 
@@ -62,4 +64,44 @@ func LikeAction(ctx context.Context, c *app.RequestContext) {
 	}
 	c.JSON(http.StatusOK, resp)
 
+}
+func ChangeCard(ctx context.Context, c *app.RequestContext) {
+	// 获取表单中的数据
+	icon, err := c.FormFile("icon")
+	if err != nil {
+
+	}
+	iconfile, _ := os.Open(icon.Filename)
+	icondata, _ := io.ReadAll(iconfile)
+
+	image, err := c.Request.FormFile("image")
+	if err != nil {
+
+	}
+	imagefile, _ := os.Open(image.Filename)
+	imagedata, _ := io.ReadAll(imagefile)
+	adminID, _ := strconv.Atoi(c.Query("admin_id"))
+	title := c.Query("title")
+	signature := c.Query("signature")
+
+	// 创建 ChangeCardRequest
+	req := &mainview.ChangeCardRequest{
+		Icon:      icondata,
+		Image:     imagedata,
+		AdminId:   int32(adminID),
+		Title:     title,
+		Signature: signature,
+	}
+
+	// 调用 RPC 方法以更改卡片
+	resp, _ := rpc.ChangeCard(ctx, req)
+
+	// 处理响应
+	if resp.StatusCode == -1 {
+		c.JSON(http.StatusOK, response.BuildBase(-1, resp.StatusMsg))
+		zap.S().Errorf("%v ===> %v", errno.ErrChangeCard, resp.StatusMsg)
+		return
+	}
+
+	c.JSON(http.StatusOK, resp)
 }
