@@ -29,13 +29,13 @@ func main() {
 		zap.S().Panicf("数据库连接错误 ===>  %v", err)
 	}
 
-	// drop table
-	err = db.Migrator().DropTable(&model.User{}, &model.Article{}, &model.Comment{})
+	//drop table
+	err = db.Migrator().DropTable(&model.User{}, &model.Article{}, &model.Comment{}, &model.Guestbook{}, &model.Admin{})
 	if err != nil {
 		zap.S().Fatalf("drop table 失败 ===>  %v", err)
 	}
 
-	err = db.AutoMigrate(&model.User{}, &model.Article{}, &model.Comment{})
+	err = db.AutoMigrate(&model.User{}, &model.Article{}, &model.Comment{}, &model.Guestbook{}, &model.Admin{})
 	if err != nil {
 		zap.S().Panicf("automigate 失败 ===>  %v", err)
 	}

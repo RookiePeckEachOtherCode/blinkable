@@ -33,6 +33,7 @@ func newComment(db *gorm.DB, opts ...gen.DOOption) comment {
 	_comment.UpdateAt = field.NewTime(tableName, "update_at")
 	_comment.AuthorID = field.NewUint32(tableName, "author_id")
 	_comment.ArticleID = field.NewUint32(tableName, "article_id")
+	_comment.UserID = field.NewUint32(tableName, "user_id")
 	_comment.Content = field.NewString(tableName, "content")
 
 	_comment.fillFieldMap()
@@ -49,6 +50,7 @@ type comment struct {
 	UpdateAt  field.Time
 	AuthorID  field.Uint32
 	ArticleID field.Uint32
+	UserID    field.Uint32
 	Content   field.String
 
 	fieldMap map[string]field.Expr
@@ -71,6 +73,7 @@ func (c *comment) updateTableName(table string) *comment {
 	c.UpdateAt = field.NewTime(table, "update_at")
 	c.AuthorID = field.NewUint32(table, "author_id")
 	c.ArticleID = field.NewUint32(table, "article_id")
+	c.UserID = field.NewUint32(table, "user_id")
 	c.Content = field.NewString(table, "content")
 
 	c.fillFieldMap()
@@ -88,12 +91,13 @@ func (c *comment) GetFieldByName(fieldName string) (field.OrderExpr, bool) {
 }
 
 func (c *comment) fillFieldMap() {
-	c.fieldMap = make(map[string]field.Expr, 6)
+	c.fieldMap = make(map[string]field.Expr, 7)
 	c.fieldMap["id"] = c.ID
 	c.fieldMap["create_at"] = c.CreateAt
 	c.fieldMap["update_at"] = c.UpdateAt
 	c.fieldMap["author_id"] = c.AuthorID
 	c.fieldMap["article_id"] = c.ArticleID
+	c.fieldMap["user_id"] = c.UserID
 	c.fieldMap["content"] = c.Content
 }
 

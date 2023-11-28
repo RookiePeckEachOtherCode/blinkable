@@ -16,44 +16,54 @@ import (
 )
 
 var (
-	Q       = new(Query)
-	Article *article
-	Comment *comment
-	User    *user
+	Q         = new(Query)
+	Admin     *admin
+	Article   *article
+	Comment   *comment
+	Guestbook *guestbook
+	User      *user
 )
 
 func SetDefault(db *gorm.DB, opts ...gen.DOOption) {
 	*Q = *Use(db, opts...)
+	Admin = &Q.Admin
 	Article = &Q.Article
 	Comment = &Q.Comment
+	Guestbook = &Q.Guestbook
 	User = &Q.User
 }
 
 func Use(db *gorm.DB, opts ...gen.DOOption) *Query {
 	return &Query{
-		db:      db,
-		Article: newArticle(db, opts...),
-		Comment: newComment(db, opts...),
-		User:    newUser(db, opts...),
+		db:        db,
+		Admin:     newAdmin(db, opts...),
+		Article:   newArticle(db, opts...),
+		Comment:   newComment(db, opts...),
+		Guestbook: newGuestbook(db, opts...),
+		User:      newUser(db, opts...),
 	}
 }
 
 type Query struct {
 	db *gorm.DB
 
-	Article article
-	Comment comment
-	User    user
+	Admin     admin
+	Article   article
+	Comment   comment
+	Guestbook guestbook
+	User      user
 }
 
 func (q *Query) Available() bool { return q.db != nil }
 
 func (q *Query) clone(db *gorm.DB) *Query {
 	return &Query{
-		db:      db,
-		Article: q.Article.clone(db),
-		Comment: q.Comment.clone(db),
-		User:    q.User.clone(db),
+		db:        db,
+		Admin:     q.Admin.clone(db),
+		Article:   q.Article.clone(db),
+		Comment:   q.Comment.clone(db),
+		Guestbook: q.Guestbook.clone(db),
+		User:      q.User.clone(db),
 	}
 }
 
@@ -67,24 +77,30 @@ func (q *Query) WriteDB() *Query {
 
 func (q *Query) ReplaceDB(db *gorm.DB) *Query {
 	return &Query{
-		db:      db,
-		Article: q.Article.replaceDB(db),
-		Comment: q.Comment.replaceDB(db),
-		User:    q.User.replaceDB(db),
+		db:        db,
+		Admin:     q.Admin.replaceDB(db),
+		Article:   q.Article.replaceDB(db),
+		Comment:   q.Comment.replaceDB(db),
+		Guestbook: q.Guestbook.replaceDB(db),
+		User:      q.User.replaceDB(db),
 	}
 }
 
 type queryCtx struct {
-	Article IArticleDo
-	Comment ICommentDo
-	User    IUserDo
+	Admin     IAdminDo
+	Article   IArticleDo
+	Comment   ICommentDo
+	Guestbook IGuestbookDo
+	User      IUserDo
 }
 
 func (q *Query) WithContext(ctx context.Context) *queryCtx {
 	return &queryCtx{
-		Article: q.Article.WithContext(ctx),
-		Comment: q.Comment.WithContext(ctx),
-		User:    q.User.WithContext(ctx),
+		Admin:     q.Admin.WithContext(ctx),
+		Article:   q.Article.WithContext(ctx),
+		Comment:   q.Comment.WithContext(ctx),
+		Guestbook: q.Guestbook.WithContext(ctx),
+		User:      q.User.WithContext(ctx),
 	}
 }
 
