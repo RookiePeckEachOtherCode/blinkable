@@ -8,6 +8,7 @@ require (
 	github.com/cloudwego/kitex v0.7.3
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/google/uuid v1.3.0
+	github.com/hertz-contrib/cors v0.1.0
 	github.com/hertz-contrib/gzip v0.0.1
 	github.com/kitex-contrib/registry-etcd v0.2.0
 	github.com/minio/minio-go/v7 v7.0.63
