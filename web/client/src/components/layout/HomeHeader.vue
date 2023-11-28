@@ -9,7 +9,7 @@
       <div class="logo-box">CRK菜鸟营</div>
       <el-menu-item index="/home/main-view">主页</el-menu-item>
       <el-sub-menu index="2">
-        <template #title>组件</template>
+        <template #title >组件</template>
         <el-menu-item index="/home/admin-home" >管理者界面</el-menu-item>
         <el-menu-item index="/home/paper-list">文章列表</el-menu-item>
         <el-menu-item index="2-3">item three</el-menu-item>
@@ -20,8 +20,9 @@
           <el-menu-item index="2-4-3">item three</el-menu-item>
         </el-sub-menu>
       </el-sub-menu>
-      <el-menu-item index="3" disabled>关于站点</el-menu-item>
-      <el-menu-item index="">some else</el-menu-item>
+      <el-menu-item index="3" disabled style="font-size: 17px">关于站点</el-menu-item>
+      <el-menu-item index="4" style="color:#ffd04b; font-size: 17px" @click="goToDocumentation">菜鸟营文档库</el-menu-item>
+      <el-menu-item index="5" @click="goOj" style="color: #7bff91;font-size: 17px">菜鸟营Oj</el-menu-item>
       <div class="right-box">
         <el-avatar v-if="loginstate" src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png"></el-avatar>
         <el-menu-item index="/login" v-if="!loginstate" class="custom-menu-item" >Login</el-menu-item>
@@ -40,6 +41,15 @@ const  defaultAcitve=ref<String>(router.currentRoute.value.path)
 const loginstate=useUserInfoStore().authFromLocal();
 const activeIndex = ref('1')
 const activeIndex2 = ref('1')
+const goToDocumentation = () => {
+  const documentationLink = "https://rookiepeckeachothercode.github.io/RookiableDoc/#/md/%E7%BC%96%E5%86%99%E5%85%A5%E9%97%A8";
+
+  window.location.href =documentationLink
+};
+const goOj=()=>{
+  const ojlink="http://122.51.56.135:8888/"
+  window.location.href =ojlink
+}
 </script>
 
 <style scoped lang="scss">
