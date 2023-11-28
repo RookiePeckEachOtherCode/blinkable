@@ -25,7 +25,6 @@ var (
 	ErrCreateUserIsWrong         = errors.New("创建用户失败")
 	ErrFindUserIsWrong           = errors.New("查找用户失败")
 	ErrLogin                     = errors.New("登录失败")
-	ErrLike                      = errors.New("点赞失败")
 	ErrRegister                  = errors.New("注册失败")
 	ErrUserNotFound              = errors.New("用户没有找到")
 	ErrUserInfo                  = errors.New("获取用户信息失败")
@@ -37,6 +36,7 @@ var (
 	ErrMinioBuket                = errors.New("查询桶时出现错误")
 	Errupload                    = errors.New("未能正确上传到桶")
 	Errsave                      = errors.New("桶未能储存数据")
+	ErrLike                      = errors.New("喜欢失败")
 )
 
 // Server
