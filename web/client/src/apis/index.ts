@@ -18,7 +18,7 @@ export const $http=async(config:AxiosRequestConfig)=>{
         const axiosResponse=await httpInstance<Status>(config)
         const status=axiosResponse.data
 
-        if(!status?.succeed){
+        if(status?.succeed){
             let errTitle:string='Error;' ;
             if(status.status_code===401){
                 errTitle='Unauthorized';
@@ -28,8 +28,6 @@ export const $http=async(config:AxiosRequestConfig)=>{
                 errTitle='Forbidden';
             }else if(status.status_code===500){
                 errTitle="SeverError"
-            }else {
-                errTitle='Unknown'
             }
             const err=new Error(status?.status_msg||'Unknown');
             err.name=errTitle;
