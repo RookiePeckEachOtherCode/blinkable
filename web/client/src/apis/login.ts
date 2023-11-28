@@ -6,7 +6,7 @@ import {$http} from "@/apis/index";
 export const loginApi=(data:{password:string;username:string})=>{
     return $http({
         method:"post",
-        url:"/admin/login",
-        data,
+        url:"/user/login",
+        params: data,
     });
 }

@@ -93,12 +93,12 @@
         return;
       },
       async getcard() {
-        const res=await Getcards();
-        let p:Admin[];
-        if(res){
-          p=res.data.admins;
-        }
-        else p= [
+        // const res=await Getcards();
+         let p:Admin[];
+        // if(res){
+        //   p=res.data.admins;
+        // }
+         p= [
           {
             "admin_id": 1,
             "title": "crk算法第一臭卷直男",
