@@ -84,12 +84,12 @@
           user_id:user_id,
         }
         const res=await Likeapi(form)
-       if(res.status_code==1)  ElMessage.success("点赞成功")
+       if(res.status_code==0)  ElMessage.success("点赞成功")
          return;
       },
       async guestbookbut(){
         const res=await guestbookApi(this.guestbookfrom);
-        if(res.status_code==1)ElMessage.success("留言成功")
+        if(res.status_code==0)ElMessage.success("留言成功")
         return;
       },
       async getcard() {
@@ -195,6 +195,15 @@
 
   <template>
     <div v-if="admins.length">
+      <header class="header">
+        <div class="header-text">
+        <h1 class="heading-primary">
+
+            <span class="heading-primary-main">菜 鸟 营</span>
+            <span class="header-primary-sub">Rookiable Coven</span>
+        </h1>
+        </div>
+      </header>
       <el-dialog
           v-model="dialogVisible"
           :title="'cin>>'+whoguest+'>>endl;'"
@@ -443,7 +452,70 @@
   </template>
 
   <style scoped lang="scss">
+.header{
 
+  height: 800px;
+  width: 100%;
+
+}
+.header-text{
+  position: absolute;
+  top: 40%;
+  left: 50%;
+  transform: translate(-50%,-50%);
+}
+.heading-primary{
+  color:#ffffff;
+  text-transform: uppercase;
+  backface-visibility: hidden;//解决动画异常摇晃问题
+}
+.heading-primary-main{
+  display: block;
+  font-size: 80px;
+  font-weight: 400;
+  letter-spacing: 25px;
+  margin-left: 22.5%;
+  animation-name: moveInleft;
+  animation-duration: 1s;
+  animation-timing-function: ease-out;
+  //animation-iteration-count: 3;播放几次
+  //animation-delay: 1s;延迟
+}
+.header-primary-sub{
+  display: block;
+  font-size: 60px;
+  font-weight: 400;
+  letter-spacing: 15px;
+  animation-name: moveInright;
+  animation-duration: 1s;
+  animation-timing-function: ease-out;
+}
+@keyframes moveInleft {
+  0%{
+    opacity: 0;
+    transform: translateX(-100px);
+  }
+  80%{
+    transform: translateX(15px);
+  }
+  100%{
+    opacity:1;
+    transform: translate(0);
+  }
+}
+@keyframes moveInright {
+  0%{
+    opacity: 0;
+    transform: translateX(100px);
+  }
+  80%{
+    transform: translateX(-15px);
+  }
+  100%{
+    opacity:1;
+    transform: translate(0);
+  }
+}
   @keyframes shake {
     0% {
       transform: translateX(0);
