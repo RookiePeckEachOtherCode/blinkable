@@ -63,6 +63,24 @@
           }
         });
       },
+      hitarrow(){
+        // 获取目标元素
+        var targetElement = document.querySelector('.card');
+        // 检查目标元素是否存在
+        if (targetElement) {
+          // 获取目标元素的位置信息
+          var targetPosition = targetElement.getBoundingClientRect().top;
+          // 调整目标位置（减去 100px）
+          var adjustedPosition = targetPosition - 150;
+          // 使用 scrollIntoView 方法滚动到目标元素
+          window.scrollTo({
+            top: adjustedPosition,
+            behavior: 'smooth',
+            block: 'start',
+            inline: 'nearest'
+          });
+        }
+      },
       tableview(id:number){
         if (id == 1) {
           console.log(this.table1);
@@ -203,6 +221,7 @@
             <span class="header-primary-sub">Rookiable Coven</span>
         </h1>
         </div>
+        <div class="header-arrow" @click="hitarrow"> </div>
       </header>
       <el-dialog
           v-model="dialogVisible"
@@ -516,6 +535,32 @@
     transform: translate(0);
   }
 }
+.header-arrow {
+  position: absolute;
+  height: 100px;
+  width: 100px;
+  top: 80%;
+  left: 45%;
+  clip-path: polygon(0 50%, 35% 50%, 35% 0, 66% 0, 66% 50%, 100% 51%, 50% 100%);
+  background-color: white;
+  animation-name: arrowblink;
+  animation-duration: 3s;
+  animation-timing-function: ease-out;
+  animation-iteration-count: infinite; /* Set to 'infinite' for continuous loop */
+}
+
+@keyframes arrowblink {
+  0%, 100% {
+    opacity: 0;
+    transform: translateY(-15px);
+  }
+
+  50% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
   @keyframes shake {
     0% {
       transform: translateX(0);
