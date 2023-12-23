@@ -1,18 +1,21 @@
 <template>
   <div id="header">
     <el-menu
-        :default-active="defaultAcitve"
+        :default-active="activeIndex2"
         class="el-menu-demo"
         mode="horizontal"
         router
+        background-color="#78a355"
+        text-color="#fff"
+
     >
       <div class="logo-box">CRK菜鸟营</div>
       <el-menu-item index="/home/main-view">主页</el-menu-item>
       <el-sub-menu index="2">
-        <template #title >组件</template>
+        <template #title  >组件</template>
         <el-menu-item index="/home/admin-home" >管理者界面</el-menu-item>
         <el-menu-item index="/home/paper-list">文章列表</el-menu-item>
-        <el-menu-item index="2-3">item three</el-menu-item>
+        <el-menu-item index="/home/paper-edit">文章发布</el-menu-item>
         <el-sub-menu index="2-4">
           <template #title>item four</template>
           <el-menu-item index="2-4-1">item one</el-menu-item>

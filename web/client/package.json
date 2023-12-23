@@ -10,6 +10,10 @@
     "type-check": "vue-tsc --noEmit -p tsconfig.app.json --composite false"
   },
   "dependencies": {
+    "@bytemd/plugin-footnotes": "^1.12.4",
+    "@bytemd/plugin-gemoji": "^1.21.0",
+    "@bytemd/plugin-gfm": "^1.21.0",
+    "@bytemd/plugin-highlight-ssr": "^1.21.0",
     "axios": "^1.5.1",
     "element-plus": "^2.4.0",
     "jquery": "^3.7.1",

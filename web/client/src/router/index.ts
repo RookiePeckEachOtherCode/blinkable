@@ -1,7 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import {useUserInfoStore} from "@/stores/userinfo";
 import pinia from "@/stores/pinia";
-
 const  userInfoStore=useUserInfoStore(pinia);
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -13,7 +12,7 @@ const router = createRouter({
     {
       path: '/home',
       name: 'home',
-      component: ()=>import("../views/HomeView.vue"),
+      component: ()=>import("@/views/HomeView.vue"),
       meta:{
         noAuth:true,
       },
@@ -32,7 +31,11 @@ const router = createRouter({
           name:"paper-list",
           component:()=>import("@/components/paper/paperlist.vue")
         },
-
+        {
+          path:"paper-edit",
+          name:"paper-edit",
+          component:()=>import ("@/components/paper/editpaper.vue")
+        },
       ]},
     {
       path: '/login',

@@ -4,6 +4,6 @@ export const guestbookApi= (data: { admin_id: number; user_id: number;context:st
     return $http({
         method:"post",
         url:"/Main/guestbook",
-        data,
+        params: data,
     });
 }

@@ -6,7 +6,7 @@
   import {guestbookApi} from "@/apis/guestaction";
   import {useUserInfoStore} from "@/stores/userinfo";
   import router from "@/router";
-  import {ElMessage, FormInstance} from "element-plus";
+  import {ElMessage} from "element-plus";
   import { ref, defineProps } from 'vue';
   export interface Admin {
     admin_id: number;
@@ -55,13 +55,20 @@
     },
     methods: {
       hideButtons(id: number) {
+        var type=false;
+        $('.hide').each(function () {
+          if (this.id.startsWith(id + '-'+'1')){
+            if(this.style.display!='none')type=true;
+          }
+        });
         $('.hide').each(function () {
           if (this.id.startsWith(id + '-')) {
-            if (this.style.display != 'none') {
+
+            if (type) {
               $(this).fadeOut('slow');
             } else $(this).fadeIn('slow');
           }
-        });
+        })
       },
       hitarrow(){
         // 获取目标元素
@@ -70,7 +77,7 @@
         if (targetElement) {
           // 获取目标元素的位置信息
           var targetPosition = targetElement.getBoundingClientRect().top;
-          // 调整目标位置（减去 100px）
+          // 调整目标位置（减去 100px)
           var adjustedPosition = targetPosition - 150;
           // 使用 scrollIntoView 方法滚动到目标元素
           window.scrollTo({
@@ -102,10 +109,19 @@
           user_id:user_id,
         }
         const res=await Likeapi(form)
-       if(res.status_code==0)  ElMessage.success("点赞成功")
+       if(res.status_code===0)  ElMessage.success("点赞成功")
          return;
       },
-      async guestbookbut(){
+      async guestbookbut(adimin_id:number){
+        const user_id=Number(useUserInfoStore().getUserId());
+        if(!user_id){
+          router.push("/login");
+          return;
+        }
+        const form={
+          admin_id:adimin_id,
+          user_id:user_id,
+        }
         const res=await guestbookApi(this.guestbookfrom);
         if(res.status_code==0)ElMessage.success("留言成功")
         return;
@@ -486,6 +502,7 @@
 .heading-primary{
   color:#ffffff;
   text-transform: uppercase;
+  font-family: Monocraft;
   backface-visibility: hidden;//解决动画异常摇晃问题
 }
 .heading-primary-main{
@@ -561,23 +578,7 @@
   }
 }
 
-  @keyframes shake {
-    0% {
-      transform: translateX(0);
-    }
-    25% {
-      transform: translateX(-5px);
-    }
-    50% {
-      transform: translateX(5px);
-    }
-    75% {
-      transform: translateX(-5px);
-    }
-    100% {
-      transform: translateX(0);
-    }
-  }
+
   .overlay {
     position: fixed;
     top: 0;
@@ -599,6 +600,10 @@
     src: url('MFBoHeHaiYan_Noncommercial-Regular.otf')
 
   }
+@font-face {
+  font-family: Monocraft;
+  src: url("Monocraft.otf");
+}
     .card {
       display: flex;
       flex-direction: row;
@@ -672,14 +677,37 @@
                 inset 0 -3em 3em rgba(0, 0, 0, 0.1),
                 0 0 0 2px rgb(255, 255, 255),
                 0.3em 0.3em 1em rgba(0, 0, 0, 0.3);
+            transition: all 0.2s;
           }
+        @keyframes shake {
+          0% {
+            transform: translateX(0);
+          }
+          25% {
+            transform: translateX(-5px);
+          }
+          50% {
+            transform: translateX(5px);
+          }
+          75% {
+            transform: translateX(-5px);
+          }
+          100% {
+            transform: translateX(0);
+          }
+        }
         .el-button.hide:hover{
           transform: scale(1.1); /* 设置按钮获得焦点时的缩放效果，可以根据需要调整 */
           transition: transform 0.2s; /* 添加过渡效果以使动画更平滑 */
         }
         .el-button.show:hover{
+
           animation: shake 0.5s;
           background-color: #ffd04b;
+          //box-shadow: 0 10px 20px ;
+        }
+        .el-button.show:active{
+            transform: translateY(-2px);
         }
         .el-button.hide{
           width: 65px;
