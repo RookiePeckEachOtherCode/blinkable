@@ -488,7 +488,6 @@
 
   <style scoped lang="scss">
 .header{
-
   height: 800px;
   width: 100%;
 

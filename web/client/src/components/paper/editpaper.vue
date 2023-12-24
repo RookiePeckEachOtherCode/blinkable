@@ -1,7 +1,23 @@
 <template>
+  <el-dialog
+    v-model="logvisable"
+    :title="'给这篇文章一个标题吧'"
+    width="30%"
+    style="background-color:rgb(258,258,258)" >
+    <el-input v-model="title">
+    </el-input>
+    <template #footer>
+      <span class="dialog-footer">
+        <el-button @click="logvisable = false">Cancel</el-button>
+        <el-button type="primary" @click="logvisable = false;upload()">
+          Upload
+        </el-button>
+      </span>
+    </template>
+  </el-dialog>
   <div style="display: flex;flex-direction: column ;gap: 50px">
   <div class="ed">
-    <div class="show">
+    <div class="box">
       <v-md-editor v-model="text" height="600px" style="position: absolute;" @save="saveinlocal" ></v-md-editor>
     </div>
     </div>
@@ -14,7 +30,7 @@
             box-shadow:
                 inset 0 -3em 3em rgba(0, 0, 0, 0.1),
                 0 0 0 2px rgb(255, 255, 255);
-            transition: all 0.2s;" size="large" @click="upload">发布</el-button>
+            transition: all 0.2s;" size="large" @click="logvisable=true">发布</el-button>
   </div>
 
 </template>
@@ -24,11 +40,20 @@ import Editor from "@/App.vue";
 import {useUserInfoStore} from "@/stores/userinfo";
 import {uploadApi} from "@/apis/uploadfile";
 import {ElMessage} from "element-plus";
+import {strings} from "mavon-editor/dist/highlightjs/highlight.min";
+import { ref } from 'vue';
 export default {
   components: { Editor },
+  setup(props, context){
+    const title=ref('')
+    return{
+      title,
+    }
+  },
   data() {
     return {
       text: '',
+      logvisable:false,
     };
   },
   methods:{
@@ -50,6 +75,7 @@ export default {
      const formData = new FormData();
      formData.append('user_id', useUserInfoStore().getUserId());
      formData.append('file', blob, 'filename.md');
+     formData.append('title',this.title);
      const response = await uploadApi(formData);
      if(response.status_code===0){
        ElMessage.success("上传成功")
@@ -67,7 +93,7 @@ export default {
   left: 50%;
   z-index: 1;
 }
-.show{
+.box{
   position: absolute;
   left: 10%;
   width: 80%;
