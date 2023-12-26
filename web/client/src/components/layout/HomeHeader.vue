@@ -13,7 +13,7 @@
       <el-menu-item index="/home/main-view">主页</el-menu-item>
       <el-sub-menu index="2">
         <template #title  >组件</template>
-        <el-menu-item index="/home/admin-home" >管理者界面</el-menu-item>
+        <el-menu-item index="/home/admin-home" >个人信息</el-menu-item>
         <el-menu-item index="/home/paper-list">文章列表</el-menu-item>
         <el-menu-item index="/home/paper-edit">文章发布</el-menu-item>
         <el-sub-menu index="2-4">

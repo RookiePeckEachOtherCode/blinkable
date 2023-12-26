@@ -29,12 +29,17 @@ const router = createRouter({
         {
           path:"paper-list",
           name:"paper-list",
-          component:()=>import("@/components/paper/display.vue")
+          component:()=>import("@/components/paper/paperlist.vue")
         },
         {
           path:"paper-edit",
           name:"paper-edit",
           component:()=>import ("@/components/paper/editpaper.vue")
+        },
+        {
+          path:"paper-display",
+          name:"paper-display,",
+          component:()=>import("@/components/paper/display.vue")
         },
 
       ]},
