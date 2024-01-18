@@ -1,3 +1,0 @@
-info_path: "logs/info.log"
-error_path: "logs/error.log"
-mod: "dev"

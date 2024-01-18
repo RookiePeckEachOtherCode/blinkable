@@ -28,3 +28,5 @@ go.work
 logs/
 
 output/
+deployment/nacos/nacos-docker/mysql
+deployment/nacos/nacos-docker/standalone-logs
