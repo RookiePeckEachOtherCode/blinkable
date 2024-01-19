@@ -14,7 +14,7 @@
     "@bytemd/plugin-gemoji": "^1.21.0",
     "@bytemd/plugin-gfm": "^1.21.0",
     "@bytemd/plugin-highlight-ssr": "^1.21.0",
-    "axios": "^1.5.1",
+    "axios": "^1.6.0",
     "element-plus": "^2.4.0",
     "jquery": "^3.7.1",
     "pinia": "^2.1.7",
