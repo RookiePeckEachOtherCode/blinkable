@@ -1,0 +1,43 @@
+receivers:
+  otlp:
+    protocols:
+      grpc:
+        # endpoint: localhost:4317
+      http:
+        # endpoint: localhost:4318
+
+exporters:
+  prometheusremotewrite:
+    endpoint: "http://victoriametrics:8428/api/v1/write"
+
+  logging:
+    loglevel: debug
+
+  otlp:
+    endpoint: jaeger-all-in-one:14250
+    # endpoint: 127.0.0.1:14250
+    tls:
+      insecure: true
+
+
+processors:
+  batch:
+
+extensions:
+  health_check:
+  pprof:
+    endpoint: :1888
+  zpages:
+    endpoint: :55679
+
+service:
+  extensions: [pprof, zpages, health_check]
+  pipelines:
+    traces:
+      receivers: [otlp]
+      processors: [batch]
+      exporters: [logging, otlp]
+    metrics:
+      receivers: [otlp]
+      processors: [batch]
+      exporters: [logging, prometheusremotewrite]
