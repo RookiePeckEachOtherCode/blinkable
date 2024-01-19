@@ -33,7 +33,18 @@
 │   ├── minio              //对象存储
 │   ├── viper              //加载配置文件
 │   └── zap                //打印日志
-└── web                     //web服务
+└── web                     //前端页面
+│   └──client                      
+│       └──src
+│           ├── apis               //api列表
+│           ├── assets             //静态资源
+│           ├── containers         //容器列表
+│           ├── depends            //依赖库目录
+│           ├── enveroment         //环境配置文件
+│           ├── pages              //页面（组件）目录
+│           ├── router             //路由管理
+│           ├── rules              //自定义规则文件
+│           └── stores             //缓存配置  
 ```
 
 定义完接口文件后，使用add-service.sh生成服务代码，如：
