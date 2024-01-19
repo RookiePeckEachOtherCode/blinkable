@@ -29,10 +29,10 @@ struct user_register_response {
 }
 
 struct get_user_info_request {
-    1: i64    user_id
-    2: string token
-    3: string user_name
-    4: i32   tp
+    1: i64    user_id (api.query = "user_id")
+    2: string token (api.query = "token")
+    3: string user_name (api.query = "user_name")
+    4: i32    tp (api.query = "tp")
 }
 
 struct get_user_info_response {

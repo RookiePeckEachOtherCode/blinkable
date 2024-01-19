@@ -6,13 +6,13 @@ import (
 	"path"
 	"time"
 
-	"github.com/cloudwego/kitex/pkg/klog"
-	kitexlogrus "github.com/kitex-contrib/obs-opentelemetry/logging/logrus"
+	"github.com/cloudwego/hertz/pkg/common/hlog"
+	hertzlogrus "github.com/hertz-contrib/obs-opentelemetry/logging/logrus"
 	"github.com/natefinch/lumberjack"
 )
 
 func InitLogger() {
-	logFilePath := consts.KlogFilePath
+	logFilePath := consts.HlogFIlePath
 	if err := os.MkdirAll(logFilePath, 0o777); err != nil {
 		panic(err)
 	}
@@ -25,8 +25,7 @@ func InitLogger() {
 		}
 	}
 
-	logger := kitexlogrus.NewLogger()
-
+	logger := hertzlogrus.NewLogger()
 	lumberjackLogger := &lumberjack.Logger{
 		Filename:   fileName,
 		MaxSize:    20,   // A file can be up to 20M.
@@ -36,9 +35,8 @@ func InitLogger() {
 	}
 
 	logger.SetOutput(lumberjackLogger)
-	logger.SetLevel(klog.LevelDebug)
+	logger.SetLevel(hlog.LevelDebug)
 
 	logger.SetOutput(os.Stdout)
-	klog.SetLogger(logger)
-
+	hlog.SetLogger(logger)
 }

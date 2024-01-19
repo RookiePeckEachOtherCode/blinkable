@@ -1018,10 +1018,10 @@ func (p *UserRegisterResponse) String() string {
 }
 
 type GetUserInfoRequest struct {
-	UserID   int64  `thrift:"user_id,1" form:"user_id" json:"user_id" query:"user_id"`
-	Token    string `thrift:"token,2" form:"token" json:"token" query:"token"`
-	UserName string `thrift:"user_name,3" form:"user_name" json:"user_name" query:"user_name"`
-	Tp       int32  `thrift:"tp,4" form:"tp" json:"tp" query:"tp"`
+	UserID   int64  `thrift:"user_id,1" json:"user_id" query:"user_id"`
+	Token    string `thrift:"token,2" json:"token" query:"token"`
+	UserName string `thrift:"user_name,3" json:"user_name" query:"user_name"`
+	Tp       int32  `thrift:"tp,4" json:"tp" query:"tp"`
 }
 
 func NewGetUserInfoRequest() *GetUserInfoRequest {

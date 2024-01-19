@@ -119,6 +119,8 @@ func (s *UserServiceImpl) UserRegister(ctx context.Context, req *user.UserRegist
 		Avatar:          "",
 		BackgroundImage: "",
 		Signature:       "这个人很懒，什么都没有",
+		CreateAt:        time.Now(),
+		UpdateAt:        time.Now(),
 	}
 	err = s.MysqlCen.CreateUser(ctx, newUser)
 	if err != nil {

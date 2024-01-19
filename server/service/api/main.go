@@ -20,7 +20,7 @@ func main() {
 
 	h := server.New(
 		tracer,
-		server.WithHostPorts(fmt.Sprintf("%v:%v", config.GlobalServerConfig.Host, config.GlobalServerConfig.Port)),
+		server.WithHostPorts(fmt.Sprintf(":%s", config.GlobalServerConfig.Port)),
 		server.WithRegistry(r, info),
 		server.WithHandleMethodNotAllowed(true),
 	)

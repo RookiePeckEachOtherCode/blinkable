@@ -1,49 +1,10 @@
 package consts
 
-// import "blinkable/pkg/viper"
-
-// API
-// const (
-//
-//	API_PORT = "8080"
-//
-// )
-//
-// // ETCD
-// const (
-//
-//	ETCD_ADDR = "127.0.0.1:2379"
-//
-// )
-//
-// // UserService
-// const (
-//
-//	UserServiceName    = "Blinkable-UserService"
-//	UserServiceAPIPort = "10001"
-//	UserServiceRPCPort = "11001"
-//
-// )
-//
-// // jwt
-// const (
-//
-//	JwtKey = "114514"
-//
-// )
-//
-// // minio
-// const (
-//
-//	cfg                  = viper.Load("oss".Viper
-//	AvatarBucketName     = cfg.GetString("bucket.avatar.name"
-//	BackgroundBucketName = cfg.GetString("bucket.background.name"
-//
-// )
-// PATH
 const (
 	KlogFilePath   = "./tmp/klog/logs"
+	HlogFIlePath   = "./temp/hlog/logs"
 	UserConfigPath = "../../service/user/config.yaml"
+	APIConfigPath  = "../../service/api/config.yaml"
 )
 
 // SnowflakeNode    = 1
@@ -97,4 +58,8 @@ const (
 	ErrGetTemporarilyUrlIsWrong      = "获取临时 url 失败"
 	ErrUploadFile                    = "上传文件失败"
 	ErrUploadImgTypeIsWrong          = "上传图片类型错误"
+)
+
+const (
+	DSN = "%s:%s@tcp(%s:%s)/%s?charset=utf8mb4&parseTime=True&loc=Local"
 )

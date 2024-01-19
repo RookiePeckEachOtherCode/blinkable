@@ -18,10 +18,7 @@ import (
 
 func initUser() {
 	sc := []constant.ServerConfig{
-		{
-			IpAddr: config.GlobalNacosConfig.Host,
-			Port:   config.GlobalNacosConfig.Port,
-		},
+		*constant.NewServerConfig(config.GlobalNacosConfig.Host, config.GlobalNacosConfig.Port),
 	}
 
 	cc := constant.ClientConfig{
@@ -38,10 +35,11 @@ func initUser() {
 			ClientConfig:  &cc,
 			ServerConfigs: sc,
 		})
-	r := nacos.NewNacosResolver(nacosCli, nacos.WithGroup("USER_GROUP"))
 	if err != nil {
 		klog.Fatalf("new nacos client failed: %s", err.Error())
 	}
+
+	r := nacos.NewNacosResolver(nacosCli, nacos.WithGroup("USER_GROUP"))
 	provider.NewOpenTelemetryProvider(
 		provider.WithServiceName(config.GlobalServerConfig.Name),
 		provider.WithExportEndpoint(config.GlobalServerConfig.OtelInfo.EndPoint),

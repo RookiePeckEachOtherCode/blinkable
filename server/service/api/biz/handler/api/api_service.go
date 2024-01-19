@@ -30,8 +30,7 @@ func UserLogin(ctx context.Context, c *app.RequestContext) {
 	}
 
 	resp := new(api.UserLoginResponse)
-	client := config.GlobalUserClient
-	res, err := client.UserLogin(ctx, &user.UserLoginRequest{
+	res, err := config.GlobalUserClient.UserLogin(ctx, &user.UserLoginRequest{
 		Username: req.Username,
 		Password: req.Password,
 	})
@@ -65,8 +64,7 @@ func UserRegister(ctx context.Context, c *app.RequestContext) {
 	}
 
 	resp := new(api.UserRegisterResponse)
-	client := config.GlobalUserClient
-	res, err := client.UserRegister(ctx, &user.UserRegisterRequest{
+	res, err := config.GlobalUserClient.UserRegister(ctx, &user.UserRegisterRequest{
 		Username: req.Username,
 		Password: req.Password,
 	})
@@ -97,17 +95,9 @@ func GetUserInfo(ctx context.Context, c *app.RequestContext) {
 		return
 	}
 	if req.Tp == 0 {
-		userId, ok := c.Get("user_id")
-		if !ok {
-			err = errors.New("api get userid failed")
-			hlog.Error(err)
-			c.String(http.StatusBadRequest, err.Error())
-			return
-		}
-		client := config.GlobalUserClient
-		res, err := client.GetUserInfo(ctx, &user.GetUserInfoRequest{
+		res, err := config.GlobalUserClient.GetUserInfo(ctx, &user.GetUserInfoRequest{
 			Tp:     req.Tp,
-			UserId: userId.(int64),
+			UserId: req.UserID,
 			Token:  req.Token,
 		})
 		if err != nil {
@@ -131,17 +121,9 @@ func GetUserInfo(ctx context.Context, c *app.RequestContext) {
 		resp.Succed = res.BaseResp.Succed
 		c.JSON(consts.StatusOK, resp)
 	} else if req.Tp == 1 {
-		name, ok := c.Get("user_name")
-		if !ok {
-			err = errors.New("api get user_name failed")
-			hlog.Error(err)
-			c.String(http.StatusBadRequest, err.Error())
-			return
-		}
-		client := config.GlobalUserClient
-		res, err := client.GetUserInfo(ctx, &user.GetUserInfoRequest{
+		res, err := config.GlobalUserClient.GetUserInfo(ctx, &user.GetUserInfoRequest{
 			Tp:       req.Tp,
-			UserName: name.(string),
+			UserName: req.UserName,
 			Token:    req.Token,
 		})
 		if err != nil {

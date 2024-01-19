@@ -26,6 +26,7 @@ type NacosConfig struct {
 	DataId    string `mapstructure:"dataid" json:"data_id"`
 	Group     string `mapstructure:"group" json:"group"`
 }
+
 type RPCServerConfig struct {
 	Name string `mapstructure:"name" json:"name"`
 }
