@@ -2,7 +2,7 @@ package consts
 
 const (
 	KlogFilePath   = "./tmp/klog/logs"
-	HlogFIlePath   = "./temp/hlog/logs"
+	HlogFIlePath   = "./tmp/hlog/logs"
 	UserConfigPath = "../../service/user/config.yaml"
 	APIConfigPath  = "../../service/api/config.yaml"
 )
