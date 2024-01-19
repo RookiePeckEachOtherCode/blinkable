@@ -30,3 +30,5 @@ logs/
 output/
 deployment/nacos/nacos-docker/mysql
 deployment/nacos/nacos-docker/standalone-logs
+server/service/api/tmp
+server/service/user/tmp
