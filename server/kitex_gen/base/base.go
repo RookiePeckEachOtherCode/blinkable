@@ -298,6 +298,7 @@ type User struct {
 	Experience    int32  `thrift:"experience,5" frugal:"5,default,i32" json:"experience"`
 	BackgroundImg string `thrift:"background_img,6" frugal:"6,default,string" json:"background_img"`
 	Level         int32  `thrift:"level,7" frugal:"7,default,i32" json:"level"`
+	Signature     string `thrift:"signature,8" frugal:"8,default,string" json:"signature"`
 }
 
 func NewUser() *User {
@@ -335,6 +336,10 @@ func (p *User) GetBackgroundImg() (v string) {
 func (p *User) GetLevel() (v int32) {
 	return p.Level
 }
+
+func (p *User) GetSignature() (v string) {
+	return p.Signature
+}
 func (p *User) SetId(val int64) {
 	p.Id = val
 }
@@ -356,6 +361,9 @@ func (p *User) SetBackgroundImg(val string) {
 func (p *User) SetLevel(val int32) {
 	p.Level = val
 }
+func (p *User) SetSignature(val string) {
+	p.Signature = val
+}
 
 var fieldIDToName_User = map[int16]string{
 	1: "id",
@@ -365,6 +373,7 @@ var fieldIDToName_User = map[int16]string{
 	5: "experience",
 	6: "background_img",
 	7: "level",
+	8: "signature",
 }
 
 func (p *User) Read(iprot thrift.TProtocol) (err error) {
@@ -449,6 +458,16 @@ func (p *User) Read(iprot thrift.TProtocol) (err error) {
 		case 7:
 			if fieldTypeId == thrift.I32 {
 				if err = p.ReadField7(iprot); err != nil {
+					goto ReadFieldError
+				}
+			} else {
+				if err = iprot.Skip(fieldTypeId); err != nil {
+					goto SkipFieldError
+				}
+			}
+		case 8:
+			if fieldTypeId == thrift.STRING {
+				if err = p.ReadField8(iprot); err != nil {
 					goto ReadFieldError
 				}
 			} else {
@@ -549,6 +568,15 @@ func (p *User) ReadField7(iprot thrift.TProtocol) error {
 	return nil
 }
 
+func (p *User) ReadField8(iprot thrift.TProtocol) error {
+	if v, err := iprot.ReadString(); err != nil {
+		return err
+	} else {
+		p.Signature = v
+	}
+	return nil
+}
+
 func (p *User) Write(oprot thrift.TProtocol) (err error) {
 	var fieldId int16
 	if err = oprot.WriteStructBegin("User"); err != nil {
@@ -581,6 +609,10 @@ func (p *User) Write(oprot thrift.TProtocol) (err error) {
 		}
 		if err = p.writeField7(oprot); err != nil {
 			fieldId = 7
+			goto WriteFieldError
+		}
+		if err = p.writeField8(oprot); err != nil {
+			fieldId = 8
 			goto WriteFieldError
 		}
 
@@ -721,6 +753,23 @@ WriteFieldEndError:
 	return thrift.PrependError(fmt.Sprintf("%T write field 7 end error: ", p), err)
 }
 
+func (p *User) writeField8(oprot thrift.TProtocol) (err error) {
+	if err = oprot.WriteFieldBegin("signature", thrift.STRING, 8); err != nil {
+		goto WriteFieldBeginError
+	}
+	if err := oprot.WriteString(p.Signature); err != nil {
+		return err
+	}
+	if err = oprot.WriteFieldEnd(); err != nil {
+		goto WriteFieldEndError
+	}
+	return nil
+WriteFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 8 begin error: ", p), err)
+WriteFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 8 end error: ", p), err)
+}
+
 func (p *User) String() string {
 	if p == nil {
 		return "<nil>"
@@ -753,6 +802,9 @@ func (p *User) DeepEqual(ano *User) bool {
 		return false
 	}
 	if !p.Field7DeepEqual(ano.Level) {
+		return false
+	}
+	if !p.Field8DeepEqual(ano.Signature) {
 		return false
 	}
 	return true
@@ -803,6 +855,13 @@ func (p *User) Field6DeepEqual(src string) bool {
 func (p *User) Field7DeepEqual(src int32) bool {
 
 	if p.Level != src {
+		return false
+	}
+	return true
+}
+func (p *User) Field8DeepEqual(src string) bool {
+
+	if strings.Compare(p.Signature, src) != 0 {
 		return false
 	}
 	return true

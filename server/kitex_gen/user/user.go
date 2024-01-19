@@ -131,7 +131,7 @@ func (p *UserLoginRequest) ReadField2(iprot thrift.TProtocol) error {
 
 func (p *UserLoginRequest) Write(oprot thrift.TProtocol) (err error) {
 	var fieldId int16
-	if err = oprot.WriteStructBegin("UserLoginRequest"); err != nil {
+	if err = oprot.WriteStructBegin("user_login_request"); err != nil {
 		goto WriteStructBeginError
 	}
 	if p != nil {
@@ -390,7 +390,7 @@ func (p *UserLoginResponse) ReadField3(iprot thrift.TProtocol) error {
 
 func (p *UserLoginResponse) Write(oprot thrift.TProtocol) (err error) {
 	var fieldId int16
-	if err = oprot.WriteStructBegin("UserLoginResponse"); err != nil {
+	if err = oprot.WriteStructBegin("user_login_response"); err != nil {
 		goto WriteStructBeginError
 	}
 	if p != nil {
@@ -644,7 +644,7 @@ func (p *UserRegisterRequest) ReadField2(iprot thrift.TProtocol) error {
 
 func (p *UserRegisterRequest) Write(oprot thrift.TProtocol) (err error) {
 	var fieldId int16
-	if err = oprot.WriteStructBegin("UserRegisterRequest"); err != nil {
+	if err = oprot.WriteStructBegin("user_register_request"); err != nil {
 		goto WriteStructBeginError
 	}
 	if p != nil {
@@ -903,7 +903,7 @@ func (p *UserRegisterResponse) ReadField3(iprot thrift.TProtocol) error {
 
 func (p *UserRegisterResponse) Write(oprot thrift.TProtocol) (err error) {
 	var fieldId int16
-	if err = oprot.WriteStructBegin("UserRegisterResponse"); err != nil {
+	if err = oprot.WriteStructBegin("user_register_response"); err != nil {
 		goto WriteStructBeginError
 	}
 	if p != nil {
@@ -1157,7 +1157,7 @@ func (p *GetUserInfoRequest) ReadField2(iprot thrift.TProtocol) error {
 
 func (p *GetUserInfoRequest) Write(oprot thrift.TProtocol) (err error) {
 	var fieldId int16
-	if err = oprot.WriteStructBegin("GetUserInfoRequest"); err != nil {
+	if err = oprot.WriteStructBegin("get_user_info_request"); err != nil {
 		goto WriteStructBeginError
 	}
 	if p != nil {
@@ -1396,7 +1396,7 @@ func (p *GetUserInfoResponse) ReadField2(iprot thrift.TProtocol) error {
 
 func (p *GetUserInfoResponse) Write(oprot thrift.TProtocol) (err error) {
 	var fieldId int16
-	if err = oprot.WriteStructBegin("GetUserInfoResponse"); err != nil {
+	if err = oprot.WriteStructBegin("get_user_info_response"); err != nil {
 		goto WriteStructBeginError
 	}
 	if p != nil {

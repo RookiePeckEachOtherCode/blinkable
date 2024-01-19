@@ -13,4 +13,5 @@ struct User {
     5: i32 experience
     6: string background_img
     7: i32 level
+    8: string signature
 }

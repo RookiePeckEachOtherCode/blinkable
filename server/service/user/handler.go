@@ -197,6 +197,7 @@ func (s *UserServiceImpl) GetUserInfo(ctx context.Context, req *user.GetUserInfo
 		Experience:    user.Experience,
 		BackgroundImg: user.BackgroundImage,
 		Level:         user.Level,
+		Signature:     user.Signature,
 	}
 
 	return resp, nil
