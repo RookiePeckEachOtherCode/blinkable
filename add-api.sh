@@ -4,11 +4,12 @@ if ! command -v hz &>/dev/null; then
     go install github.com/cloudwego/hertz/cmd/hz@latest
 fi
 if ! command -v hz &>/dev/null; then
-	echo '安装 hz 失败，请手动安装'
-	exit 1
+    echo '安装 hz 失败，请手动安装'
+    exit 1
 fi
 
 cd ./server/service/api/
-hz update -idl ../../idl/api.thrift
-go mod tidy
 
+hz update --idl ../../idl/api.thrift
+
+go mod tidy

@@ -9,6 +9,8 @@ import (
 	"blinkable/server/service/user/config"
 	"blinkable/server/service/user/model"
 	"context"
+	"errors"
+	"fmt"
 	"time"
 
 	"github.com/bwmarrin/snowflake"
@@ -20,10 +22,12 @@ import (
 type MysqlCen interface {
 	CreateUser(ctx context.Context, user *model.User) error
 	GetUserByUserName(ctx context.Context, Username string) (*model.User, error)
+	GetUserById(ctx context.Context, id int64) (*model.User, error)
 }
 type RedisCen interface {
 	CreateUser(ctx context.Context, user *model.User) error
 	GetUserById(ctx context.Context, id int64) (*model.User, error)
+	GetUserByUserName(ctx context.Context, name string) (*model.User, error)
 }
 
 // UserServiceImpl implements the last service interface defined in the IDL.
@@ -173,31 +177,69 @@ func (s *UserServiceImpl) UserRegister(ctx context.Context, req *user.UserRegist
 // GetUserInfo implements the UserServiceImpl interface.
 func (s *UserServiceImpl) GetUserInfo(ctx context.Context, req *user.GetUserInfoRequest) (resp *user.GetUserInfoResponse, err error) {
 	resp = new(user.GetUserInfoResponse)
-	user, err := s.RedisCen.GetUserById(ctx, req.UserId)
-	if err != nil {
-		klog.Errorf("redis get user by id failed,", err)
+
+	if req.Tp == 0 {
+		user, err := s.RedisCen.GetUserById(ctx, req.UserId)
+		if err != nil {
+			klog.Errorf("redis get user by id failed,", err)
+			resp.BaseResp = &base.BaseResponse{
+				StatusCode: 500,
+				StatusMsg:  "redis get user by id failed",
+				Succed:     false,
+			}
+			return nil, err
+		}
+
+		resp.BaseResp = &base.BaseResponse{
+			StatusCode: 0,
+			StatusMsg:  "get user info by id success",
+			Succed:     true,
+		}
+		resp.UserInfo = &base.User{
+			Id:            user.ID,
+			Name:          user.Username,
+			Avatar:        user.Avatar,
+			ArticlesNum:   user.ArticlesNum,
+			Experience:    user.Experience,
+			BackgroundImg: user.BackgroundImage,
+			Level:         user.Level,
+			Signature:     user.Signature,
+		}
+	} else if req.Tp == 1 {
+		user, err := s.RedisCen.GetUserByUserName(ctx, req.UserName)
+		if err != nil {
+			klog.Errorf("redis get user by name failed,", err)
+			resp.BaseResp = &base.BaseResponse{
+				StatusCode: 500,
+				StatusMsg:  "redis get user by name failed",
+				Succed:     false,
+			}
+			return nil, err
+		}
+		resp.BaseResp = &base.BaseResponse{
+			StatusCode: 0,
+			StatusMsg:  "get user info by name success",
+			Succed:     true,
+		}
+		resp.UserInfo = &base.User{
+			Id:            user.ID,
+			Name:          user.Username,
+			Avatar:        user.Avatar,
+			ArticlesNum:   user.ArticlesNum,
+			Experience:    user.Experience,
+			BackgroundImg: user.BackgroundImage,
+			Level:         user.Level,
+			Signature:     user.Signature,
+		}
+	} else {
+		err = errors.New("undefined type")
+		klog.Errorf("get user info failed: %s", err)
 		resp.BaseResp = &base.BaseResponse{
 			StatusCode: 500,
-			StatusMsg:  "redis get user by id failed",
+			StatusMsg:  fmt.Sprintf("%s: %s", "get user inf failed", "undefined type"),
 			Succed:     false,
 		}
 		return nil, err
-	}
-
-	resp.BaseResp = &base.BaseResponse{
-		StatusCode: 0,
-		StatusMsg:  "get user info by id success",
-		Succed:     true,
-	}
-	resp.UserInfo = &base.User{
-		Id:            user.ID,
-		Name:          user.Username,
-		Avatar:        user.Avatar,
-		ArticlesNum:   user.ArticlesNum,
-		Experience:    user.Experience,
-		BackgroundImg: user.BackgroundImage,
-		Level:         user.Level,
-		Signature:     user.Signature,
 	}
 
 	return resp, nil

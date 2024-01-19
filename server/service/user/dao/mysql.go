@@ -48,3 +48,10 @@ func (u User) GetUserByUserName(ctx context.Context, username string) (*model.Us
 	}
 	return &user, nil
 }
+func (u User) GetUserById(ctx context.Context, id int64) (*model.User, error) {
+	var user model.User
+	if err := u.db.Where("id = ?", id).First(&user).Error; err != nil {
+		return nil, err
+	}
+	return &user, nil
+}

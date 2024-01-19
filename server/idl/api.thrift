@@ -8,9 +8,11 @@ struct user_login_request {
 }
 
 struct user_login_response {
-    1: string             token
-    2: i64                user_id
-    3: base.base_response base_resp
+    1: i32    status_code
+    2: string status_msg
+    3: bool   succed
+    4: string token
+    5: i64    user_id
 }
 
 struct user_register_request {
@@ -19,19 +21,25 @@ struct user_register_request {
 }
 
 struct user_register_response {
-    1: string             token
-    2: i64                user_id
-    3: base.base_response base_resp
+    1: i32    status_code
+    2: string status_msg
+    3: bool   succed
+    4: string token
+    5: i64    user_id
 }
 
 struct get_user_info_request {
     1: i64    user_id
     2: string token
+    3: string user_name
+    4: i32   tp
 }
 
 struct get_user_info_response {
-    1: base.base_response base_resp
-    2: base.User          user
+    1: i32       status_code
+    2: string    status_msg
+    3: bool      succed
+    4: base.User user
 }
 
 service ApiService {
