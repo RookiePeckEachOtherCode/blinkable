@@ -12,34 +12,34 @@ const router = createRouter({
     {
       path: '/home',
       name: 'home',
-      component: ()=>import("@/views/HomeView.vue"),
+      component: ()=>import("@/containers/HomeView.vue"),
       meta:{
         noAuth:true,
       },
       children:[{
         path:"admin-home",
         name:"admin-home",
-        component:()=>import("@/components/adminhome/AdminHome.vue")
+        component:()=>import("@/pages/adminhome/AdminHome.vue")
       },
         {
           path:"main-view",
           name:"main-view",
-          component:()=>import("@/components/Mainview/Main.vue")
+          component:()=>import("@/pages/Mainview/Main.vue")
         },
         {
           path:"paper-list",
           name:"paper-list",
-          component:()=>import("@/components/paper/paperlist.vue")
+          component:()=>import("@/pages/paper/paperlist.vue")
         },
         {
           path:"paper-edit",
           name:"paper-edit",
-          component:()=>import ("@/components/paper/editpaper.vue")
+          component:()=>import ("@/pages/paper/editpaper.vue")
         },
         {
           path:"paper-display",
           name:"paper-display,",
-          component:()=>import("@/components/paper/display.vue")
+          component:()=>import("@/pages/paper/display.vue")
         },
 
       ]},
@@ -49,7 +49,7 @@ const router = createRouter({
       meta:{
         noAuth:true,
       },
-      component: () => import('../views/Login.vue')
+      component: () => import('../containers/Login.vue')
     }
   ]
 })

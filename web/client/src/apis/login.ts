@@ -6,7 +6,7 @@ import {$http} from "@/apis/index";
 export const loginApi=(data:{password:string;username:string})=>{
     return $http({
         method:"post",
-        url:"/user/login",
+        url:"http://127.0.0.1:10000/blinkable/user/login",
         params: data,
     });
 }

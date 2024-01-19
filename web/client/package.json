@@ -3,11 +3,11 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "dev": "vite --mode dev",
-    "build": "run-p type-check \"build-only {@}\" --",
-    "preview": "vite preview",
-    "build-only": "vite build",
-    "type-check": "vue-tsc --noEmit -p tsconfig.app.json --composite false"
+    "dev": "node_modules/.bin/vite --mode dev",
+    "build": "node_modules/.bin/run-p type-check \\\\\\\"build-only {@}\\\\\\\" --",
+    "preview": "node_modules/.bin/vite preview",
+    "build-only": "node_modules/.bin/vite build",
+    "type-check": "node_modules/.bin/vue-tsc --noEmit -p tsconfig.app.json --composite false"
   },
   "dependencies": {
     "@bytemd/plugin-footnotes": "^1.12.4",

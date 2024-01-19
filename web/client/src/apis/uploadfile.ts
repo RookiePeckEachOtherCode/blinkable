@@ -1,6 +1,6 @@
 import {$http} from "@/apis/index";
 
-export const uploadApi = (data: FormData) => {
+export const uploadApi = (data:{file: FormData,user_id:string}) => {
     return $http({
         method: "post",
         url: "/user/upload",
