@@ -2,6 +2,7 @@
   "name": "client",
   "version": "0.0.0",
   "private": true,
+  "type": "module",
   "scripts": {
     "dev": "node_modules/.bin/vite --mode dev",
     "build": "node_modules/.bin/run-p type-check \\\\\\\"build-only {@}\\\\\\\" --",
