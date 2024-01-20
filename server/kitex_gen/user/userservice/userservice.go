@@ -19,9 +19,10 @@ func NewServiceInfo() *kitex.ServiceInfo {
 	serviceName := "UserService"
 	handlerType := (*user.UserService)(nil)
 	methods := map[string]kitex.MethodInfo{
-		"UserLogin":    kitex.NewMethodInfo(userLoginHandler, newUserServiceUserLoginArgs, newUserServiceUserLoginResult, false),
-		"UserRegister": kitex.NewMethodInfo(userRegisterHandler, newUserServiceUserRegisterArgs, newUserServiceUserRegisterResult, false),
-		"GetUserInfo":  kitex.NewMethodInfo(getUserInfoHandler, newUserServiceGetUserInfoArgs, newUserServiceGetUserInfoResult, false),
+		"UserLogin":      kitex.NewMethodInfo(userLoginHandler, newUserServiceUserLoginArgs, newUserServiceUserLoginResult, false),
+		"UserRegister":   kitex.NewMethodInfo(userRegisterHandler, newUserServiceUserRegisterArgs, newUserServiceUserRegisterResult, false),
+		"GetUserInfo":    kitex.NewMethodInfo(getUserInfoHandler, newUserServiceGetUserInfoArgs, newUserServiceGetUserInfoResult, false),
+		"UpdateUserInfo": kitex.NewMethodInfo(updateUserInfoHandler, newUserServiceUpdateUserInfoArgs, newUserServiceUpdateUserInfoResult, false),
 	}
 	extra := map[string]interface{}{
 		"PackageName":     "user",
@@ -92,6 +93,24 @@ func newUserServiceGetUserInfoResult() interface{} {
 	return user.NewUserServiceGetUserInfoResult()
 }
 
+func updateUserInfoHandler(ctx context.Context, handler interface{}, arg, result interface{}) error {
+	realArg := arg.(*user.UserServiceUpdateUserInfoArgs)
+	realResult := result.(*user.UserServiceUpdateUserInfoResult)
+	success, err := handler.(user.UserService).UpdateUserInfo(ctx, realArg.Req)
+	if err != nil {
+		return err
+	}
+	realResult.Success = success
+	return nil
+}
+func newUserServiceUpdateUserInfoArgs() interface{} {
+	return user.NewUserServiceUpdateUserInfoArgs()
+}
+
+func newUserServiceUpdateUserInfoResult() interface{} {
+	return user.NewUserServiceUpdateUserInfoResult()
+}
+
 type kClient struct {
 	c client.Client
 }
@@ -127,6 +146,16 @@ func (p *kClient) GetUserInfo(ctx context.Context, req *user.GetUserInfoRequest)
 	_args.Req = req
 	var _result user.UserServiceGetUserInfoResult
 	if err = p.c.Call(ctx, "GetUserInfo", &_args, &_result); err != nil {
+		return
+	}
+	return _result.GetSuccess(), nil
+}
+
+func (p *kClient) UpdateUserInfo(ctx context.Context, req *user.UpdateUserInfoRequest) (r *user.UpdateUserInfoResponse, err error) {
+	var _args user.UserServiceUpdateUserInfoArgs
+	_args.Req = req
+	var _result user.UserServiceUpdateUserInfoResult
+	if err = p.c.Call(ctx, "UpdateUserInfo", &_args, &_result); err != nil {
 		return
 	}
 	return _result.GetSuccess(), nil

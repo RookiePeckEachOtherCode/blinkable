@@ -2,16 +2,18 @@ package dao
 
 import (
 	"blinkable/server/common/consts"
+	"blinkable/server/service/user/dao/query"
 	"blinkable/server/service/user/model"
 	"context"
 	"errors"
+	"fmt"
 
 	"github.com/cloudwego/kitex/pkg/klog"
 	"gorm.io/gorm"
 )
 
 type User struct {
-	db *gorm.DB
+	q *query.Query
 }
 
 func NewUser(db *gorm.DB) *User {
@@ -21,19 +23,20 @@ func NewUser(db *gorm.DB) *User {
 			klog.Errorf("create user table failed: %s", err)
 		}
 	}
-	return &User{db: db}
+	qr := query.Use(db)
+	return &User{q: qr}
 }
+
 func (u User) CreateUser(ctx context.Context, user *model.User) error {
-	var _user model.User
-	err := u.db.Where("username = ?", user.Username).First(&_user).Error
+	_user, err := u.q.User.WithContext(ctx).Where(u.q.User.Username.Eq(user.Username)).First()
 	if err != gorm.ErrRecordNotFound && err != nil {
 		klog.Errorf(consts.ErrFindUserIsWrong, err)
 		return err
 	}
-	if _user.Username != "" {
+	if _user != nil {
 		return errors.New(consts.ErrUserIsExist)
 	}
-	err = u.db.Create(&user).Error
+	err = u.q.User.WithContext(ctx).Create(user)
 	if err != nil {
 		klog.Error(consts.ErrCreateUserIsWrong, err)
 		return err
@@ -42,16 +45,28 @@ func (u User) CreateUser(ctx context.Context, user *model.User) error {
 	return nil
 }
 func (u User) GetUserByUserName(ctx context.Context, username string) (*model.User, error) {
-	var user model.User
-	if err := u.db.Where("username = ?", username).First(&user).Error; err != nil {
+	user, err := u.q.User.WithContext(ctx).Where(u.q.User.Username.Eq(username)).First()
+	fmt.Println(*user)
+	if err != nil {
 		return nil, err
 	}
-	return &user, nil
+	return user, nil
 }
 func (u User) GetUserById(ctx context.Context, id int64) (*model.User, error) {
-	var user model.User
-	if err := u.db.Where("id = ?", id).First(&user).Error; err != nil {
+	user, err := u.q.User.WithContext(ctx).Where(u.q.User.ID.Eq(id)).First()
+	if err != nil {
 		return nil, err
 	}
-	return &user, nil
+	return user, nil
+}
+
+func (u User) UpdateUserInfo(ctx context.Context, user *model.User) error {
+	_, err := u.q.User.WithContext(ctx).Where(u.q.User.ID.Eq(user.ID)).Select(u.q.User.Username, u.q.User.Signature).Updates(map[string]interface{}{
+		"username":  user.Username,
+		"signature": user.Signature,
+	})
+	if err != nil {
+		return err
+	}
+	return nil
 }

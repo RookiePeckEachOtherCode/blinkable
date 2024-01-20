@@ -23,11 +23,13 @@ type MysqlCen interface {
 	CreateUser(ctx context.Context, user *model.User) error
 	GetUserByUserName(ctx context.Context, Username string) (*model.User, error)
 	GetUserById(ctx context.Context, id int64) (*model.User, error)
+	UpdateUserInfo(ctx context.Context, user *model.User) error
 }
 type RedisCen interface {
 	CreateUser(ctx context.Context, user *model.User) error
 	GetUserById(ctx context.Context, id int64) (*model.User, error)
 	GetUserByUserName(ctx context.Context, name string) (*model.User, error)
+	UpdateUserInfo(ctx context.Context, user *model.User) error
 }
 
 // UserServiceImpl implements the last service interface defined in the IDL.
@@ -128,9 +130,9 @@ func (s *UserServiceImpl) UserRegister(ctx context.Context, req *user.UserRegist
 			resp.BaseResp = &base.BaseResponse{
 				StatusCode: 500,
 				StatusMsg:  "user already exists",
-				Succed:     false,
+				Succed:     true,
 			}
-			return resp, err
+			return resp, nil
 		} else {
 			klog.Errorf("mysql create usre failed: %s", err)
 			resp.BaseResp = &base.BaseResponse{
@@ -242,6 +244,55 @@ func (s *UserServiceImpl) GetUserInfo(ctx context.Context, req *user.GetUserInfo
 			Succed:     false,
 		}
 		return nil, err
+	}
+
+	return resp, nil
+}
+
+// UpdateUserInfo implements the UserServiceImpl interface.
+func (s *UserServiceImpl) UpdateUserInfo(ctx context.Context, req *user.UpdateUserInfoRequest) (resp *user.UpdateUserInfoResponse, err error) {
+	resp = new(user.UpdateUserInfoResponse)
+	dataUser, err := s.MysqlCen.GetUserById(ctx, req.UserId)
+	if err != nil {
+		klog.Errorf("get user info from mysql failed: %s", err)
+		resp.BaseResp = &base.BaseResponse{
+			StatusCode: 500,
+			StatusMsg:  "get user info from mysql failed",
+			Succed:     false,
+		}
+		return nil, err
+	}
+
+	if dataUser.Signature != req.Signature {
+		dataUser.Signature = req.Signature
+	}
+	if dataUser.Username != req.Username {
+		dataUser.Username = req.Username
+	}
+
+	if err := s.MysqlCen.UpdateUserInfo(ctx, dataUser); err != nil {
+		klog.Errorf("update userinfo to mysql failed: %s", err)
+		resp.BaseResp = &base.BaseResponse{
+			StatusCode: 500,
+			StatusMsg:  "update userinfo to mysql failed",
+			Succed:     false,
+		}
+		return resp, err
+	}
+	if err := s.RedisCen.UpdateUserInfo(ctx, dataUser); err != nil {
+		klog.Errorf("update userinfo to redis failed: %s", err)
+		resp.BaseResp = &base.BaseResponse{
+			StatusCode: 500,
+			StatusMsg:  "update userinfo to redis failed",
+			Succed:     false,
+		}
+		return resp, err
+	}
+
+	resp.BaseResp = &base.BaseResponse{
+		StatusCode: 0,
+		StatusMsg:  "update userinfo to mysql success",
+		Succed:     true,
 	}
 
 	return resp, nil
