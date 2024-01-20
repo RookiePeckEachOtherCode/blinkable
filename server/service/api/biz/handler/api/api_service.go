@@ -5,7 +5,6 @@ package api
 import (
 	"context"
 	"errors"
-	"net/http"
 
 	"blinkable/server/kitex_gen/user"
 	api "blinkable/server/service/api/biz/model/api"
@@ -36,7 +35,7 @@ func UserLogin(ctx context.Context, c *app.RequestContext) {
 	})
 	if err != nil {
 		hlog.Errorf("user_service rpc call failed: %s", err)
-		c.String(http.StatusInternalServerError, err.Error())
+		c.String(consts.StatusInternalServerError, err.Error())
 		return
 	}
 
@@ -70,7 +69,7 @@ func UserRegister(ctx context.Context, c *app.RequestContext) {
 	})
 	if err != nil {
 		hlog.Errorf("user_service rpc call failed: %s", err)
-		c.String(http.StatusBadRequest, err.Error())
+		c.String(consts.StatusBadRequest, err.Error())
 		return
 	}
 	resp = &api.UserRegisterResponse{
@@ -81,7 +80,7 @@ func UserRegister(ctx context.Context, c *app.RequestContext) {
 		Token:      res.Token,
 	}
 
-	c.JSON(http.StatusOK, resp)
+	c.JSON(consts.StatusOK, resp)
 }
 
 // GetUserInfo .
@@ -149,7 +148,38 @@ func GetUserInfo(ctx context.Context, c *app.RequestContext) {
 	} else {
 		err := errors.New("undefined type")
 		hlog.Errorf("get user info failed: %s", err)
-		c.String(http.StatusBadRequest, err.Error())
+		c.String(consts.StatusBadRequest, err.Error())
 		return
 	}
+}
+
+// UpdateUserInfo .
+// @router /blinkable/user/update [POST]
+func UpdateUserInfo(ctx context.Context, c *app.RequestContext) {
+	var err error
+	var req api.UpdateUserInfoRequest
+	err = c.BindAndValidate(&req)
+	if err != nil {
+		c.String(consts.StatusBadRequest, err.Error())
+		return
+	}
+
+	resp := new(api.UpdateUserInfoResponse)
+	res, err := config.GlobalUserClient.UpdateUserInfo(ctx, &user.UpdateUserInfoRequest{
+		UserId:    req.UserID,
+		Username:  req.Username,
+		Token:     req.Token,
+		Signature: req.Signature,
+	})
+	if err != nil {
+		hlog.Errorf("update userinfo failed: %s", err)
+		c.String(consts.StatusBadRequest, err.Error())
+		return
+	}
+
+	resp.Succed = res.BaseResp.Succed
+	resp.StatusMsg = res.BaseResp.StatusMsg
+	resp.StatusCode = res.BaseResp.StatusCode
+
+	c.JSON(consts.StatusOK, resp)
 }

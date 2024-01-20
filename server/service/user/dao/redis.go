@@ -64,3 +64,6 @@ func (r *RedisCen) GetUserByUserName(ctx context.Context, name string) (*model.U
 	}
 	return user, nil
 }
+func (r *RedisCen) UpdateUserInfo(ctx context.Context, user *model.User) error {
+	return r.CreateUser(ctx, user)
+}
