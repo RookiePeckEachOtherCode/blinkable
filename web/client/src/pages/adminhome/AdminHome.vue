@@ -17,15 +17,33 @@
         <el-upload
             class="avatar-uploader"
             :auto-upload="true"
-            action="http://127.0.0.1:10000/blinkable/user/updateimage"
+            action="http://127.0.0.1:10000/blinkable/user/update/avatar"
             :show-file-list="false"
-            :before-upload="handleUpload"
+            :before-upload="handleUpload_icon"
         >
           <img v-if="imageUrl" :src="imageUrl" class="avatar" alt=""/>
           <el-icon v-else class="avatar-uploader-icon"><Plus /></el-icon>
         </el-upload>
         <el-image :src=icon_url style="margin-left: 20px;width: 180px;height: 180px;border-radius: 5px"></el-image>
       </div>
+    </el-form-item>
+    <el-form-item label="背景图">
+      <el-upload
+          ref="upload"
+          class="upload-demo"
+          action="http://127.0.0.1:10000/blinkable/user/background"
+          :limit="1"
+          :on-exceed="handleExceed"
+          :auto-upload="false"
+          :data="{'user_id':user_id}"
+      >
+        <template #trigger>
+          <el-button type="primary" color="#69D0D7" style="color: white">选择图片</el-button>
+        </template>
+        <el-button class="ml-3" type="success" @click="upbackgourd" style="margin-left: 20px;margin-bottom: 5px">
+          上传
+        </el-button>
+      </el-upload>
     </el-form-item>
     <el-form-item label="签名">
       <el-input v-model="form.signature" type="textarea" style="margin-right: 200px" :size="'large'"/>
@@ -41,8 +59,11 @@
 import { reactive, onBeforeMount } from 'vue';
 import { getuserinfo } from '../../apis/getuserinfo';
 import { useUserInfoStore } from '../../stores/userinfo';
-import {uploadApi} from "../../apis/uploadfile";
-
+import {upload_iconApi} from "../../apis/uploadicon";
+import {genFileId, UploadInstance, UploadProps} from "element-plus";
+import {UploadRawFile} from "element-plus/lib/components";
+import {ref} from "vue";
+import {uploadinfo} from "../../apis/uploadinfo"
 useUserInfoStore().authFromLocal();
 const form = reactive({
   user_name: '',
@@ -67,15 +88,25 @@ onBeforeMount(async () => {
   form.background_url=res.background_url
   form.title=res.title
 });
-const handleUpload=(file)=>{
-  console.log(useUserInfoStore().getUserId())
-   const result=uploadApi({"file":file,"user_id":useUserInfoStore().getUserId()})
+const user_id=useUserInfoStore().getUserId()
+const token=useUserInfoStore().getToken()
+const handleUpload_icon=(file)=>{
+   const result=upload_iconApi({"file":file,"user_id":user_id})
   return false
 }
-
+const upload = ref<UploadInstance>()
+const handleExceed: UploadProps['onExceed'] = (files) => {
+  upload.value!.clearFiles()
+  const file = files[0] as UploadRawFile
+  file.uid = genFileId()
+  upload.value!.handleStart(file)
+}
 const onSubmit = () => {
-  console.log('submit!');
+  const result=uploadinfo({signature: form.signature, title: form.title, token: token, username: form.user_name, user_id:user_id})
 };
+const upbackgourd = (file) => {
+  upload.value!.submit()
+}
 </script>
 
 <style scoped>

@@ -38,7 +38,6 @@
 <script>
 import Editor from "@/App.vue";
 import {useUserInfoStore} from "@/stores/userinfo";
-import {uploadApi} from "@/apis/uploadfile";
 import {ElMessage} from "element-plus";
 import {strings} from "mavon-editor/dist/highlightjs/highlight.min";
 import { ref } from 'vue';
