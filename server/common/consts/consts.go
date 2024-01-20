@@ -11,6 +11,7 @@ const (
 const (
 	NacosSnowflakeNode = 1
 	UserSnowflakeNode  = 2
+	MinioSnowflakeNode = 3
 )
 
 // Redis
@@ -58,8 +59,15 @@ const (
 	ErrGetTemporarilyUrlIsWrong      = "获取临时 url 失败"
 	ErrUploadFile                    = "上传文件失败"
 	ErrUploadImgTypeIsWrong          = "上传图片类型错误"
+
+	ErrUserInfoNotChange = "userinfo not change"
 )
 
 const (
 	DSN = "%s:%s@tcp(%s:%s)/%s?charset=utf8mb4&parseTime=True&loc=Local"
+)
+
+const (
+	AvatarBucket     = 0
+	BackgroundBucket = 1
 )

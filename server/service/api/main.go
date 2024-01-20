@@ -15,6 +15,8 @@ import (
 func main() {
 	i.InitLogger()
 	r, info := i.InitNacos()
+	i.InitMinio()
+	// i.InitCreateALLBucket()
 	tracer, cfg := hertzTracing.NewServerTracer()
 	rpc.Init()
 
