@@ -1,0 +1,46 @@
+{
+  "name": "client",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "node_modules/.bin/vite --mode dev",
+    "build": "node_modules/.bin/run-p type-check \\\\\\\"build-only {@}\\\\\\\" --",
+    "preview": "node_modules/.bin/vite preview",
+    "build-only": "node_modules/.bin/vite build",
+    "type-check": "node_modules/.bin/vue-tsc --noEmit -p tsconfig.app.json --composite false"
+  },
+  "dependencies": {
+    "@bytemd/plugin-footnotes": "^1.12.4",
+    "@bytemd/plugin-gemoji": "^1.21.0",
+    "@bytemd/plugin-gfm": "^1.21.0",
+    "@bytemd/plugin-highlight-ssr": "^1.21.0",
+    "@kangc/v-md-editor": "^2.3.18",
+    "axios": "^1.5.1",
+    "element-plus": "^2.4.0",
+    "jquery": "^3.7.1",
+    "mavon-editor": "^2.10.4",
+    "pinia": "^2.1.7",
+    "pinia-plugin-persist": "^1.0.0",
+    "rimraf": "^5.0.5",
+    "sass": "^1.69.3",
+    "tall": "^8.0.0",
+    "to-fast-properties": "^4.0.0",
+    "vue": "^3.3.4",
+    "vue-router": "^4.2.4"
+  },
+  "devDependencies": {
+    "@tsconfig/node18": "^18.2.2",
+    "@types/jquery": "^3.5.25",
+    "@types/node": "^18.17.17",
+    "@vitejs/plugin-vue": "^4.3.4",
+    "@vitejs/plugin-vue-jsx": "^3.0.2",
+    "@vue/tsconfig": "^0.4.0",
+    "npm-run-all2": "^6.0.6",
+    "typescript": "~5.2.0",
+    "unplugin-auto-import": "^0.16.6",
+    "unplugin-vue-components": "^0.25.2",
+    "vite": "^4.5.0",
+    "vue-tsc": "^1.8.11"
+  }
+}

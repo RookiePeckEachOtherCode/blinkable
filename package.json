@@ -1,4 +1,5 @@
 {
+  "type": "module",
   "dependencies": {
     "@bytemd/plugin-breaks": "^1.21.0",
     "@bytemd/vue-next": "^1.21.0",
