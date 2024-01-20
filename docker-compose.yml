@@ -39,8 +39,8 @@ services:
       MINIO_SECRET_KEY: blinkableKey
       MINIO_ROOT_USER: blinkable
       MINIO_ROOT_PASSWORD: blinkable
-    volumes:
-      - ./minio/data:/data
+    # volumes:
+      # - ./minio/data:/data
     command: server --console-address ':9001' /data
     privileged: true
     # restart: always
