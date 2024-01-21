@@ -39,7 +39,7 @@
 import Editor from "@/App.vue";
 import {useUserInfoStore} from "@/stores/userinfo";
 import {ElMessage} from "element-plus";
-import {strings} from "mavon-editor/dist/highlightjs/highlight.min";
+import {uploadmd} from "../../apis/uploadmd"
 import { ref } from 'vue';
 export default {
   components: { Editor },
@@ -73,9 +73,9 @@ export default {
       const blob = new Blob([content], { type: 'text/markdown'});
      const formData = new FormData();
      formData.append('user_id', useUserInfoStore().getUserId());
-     formData.append('file', blob, 'filename.md');
+     formData.append('file', blob, this.title+".md");
      formData.append('title',this.title);
-     const response = await uploadApi(formData);
+     const response = await uploadmd(formData);
      if(response.status_code===0){
        ElMessage.success("上传成功")
        return;

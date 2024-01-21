@@ -45,6 +45,9 @@
         </el-button>
       </el-upload>
     </el-form-item>
+    <el-form-item label="git主页地址">
+      <el-input v-model="form.git_url" style="margin-right: 400px" :size="'large'"></el-input>
+    </el-form-item>
     <el-form-item label="签名">
       <el-input v-model="form.signature" type="textarea" style="margin-right: 200px" :size="'large'"/>
     </el-form-item>
@@ -71,8 +74,8 @@ const form = reactive({
   signature: '',
   icon_url:'',
   resource: '',
-  desc: '',
   level:0,
+  git_url:'',
   background_url:'',
 });
 let res;
@@ -87,6 +90,7 @@ onBeforeMount(async () => {
   form.signature=res.signature
   form.background_url=res.background_url
   form.title=res.title
+  form.git_url=res.git_url
 });
 const user_id=useUserInfoStore().getUserId()
 const token=useUserInfoStore().getToken()
@@ -102,13 +106,13 @@ const handleExceed: UploadProps['onExceed'] = (files) => {
   upload.value!.handleStart(file)
 }
 const onSubmit = () => {
-  const result=uploadinfo({signature: form.signature, title: form.title, token: token, username: form.user_name, user_id:user_id})
+  const result=uploadinfo({signature: form.signature, title: form.title, token: token, username: form.user_name, user_id:user_id,git_url:form.git_url})
 };
 const upbackgourd = (file) => {
   upload.value!.submit()
 }
 </script>
-
+  
 <style scoped>
 .avatar-uploader .avatar {
   width: 178px;

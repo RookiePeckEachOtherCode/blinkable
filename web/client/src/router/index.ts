@@ -38,8 +38,9 @@ const router = createRouter({
         },
         {
           path:"paper-display",
-          name:"paper-display,",
-          component:()=>import("@/pages/paper/display.vue")
+          name:"paper-display",
+          props:true,
+          component:()=>import("@/pages/paper/display.vue"),
         },
 
       ]},

@@ -10,7 +10,7 @@
           <el-avatar
               src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png" :size="80" style="margin-left: 20px;margin-top: 20px"/>
                     <el-text size="large" style="font-size: 30px;color: white;position: absolute;margin-top: 20px;margin-left: 10px" >ggbond</el-text>
-                    <el-text style="position: absolute;font-size: 20px;color: white;font-family: ggbond;margin-top: 70px;margin-left: 10px">哼哼哼啊啊啊啊</el-text>
+                    <el-text style="position: absolute;font-size: 20px;color: white;font-family: ggbond;margin-top: 70px;margin-left: 10px" @click="loadMarkdownFile()">哼哼哼啊啊啊啊</el-text>
         </el-col>
         </el-row>
         <el-row style="margin-top: 30px">
@@ -29,30 +29,23 @@
 </template>
 
 <script>
+import { getarticle } from "../../apis/getarticle";
+
 export default {
   data() {
     return {
-      markdown: '## Quick Start\n' +
-          '\n' +
-          '```js\n' +
-          'import Vue from \'vue\';\n' +
-          'import VueMarkdownEditor from \'@kangc/v-md-editor\';\n' +
-          'import \'@kangc/v-md-editor/lib/style/base-editor.css\';\n' +
-          'import vuepressTheme from \'@kangc/v-md-editor/lib/theme/vuepress.js\';\n' +
-          '\n' +
-          'VueMarkdownEditor.use(vuepressTheme);\n' +
-          '\n' +
-          'Vue.use(VueMarkdownEditor);\n' +
-          '```',
-      t:6,
+      markdown: "",
+      t: 6,
     };
   },
-  mounted() {
-    this.loadMarkdownFile();
+  created() {
+    this.loadMarkdownFile(); // 在组件创建时执行
   },
   methods: {
     async loadMarkdownFile() {
-
+      const n = this.$route.query.article_id
+      const res = await getarticle({article_id: n})
+      this.markdown=res.content
     },
   },
 };

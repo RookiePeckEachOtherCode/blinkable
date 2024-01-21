@@ -2,7 +2,7 @@
   <div style="width: 1500px;z-index: 1;position: absolute;left: 6%">
     <ul style="font-size: 35px;color: white;font-family: ggbond">
       <li v-for="backendArticles in paginatedArticles" :key="backendArticles.article_id"
-          class="list" @click="goview">
+          class="list" @click="goview(backendArticles.article_id)">
         <span>{{ backendArticles.title }}</span>
         <div>
         <span style="font-size: 20px;margin-top: 15px;margin-right: 70px;color:#7fb80e ">{{ backendArticles.time }}</span>
@@ -70,8 +70,8 @@ export default {
     handlePageChange(val) {
       this.currentPage = val;
     },
-    goview(){
-      window.location.href="http://localhost:5173/home/paper-display"
+    goview(id){
+      this.$router.push({name:"paper-display",query:{article_id:id}})
     }
   },
 };
