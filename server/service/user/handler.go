@@ -44,6 +44,14 @@ func (s *UserServiceImpl) UserLogin(ctx context.Context, req *user.UserLoginRequ
 	resp = new(user.UserLoginResponse)
 
 	user, err := s.MysqlCen.GetUserByUserName(ctx, req.Username)
+	if user == nil {
+		resp.BaseResp = &base.BaseResponse{
+			StatusCode: 500,
+			StatusMsg:  "user not found",
+			Succed:     false,
+		}
+		return resp, nil
+	}
 	if err != nil {
 		if err == gorm.ErrRecordNotFound {
 			resp.BaseResp = &base.BaseResponse{
@@ -123,6 +131,7 @@ func (s *UserServiceImpl) UserRegister(ctx context.Context, req *user.UserRegist
 		Signature:       "这个人很懒，什么都没有",
 		CreateAt:        time.Now(),
 		UpdateAt:        time.Now(),
+		Title:           "",
 	}
 	err = s.MysqlCen.CreateUser(ctx, newUser)
 	if err != nil {
@@ -208,6 +217,7 @@ func (s *UserServiceImpl) GetUserInfo(ctx context.Context, req *user.GetUserInfo
 			BackgroundImg: user.BackgroundImage,
 			Level:         user.Level,
 			Signature:     user.Signature,
+			Title:         user.Title,
 		}
 	} else if req.Tp == 1 {
 		user, err := s.RedisCen.GetUserByUserName(ctx, req.UserName)
@@ -234,6 +244,7 @@ func (s *UserServiceImpl) GetUserInfo(ctx context.Context, req *user.GetUserInfo
 			BackgroundImg: user.BackgroundImage,
 			Level:         user.Level,
 			Signature:     user.Signature,
+			Title:         user.Title,
 		}
 	} else {
 		err = errors.New("undefined type")
@@ -268,6 +279,9 @@ func (s *UserServiceImpl) UpdateUserInfo(ctx context.Context, req *user.UpdateUs
 	}
 	if dataUser.Username != req.Username {
 		dataUser.Username = req.Username
+	}
+	if dataUser.Title != req.Title {
+		dataUser.Title = req.Title
 	}
 
 	if err := s.MysqlCen.UpdateUserInfo(ctx, dataUser); err != nil {

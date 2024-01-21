@@ -1620,7 +1620,8 @@ type UpdateUserInfoRequest struct {
 	UserId    int64  `thrift:"user_id,1" frugal:"1,default,i64" json:"user_id"`
 	Token     string `thrift:"token,2" frugal:"2,default,string" json:"token"`
 	Username  string `thrift:"username,3" frugal:"3,default,string" json:"username"`
-	Signature string `thrift:"signature,6" frugal:"6,default,string" json:"signature"`
+	Signature string `thrift:"signature,4" frugal:"4,default,string" json:"signature"`
+	Title     string `thrift:"title,5" frugal:"5,default,string" json:"title"`
 }
 
 func NewUpdateUserInfoRequest() *UpdateUserInfoRequest {
@@ -1646,6 +1647,10 @@ func (p *UpdateUserInfoRequest) GetUsername() (v string) {
 func (p *UpdateUserInfoRequest) GetSignature() (v string) {
 	return p.Signature
 }
+
+func (p *UpdateUserInfoRequest) GetTitle() (v string) {
+	return p.Title
+}
 func (p *UpdateUserInfoRequest) SetUserId(val int64) {
 	p.UserId = val
 }
@@ -1658,12 +1663,16 @@ func (p *UpdateUserInfoRequest) SetUsername(val string) {
 func (p *UpdateUserInfoRequest) SetSignature(val string) {
 	p.Signature = val
 }
+func (p *UpdateUserInfoRequest) SetTitle(val string) {
+	p.Title = val
+}
 
 var fieldIDToName_UpdateUserInfoRequest = map[int16]string{
 	1: "user_id",
 	2: "token",
 	3: "username",
-	6: "signature",
+	4: "signature",
+	5: "title",
 }
 
 func (p *UpdateUserInfoRequest) Read(iprot thrift.TProtocol) (err error) {
@@ -1715,9 +1724,19 @@ func (p *UpdateUserInfoRequest) Read(iprot thrift.TProtocol) (err error) {
 					goto SkipFieldError
 				}
 			}
-		case 6:
+		case 4:
 			if fieldTypeId == thrift.STRING {
-				if err = p.ReadField6(iprot); err != nil {
+				if err = p.ReadField4(iprot); err != nil {
+					goto ReadFieldError
+				}
+			} else {
+				if err = iprot.Skip(fieldTypeId); err != nil {
+					goto SkipFieldError
+				}
+			}
+		case 5:
+			if fieldTypeId == thrift.STRING {
+				if err = p.ReadField5(iprot); err != nil {
 					goto ReadFieldError
 				}
 			} else {
@@ -1782,11 +1801,20 @@ func (p *UpdateUserInfoRequest) ReadField3(iprot thrift.TProtocol) error {
 	return nil
 }
 
-func (p *UpdateUserInfoRequest) ReadField6(iprot thrift.TProtocol) error {
+func (p *UpdateUserInfoRequest) ReadField4(iprot thrift.TProtocol) error {
 	if v, err := iprot.ReadString(); err != nil {
 		return err
 	} else {
 		p.Signature = v
+	}
+	return nil
+}
+
+func (p *UpdateUserInfoRequest) ReadField5(iprot thrift.TProtocol) error {
+	if v, err := iprot.ReadString(); err != nil {
+		return err
+	} else {
+		p.Title = v
 	}
 	return nil
 }
@@ -1809,8 +1837,12 @@ func (p *UpdateUserInfoRequest) Write(oprot thrift.TProtocol) (err error) {
 			fieldId = 3
 			goto WriteFieldError
 		}
-		if err = p.writeField6(oprot); err != nil {
-			fieldId = 6
+		if err = p.writeField4(oprot); err != nil {
+			fieldId = 4
+			goto WriteFieldError
+		}
+		if err = p.writeField5(oprot); err != nil {
+			fieldId = 5
 			goto WriteFieldError
 		}
 
@@ -1883,8 +1915,8 @@ WriteFieldEndError:
 	return thrift.PrependError(fmt.Sprintf("%T write field 3 end error: ", p), err)
 }
 
-func (p *UpdateUserInfoRequest) writeField6(oprot thrift.TProtocol) (err error) {
-	if err = oprot.WriteFieldBegin("signature", thrift.STRING, 6); err != nil {
+func (p *UpdateUserInfoRequest) writeField4(oprot thrift.TProtocol) (err error) {
+	if err = oprot.WriteFieldBegin("signature", thrift.STRING, 4); err != nil {
 		goto WriteFieldBeginError
 	}
 	if err := oprot.WriteString(p.Signature); err != nil {
@@ -1895,9 +1927,26 @@ func (p *UpdateUserInfoRequest) writeField6(oprot thrift.TProtocol) (err error) 
 	}
 	return nil
 WriteFieldBeginError:
-	return thrift.PrependError(fmt.Sprintf("%T write field 6 begin error: ", p), err)
+	return thrift.PrependError(fmt.Sprintf("%T write field 4 begin error: ", p), err)
 WriteFieldEndError:
-	return thrift.PrependError(fmt.Sprintf("%T write field 6 end error: ", p), err)
+	return thrift.PrependError(fmt.Sprintf("%T write field 4 end error: ", p), err)
+}
+
+func (p *UpdateUserInfoRequest) writeField5(oprot thrift.TProtocol) (err error) {
+	if err = oprot.WriteFieldBegin("title", thrift.STRING, 5); err != nil {
+		goto WriteFieldBeginError
+	}
+	if err := oprot.WriteString(p.Title); err != nil {
+		return err
+	}
+	if err = oprot.WriteFieldEnd(); err != nil {
+		goto WriteFieldEndError
+	}
+	return nil
+WriteFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 5 begin error: ", p), err)
+WriteFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 5 end error: ", p), err)
 }
 
 func (p *UpdateUserInfoRequest) String() string {
@@ -1922,7 +1971,10 @@ func (p *UpdateUserInfoRequest) DeepEqual(ano *UpdateUserInfoRequest) bool {
 	if !p.Field3DeepEqual(ano.Username) {
 		return false
 	}
-	if !p.Field6DeepEqual(ano.Signature) {
+	if !p.Field4DeepEqual(ano.Signature) {
+		return false
+	}
+	if !p.Field5DeepEqual(ano.Title) {
 		return false
 	}
 	return true
@@ -1949,9 +2001,16 @@ func (p *UpdateUserInfoRequest) Field3DeepEqual(src string) bool {
 	}
 	return true
 }
-func (p *UpdateUserInfoRequest) Field6DeepEqual(src string) bool {
+func (p *UpdateUserInfoRequest) Field4DeepEqual(src string) bool {
 
 	if strings.Compare(p.Signature, src) != 0 {
+		return false
+	}
+	return true
+}
+func (p *UpdateUserInfoRequest) Field5DeepEqual(src string) bool {
+
+	if strings.Compare(p.Title, src) != 0 {
 		return false
 	}
 	return true

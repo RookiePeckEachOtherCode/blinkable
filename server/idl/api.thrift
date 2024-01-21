@@ -46,7 +46,8 @@ struct update_user_info_request {
     1: i64    user_id (api.query = "user_id")
     2: string token (api.query = "token")
     3: string username (api.query = "username", api.vd = "len($)>0 && len($)<33")
-    6: string signature (api.query = "signature", api.vd = "len($)>0 && len($)<100")
+    4: string signature (api.query = "signature", api.vd = "len($)>0 && len($)<100")
+    5: string title (api.query = "title", api.vd = "len($)>0 && len($)<21")
 }
 
 struct update_user_info_response {

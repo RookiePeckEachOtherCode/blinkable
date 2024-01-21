@@ -40,7 +40,8 @@ struct update_user_info_request {
     1: i64    user_id
     2: string token
     3: string username
-    6: string signature
+    4: string signature
+    5: string title
 }
 
 struct update_user_info_response {

@@ -6,7 +6,6 @@ import (
 	"blinkable/server/service/user/model"
 	"context"
 	"errors"
-	"fmt"
 
 	"github.com/cloudwego/kitex/pkg/klog"
 	"gorm.io/gorm"
@@ -46,7 +45,6 @@ func (u User) CreateUser(ctx context.Context, user *model.User) error {
 }
 func (u User) GetUserByUserName(ctx context.Context, username string) (*model.User, error) {
 	user, err := u.q.User.WithContext(ctx).Where(u.q.User.Username.Eq(username)).First()
-	fmt.Println(*user)
 	if err != nil {
 		return nil, err
 	}
@@ -64,6 +62,7 @@ func (u User) UpdateUserInfo(ctx context.Context, user *model.User) error {
 	_, err := u.q.User.WithContext(ctx).Where(u.q.User.ID.Eq(user.ID)).Select(u.q.User.Username, u.q.User.Signature).Updates(map[string]interface{}{
 		"username":  user.Username,
 		"signature": user.Signature,
+		"title":     user.Title,
 	})
 	if err != nil {
 		return err
