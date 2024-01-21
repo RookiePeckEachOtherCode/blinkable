@@ -15,4 +15,5 @@ type User struct {
 	Experience      int32     `json:"experience,omitempty"`                                //经验
 	BackgroundImage string    `json:"background_image,omitempty"`                          //背景
 	Level           int32     `json:"level,omitempty"`                                     //等级
+	Title           string    `json:"title,omitempty"`
 }
