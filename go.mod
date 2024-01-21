@@ -9,8 +9,10 @@ require (
 	github.com/cloudwego/hertz v0.8.0
 	github.com/cloudwego/kitex v0.8.0
 	github.com/golang-jwt/jwt v3.2.2+incompatible
+	github.com/hertz-contrib/gzip v0.0.3
 	github.com/hertz-contrib/obs-opentelemetry/logging/logrus v0.1.1
 	github.com/hertz-contrib/obs-opentelemetry/tracing v0.3.1
+	github.com/hertz-contrib/pprof v0.1.1
 	github.com/hertz-contrib/registry/nacos v0.0.0-20240117071831-d07355f82f9f
 	github.com/kitex-contrib/obs-opentelemetry v0.2.5
 	github.com/kitex-contrib/obs-opentelemetry/logging/logrus v0.0.0-20240117073603-beff3185044c
@@ -50,6 +52,7 @@ require (
 	github.com/dgryski/go-rendezvous v0.0.0-20200823014737-9f7001d12a5f // indirect
 	github.com/dustin/go-humanize v1.0.1 // indirect
 	github.com/fatih/structtag v1.2.0 // indirect
+	github.com/felixge/fgprof v0.9.3 // indirect
 	github.com/fsnotify/fsnotify v1.7.0 // indirect
 	github.com/go-errors/errors v1.5.1 // indirect
 	github.com/go-logr/logr v1.4.1 // indirect
