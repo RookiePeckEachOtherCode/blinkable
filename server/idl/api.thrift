@@ -56,9 +56,23 @@ struct update_user_info_response {
     3: bool   succed
 }
 
+struct update_user_password_request {
+    1: i64    user_id (api.query = "user_id")
+    2: string token (api.query = "token")
+    3: string new_passwd (api.query = "new_password")
+    4: string old_passwd (api.query = "old_password")
+}
+
+struct update_user_password_response {
+    1: i32    status_code
+    2: string status_msg
+    3: bool   succed
+}
+
 service ApiService {
     user_login_response UserLogin(1: user_login_request req) (api.post = "/blinkable/user/login")
     user_register_response UserRegister(1: user_register_request req) (api.post = "/blinkable/user/register")
     get_user_info_response GetUserInfo(1: get_user_info_request req) (api.get = "/blinkable/user/info")
     update_user_info_response UpdateUserInfo(1: update_user_info_request req) (api.post = "/blinkable/user/update")
+    update_user_password_response UpdateUserPassword(1: update_user_password_request req) (api.post = "/blinkable/user/update/password")
 }

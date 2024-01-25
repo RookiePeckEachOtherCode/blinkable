@@ -25,6 +25,8 @@ func Register(r *server.Hertz) {
 			_user.POST("/login", append(_userloginMw(), api.UserLogin)...)
 			_user.POST("/register", append(_userregisterMw(), api.UserRegister)...)
 			_user.POST("/update", append(_updateuserinfoMw(), api.UpdateUserInfo)...)
+			_update := _user.Group("/update", _updateMw()...)
+			_update.POST("/password", append(_updateuserpasswordMw(), api.UpdateUserPassword)...)
 		}
 	}
 }

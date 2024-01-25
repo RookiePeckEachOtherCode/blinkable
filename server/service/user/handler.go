@@ -5,13 +5,14 @@ import (
 	"blinkable/server/common/middleware"
 	"blinkable/server/common/middleware/models"
 	"blinkable/server/kitex_gen/base"
-	user "blinkable/server/kitex_gen/user"
 	"blinkable/server/service/user/config"
 	"blinkable/server/service/user/model"
 	"context"
 	"errors"
 	"fmt"
 	"time"
+
+	user "blinkable/server/kitex_gen/user"
 
 	"github.com/bwmarrin/snowflake"
 	"github.com/cloudwego/kitex/pkg/klog"
@@ -71,7 +72,10 @@ func (s *UserServiceImpl) UserLogin(ctx context.Context, req *user.UserLoginRequ
 		}
 	}
 
-	if user.Password != middleware.Md5Crypt(req.Password, config.GlobalServerConfig.Salt) {
+	if user.Password != middleware.Md5Crypt(
+		req.Password,
+		config.GlobalServerConfig.Salt,
+	) {
 		resp.BaseResp = &base.BaseResponse{
 			StatusCode: 500,
 			StatusMsg:  "WA password",
@@ -109,7 +113,10 @@ func (s *UserServiceImpl) UserLogin(ctx context.Context, req *user.UserLoginRequ
 }
 
 // UserRegister implements the UserServiceImpl interface.
-func (s *UserServiceImpl) UserRegister(ctx context.Context, req *user.UserRegisterRequest) (resp *user.UserRegisterResponse, err error) {
+func (s *UserServiceImpl) UserRegister(
+	ctx context.Context,
+	req *user.UserRegisterRequest,
+) (resp *user.UserRegisterResponse, err error) {
 	resp = new(user.UserRegisterResponse)
 	sf, err := snowflake.NewNode(consts.UserSnowflakeNode)
 	if err != nil {
@@ -124,8 +131,11 @@ func (s *UserServiceImpl) UserRegister(ctx context.Context, req *user.UserRegist
 	newUser := &model.User{
 		ID:       sf.Generate().Int64(),
 		Username: req.Username,
-		Password: middleware.Md5Crypt(req.Password, config.GlobalServerConfig.Salt),
-		//TODO rand pic
+		Password: middleware.Md5Crypt(
+			req.Password,
+			config.GlobalServerConfig.Salt,
+		),
+		// TODO rand pic
 		Avatar:          "",
 		BackgroundImage: "",
 		Signature:       "这个人很懒，什么都没有",
@@ -188,7 +198,10 @@ func (s *UserServiceImpl) UserRegister(ctx context.Context, req *user.UserRegist
 }
 
 // GetUserInfo implements the UserServiceImpl interface.
-func (s *UserServiceImpl) GetUserInfo(ctx context.Context, req *user.GetUserInfoRequest) (resp *user.GetUserInfoResponse, err error) {
+func (s *UserServiceImpl) GetUserInfo(
+	ctx context.Context,
+	req *user.GetUserInfoRequest,
+) (resp *user.GetUserInfoResponse, err error) {
 	resp = new(user.GetUserInfoResponse)
 
 	if req.Tp == 0 {
@@ -309,5 +322,57 @@ func (s *UserServiceImpl) UpdateUserInfo(ctx context.Context, req *user.UpdateUs
 		Succed:     true,
 	}
 
+	return resp, nil
+}
+
+// UpdateUserPassword implements the UserServiceImpl interface.
+func (s *UserServiceImpl) UpdateUserPassword(ctx context.Context, req *user.UpdateUserPasswordRequest) (resp *user.UpdateUserPasswordResponse, err error) {
+	req.Oldpassword = middleware.Md5Crypt(req.Oldpassword, config.GlobalServerConfig.Salt)
+	req.Newpassword_ = middleware.Md5Crypt(req.Newpassword_, config.GlobalServerConfig.Salt)
+	resp = new(user.UpdateUserPasswordResponse)
+	dataUser, err := s.RedisCen.GetUserById(ctx, req.UserId)
+	if err != nil {
+		klog.Errorf("get user info from redis is failed: %s", err)
+		resp.BaseResp = &base.BaseResponse{
+			StatusCode: 500,
+			StatusMsg:  "get user info from redis is failed",
+			Succed:     false,
+		}
+		return resp, err
+	}
+	if dataUser.Password != req.Oldpassword {
+		klog.Errorf("user old_password incorrect")
+		resp.BaseResp = &base.BaseResponse{
+			StatusCode: 0,
+			StatusMsg:  "user old_password incorrect",
+			Succed:     false,
+		}
+		return resp, nil
+	}
+	dataUser.Password = req.Newpassword_
+	if err := s.MysqlCen.UpdateUserInfo(ctx, dataUser); err != nil {
+		klog.Errorf("update user password to mysql is failed: %s", err)
+		resp.BaseResp = &base.BaseResponse{
+			StatusCode: 500,
+			StatusMsg:  "update user password to mysql is failed",
+			Succed:     false,
+		}
+		return resp, err
+	}
+	if err := s.RedisCen.UpdateUserInfo(ctx, dataUser); err != nil {
+		klog.Errorf("update user password to redis is failed: %s", err)
+		resp.BaseResp = &base.BaseResponse{
+			StatusCode: 500,
+			StatusMsg:  "update user password to redis is failed",
+			Succed:     false,
+		}
+		return resp, err
+	}
+
+	resp.BaseResp = &base.BaseResponse{
+		StatusMsg:  "success",
+		StatusCode: 0,
+		Succed:     true,
+	}
 	return resp, nil
 }
