@@ -64,8 +64,5 @@ func (u User) UpdateUserInfo(ctx context.Context, user *model.User) error {
 		"signature": user.Signature,
 		"title":     user.Title,
 	})
-	if err != nil {
-		return err
-	}
-	return nil
+	return err
 }

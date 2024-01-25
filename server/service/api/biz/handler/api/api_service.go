@@ -69,7 +69,7 @@ func UserRegister(ctx context.Context, c *app.RequestContext) {
 	})
 	if err != nil {
 		hlog.Errorf("user_service rpc call failed: %s", err)
-		c.String(consts.StatusBadRequest, err.Error())
+		c.String(consts.StatusInternalServerError, err.Error())
 		return
 	}
 	resp = &api.UserRegisterResponse{
@@ -101,7 +101,7 @@ func GetUserInfo(ctx context.Context, c *app.RequestContext) {
 		})
 		if err != nil {
 			hlog.Errorf("get_user_info rpc call failed", err)
-			c.String(consts.StatusBadRequest, err.Error())
+			c.String(consts.StatusInternalServerError, err.Error())
 			return
 		}
 		resp := new(api.GetUserInfoResponse)
@@ -127,7 +127,7 @@ func GetUserInfo(ctx context.Context, c *app.RequestContext) {
 		})
 		if err != nil {
 			hlog.Errorf("get_user_info rpc call failed", err)
-			c.String(consts.StatusBadRequest, err.Error())
+			c.String(consts.StatusInternalServerError, err.Error())
 			return
 		}
 		resp := new(api.GetUserInfoResponse)
@@ -180,6 +180,36 @@ func UpdateUserInfo(ctx context.Context, c *app.RequestContext) {
 	resp.Succed = res.BaseResp.Succed
 	resp.StatusMsg = res.BaseResp.StatusMsg
 	resp.StatusCode = res.BaseResp.StatusCode
+
+	c.JSON(consts.StatusOK, resp)
+}
+
+// UpdateUserPassword .
+// @router /blinkable/user/update/password [POST]
+func UpdateUserPassword(ctx context.Context, c *app.RequestContext) {
+	var err error
+	var req api.UpdateUserPasswordRequest
+	err = c.BindAndValidate(&req)
+	if err != nil {
+		c.String(consts.StatusBadRequest, err.Error())
+		return
+	}
+
+	resp := new(api.UpdateUserPasswordResponse)
+	res, err := config.GlobalUserClient.UpdateUserPassword(ctx, &user.UpdateUserPasswordRequest{
+		UserId:       req.UserID,
+		Token:        req.Token,
+		Newpassword_: req.NewPasswd,
+		Oldpassword:  req.OldPasswd,
+	})
+	if err != nil {
+		hlog.Errorf("update user password failed: %s", err)
+		c.String(consts.StatusBadRequest, err.Error())
+		return
+	}
+	resp.StatusCode = res.BaseResp.StatusCode
+	resp.StatusMsg = res.BaseResp.StatusMsg
+	resp.Succed = res.BaseResp.Succed
 
 	c.JSON(consts.StatusOK, resp)
 }

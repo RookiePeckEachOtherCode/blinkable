@@ -19,10 +19,11 @@ func NewServiceInfo() *kitex.ServiceInfo {
 	serviceName := "UserService"
 	handlerType := (*user.UserService)(nil)
 	methods := map[string]kitex.MethodInfo{
-		"UserLogin":      kitex.NewMethodInfo(userLoginHandler, newUserServiceUserLoginArgs, newUserServiceUserLoginResult, false),
-		"UserRegister":   kitex.NewMethodInfo(userRegisterHandler, newUserServiceUserRegisterArgs, newUserServiceUserRegisterResult, false),
-		"GetUserInfo":    kitex.NewMethodInfo(getUserInfoHandler, newUserServiceGetUserInfoArgs, newUserServiceGetUserInfoResult, false),
-		"UpdateUserInfo": kitex.NewMethodInfo(updateUserInfoHandler, newUserServiceUpdateUserInfoArgs, newUserServiceUpdateUserInfoResult, false),
+		"UserLogin":          kitex.NewMethodInfo(userLoginHandler, newUserServiceUserLoginArgs, newUserServiceUserLoginResult, false),
+		"UserRegister":       kitex.NewMethodInfo(userRegisterHandler, newUserServiceUserRegisterArgs, newUserServiceUserRegisterResult, false),
+		"GetUserInfo":        kitex.NewMethodInfo(getUserInfoHandler, newUserServiceGetUserInfoArgs, newUserServiceGetUserInfoResult, false),
+		"UpdateUserInfo":     kitex.NewMethodInfo(updateUserInfoHandler, newUserServiceUpdateUserInfoArgs, newUserServiceUpdateUserInfoResult, false),
+		"UpdateUserPassword": kitex.NewMethodInfo(updateUserPasswordHandler, newUserServiceUpdateUserPasswordArgs, newUserServiceUpdateUserPasswordResult, false),
 	}
 	extra := map[string]interface{}{
 		"PackageName":     "user",
@@ -111,6 +112,24 @@ func newUserServiceUpdateUserInfoResult() interface{} {
 	return user.NewUserServiceUpdateUserInfoResult()
 }
 
+func updateUserPasswordHandler(ctx context.Context, handler interface{}, arg, result interface{}) error {
+	realArg := arg.(*user.UserServiceUpdateUserPasswordArgs)
+	realResult := result.(*user.UserServiceUpdateUserPasswordResult)
+	success, err := handler.(user.UserService).UpdateUserPassword(ctx, realArg.Req)
+	if err != nil {
+		return err
+	}
+	realResult.Success = success
+	return nil
+}
+func newUserServiceUpdateUserPasswordArgs() interface{} {
+	return user.NewUserServiceUpdateUserPasswordArgs()
+}
+
+func newUserServiceUpdateUserPasswordResult() interface{} {
+	return user.NewUserServiceUpdateUserPasswordResult()
+}
+
 type kClient struct {
 	c client.Client
 }
@@ -156,6 +175,16 @@ func (p *kClient) UpdateUserInfo(ctx context.Context, req *user.UpdateUserInfoRe
 	_args.Req = req
 	var _result user.UserServiceUpdateUserInfoResult
 	if err = p.c.Call(ctx, "UpdateUserInfo", &_args, &_result); err != nil {
+		return
+	}
+	return _result.GetSuccess(), nil
+}
+
+func (p *kClient) UpdateUserPassword(ctx context.Context, req *user.UpdateUserPasswordRequest) (r *user.UpdateUserPasswordResponse, err error) {
+	var _args user.UserServiceUpdateUserPasswordArgs
+	_args.Req = req
+	var _result user.UserServiceUpdateUserPasswordResult
+	if err = p.c.Call(ctx, "UpdateUserPassword", &_args, &_result); err != nil {
 		return
 	}
 	return _result.GetSuccess(), nil
