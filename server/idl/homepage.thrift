@@ -1,22 +1,23 @@
-namespace go Mainview
+namespace go Homepage
 
 struct Guestbook {
  1:i32 book_id;
  2:i32 user_id;
  3:string context;
- 4:i32 admin_id;
+ 4:i32 formuser_id;
  5:string create_time;
 }
 
-struct Admin {
+struct Users {
  1:i32 admin_id;
  2:string signature;
- 3:i32 like;
+ 3:i32 likes;
  4:string title;
  5:i32 comments;
  6:list<Guestbook> guestbooks;
  7:string icon_url;
  8:string image_url;
+ 9:string git_url;
 }
 
 struct LikeRequest{
@@ -24,7 +25,7 @@ struct LikeRequest{
  2:i32 user_id;
 }
 
-struct GetMainvewRequest{
+struct GetHomepageRequest{
 
 }
 
@@ -35,8 +36,8 @@ struct AddGuestbookRequest{
 
 }
 
-struct GetMainviewResponse{
-1:list<Admin> admins;
+struct GetHomepageResponse{
+1:list<Users> users;
 2:i32 status_code;
 3:string status_msg;
 4:bool succed;
@@ -54,23 +55,11 @@ struct AddGuestbookResponse{
 3:bool succed;
 }
 
-struct ChangeCardRequest{
-1: binary icon;
-2: binary image;
-3: i32 admin_id;
-4: string title;
-5: string signature;
-}
-struct ChangeCardResponse{
-1:i32 status_code;
-2:string status_msg;
-3:bool succed;
-}
 
 
-service MainviewService{
+
+service HomepageService{
  LikeResponse LikeAction(1:LikeRequest req);
- GetMainviewResponse GetMainview(1:GetMainvewRequest req);
+ GetHomepageResponse GetMainview(1:GetHomepageRequest req);
  AddGuestbookResponse AddGuestbook(1:AddGuestbookRequest req);
- ChangeCardResponse ChangeCard(1:ChangeCardRequest req);
 }

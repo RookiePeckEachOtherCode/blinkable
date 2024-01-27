@@ -36,7 +36,6 @@ func (r *RedisCen) CreateUser(ctx context.Context, user *model.User) error {
 	}
 	return nil
 }
-
 func (r *RedisCen) GetUserById(ctx context.Context, id int64) (*model.User, error) {
 	userJson, err := r.redisClient.Get(ctx, "user:"+strconv.FormatInt(id, 10)).Bytes()
 	if err != nil && err != redis.Nil {
