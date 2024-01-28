@@ -1,12 +1,13 @@
 package dao
 
 import (
-	"blinkable/server/service/user/model"
+	"blinkable/server/service/homepage/model"
 	"context"
+	"strconv"
+
 	"github.com/bytedance/sonic"
 	"github.com/cloudwego/kitex/pkg/klog"
 	"github.com/redis/go-redis/v9"
-	"strconv"
 )
 
 type RedisCli struct {

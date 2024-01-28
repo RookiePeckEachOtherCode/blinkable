@@ -5,6 +5,8 @@ import (
 	"blinkable/server/service/homepage/config"
 	"blinkable/server/service/homepage/model"
 	"fmt"
+	"time"
+
 	"github.com/cloudwego/kitex/pkg/klog"
 	"github.com/redis/go-redis/v9"
 	"gorm.io/driver/mysql"
@@ -14,10 +16,10 @@ import (
 	"gorm.io/gorm/schema"
 	"gorm.io/plugin/opentelemetry/logging/logrus"
 	"gorm.io/plugin/opentelemetry/tracing"
-	"time"
 )
 
 type Querier interface {
+	// SELECT * FROM @@table WHERE name = @name{{if role !=""}} AND role = @role{{end}}
 	FilterWithNameAndRole(name, role string) ([]gen.T, error)
 }
 

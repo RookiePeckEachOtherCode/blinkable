@@ -1,10 +1,11 @@
 package consts
 
 const (
-	KlogFilePath   = "./tmp/klog/logs"
-	HlogFIlePath   = "./tmp/hlog/logs"
-	UserConfigPath = "../../service/user/config.yaml"
-	APIConfigPath  = "../../service/api/config.yaml"
+	KlogFilePath       = "./tmp/klog/logs"
+	HlogFIlePath       = "./tmp/hlog/logs"
+	UserConfigPath     = "../../service/user/config.yaml"
+	APIConfigPath      = "../../service/api/config.yaml"
+	HomepageConfigPath = "../../service/homepage/config.yaml"
 )
 
 // SnowflakeNode    = 1

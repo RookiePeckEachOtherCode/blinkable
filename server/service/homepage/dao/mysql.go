@@ -1,7 +1,9 @@
 package dao
 
 import (
-	"blinkable/server/service/homepage/model"
+	"blinkable/server/service/homepage/dao/query"
+	"blinkable/server/service/user/model"
+
 	"github.com/cloudwego/kitex/pkg/klog"
 	"gorm.io/gorm"
 )

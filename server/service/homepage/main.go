@@ -3,23 +3,25 @@ package main
 import (
 	homepage "blinkable/server/kitex_gen/Homepage/homepageservice"
 	"blinkable/server/service/api/config"
+	"blinkable/server/service/homepage/dao"
 	i "blinkable/server/service/homepage/init"
 	"context"
+	"log"
+	"net"
+
 	"github.com/cloudwego/kitex/pkg/limit"
 	"github.com/cloudwego/kitex/pkg/rpcinfo"
 	"github.com/cloudwego/kitex/pkg/utils"
 	"github.com/cloudwego/kitex/server"
 	"github.com/kitex-contrib/obs-opentelemetry/provider"
 	"github.com/kitex-contrib/obs-opentelemetry/tracing"
-	"log"
-	"net"
 )
 
 func main() {
 	i.InitLogger()
 	r, info := i.InitNacos()
-	i.InitDB()
-	//rdb := i.InitRedis()
+	db := i.InitDB()
+	rdb := i.InitRedis()
 	p := provider.NewOpenTelemetryProvider(
 		provider.WithServiceName(config.GlobalServerConfig.Name),
 		provider.WithExportEndpoint(config.GlobalServerConfig.OtelInfo.EndPoint),
@@ -28,8 +30,8 @@ func main() {
 	defer p.Shutdown(context.Background())
 
 	impl := &HomepageServiceImpl{
-		//MysqlCli: dao.NewUser(db),
-		//RedisCli: dao.NewRedisCli(rdb),
+		MysqlCli: dao.NewUser(db),
+		RedisCli: dao.NewRedisCli(rdb),
 	}
 	svr := homepage.NewServer(
 		impl,
