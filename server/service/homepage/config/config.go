@@ -7,7 +7,6 @@ type ServerConfig struct {
 	MysqlInfo MysqlConfig `mapstructure:"mysql" json:"mysql"`
 	OtelInfo  OtelConfig  `mapstructure:"otel"  json:"otel"`
 	RedisInfo RedisConfig `mapstructure:"redis" json:"redis"`
-	JWTInfo   JWTConfig   `mapstructure:"jwt" json:"jwt"`
 }
 
 type MysqlConfig struct {
@@ -36,8 +35,4 @@ type RedisConfig struct {
 	Host     string `mapstructure:"host" json:"host"`
 	Port     string `mapstructure:"port" json:"port"`
 	Password string `mapstructure:"password" json:"password"`
-}
-
-type JWTConfig struct {
-	SigningKey string `mapstructure:"key" json:"key"`
 }
