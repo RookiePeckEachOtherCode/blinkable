@@ -95,7 +95,7 @@ services:
       - "--opentsdbListenAddr=:4242"
       - "--httpListenAddr=:8428"
       - "--influxListenAddr=:8089"
-    restart: always
+    #restart: always
     networks:
         - blink
 
