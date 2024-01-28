@@ -47,6 +47,46 @@ func (r *RedisCli) CreateUser(ctx context.Context, user *model.User) error {
 	return nil
 }
 
+func (r *RedisCli) CreateGuestbook(ctx context.Context, guestbook *model.Guestbook) error {
+	guestbookJson, err := sonic.Marshal(guestbook)
+	if err != nil {
+		klog.Errorf("redis marshal guestbook failed: %s", err)
+		return err
+	}
+
+	key := "guestbook:" + strconv.FormatInt(guestbook.UserID, 10)
+
+	err = r.redisClient.HSet(ctx, key, strconv.FormatInt(guestbook.ID, 10), guestbookJson).Err()
+	if err != nil {
+		klog.Error("redis create guestbook failed %s", err)
+		return err
+	}
+	return nil
+}
+
+func (r *RedisCli) GetGuestbooksByUserID(ctx context.Context, userID int64) ([]*model.Guestbook, error) {
+
+	key := "guestbook:" + strconv.FormatInt(userID, 10)
+
+	result, err := r.redisClient.HGetAll(ctx, key).Result()
+	if err != nil {
+		klog.Errorf("redis get guestbooks by user ID failed: %s", err)
+		return nil, err
+	}
+
+	var guestbooks []*model.Guestbook
+	for _, value := range result {
+		var guestbook model.Guestbook
+		if err := sonic.Unmarshal([]byte(value), &guestbook); err != nil {
+			klog.Errorf("redis unmarshal guestbook failed: %s", err)
+			return nil, err
+		}
+		guestbooks = append(guestbooks, &guestbook)
+	}
+
+	return guestbooks, nil
+}
+
 func (r *RedisCli) UpdateUserInfo(ctx context.Context, user *model.User) error {
 	return r.CreateUser(ctx, user)
 }
