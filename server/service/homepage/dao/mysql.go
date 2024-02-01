@@ -5,6 +5,7 @@ import (
 	"blinkable/server/service/homepage/dao/query"
 	model2 "blinkable/server/service/homepage/model"
 	"context"
+	"time"
 
 	"github.com/cloudwego/kitex/pkg/klog"
 	"gorm.io/gorm"
@@ -30,6 +31,13 @@ func NewUser(db *gorm.DB) *User {
 	return &User{q: qr}
 }
 
+func (u User) GetUserById(ctx context.Context, id int64) (*model2.User, error) {
+	user, err := u.q.User.WithContext(ctx).Where(u.q.User.ID.Eq(id)).First()
+	if err != nil {
+		return nil, err
+	}
+	return user, nil
+}
 func (u User) GetUsersByIds(ctx context.Context, ids []int64) ([]*model2.User, error) {
 	users, err := u.q.User.WithContext(ctx).Where(u.q.User.ID.In(ids...)).Find()
 	if err != nil {
@@ -46,8 +54,14 @@ func (u User) GetGuestbooksById(ctx context.Context, id int64) ([]*model2.Guestb
 	return guestbooks, nil
 }
 
-func (u User) AddGuestbook(ctx context.Context, guestbook *model2.Guestbook) error {
-	err := u.q.Guestbook.WithContext(ctx).Create(guestbook)
+func (u User) AddGuestbook(ctx context.Context, con string, userid int64, fid int64) error {
+	gbk := model2.Guestbook{
+		CreateTime: time.Now(),
+		Context:    con,
+		FromuserID: fid,
+		UserID:     userid,
+	}
+	err := u.q.Guestbook.WithContext(ctx).Create(&gbk)
 	if err != nil {
 		klog.Error(consts.ErrAddGuestbook, err)
 		return err

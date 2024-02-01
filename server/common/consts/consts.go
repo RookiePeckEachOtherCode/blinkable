@@ -72,3 +72,5 @@ const (
 	AvatarBucket     = 0
 	BackgroundBucket = 1
 )
+
+var AdminIds = [3]int{1, 2, 3}

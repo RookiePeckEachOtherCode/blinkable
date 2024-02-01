@@ -3,11 +3,11 @@ package dao
 import (
 	"blinkable/server/service/homepage/model"
 	"context"
-	"strconv"
-
 	"github.com/bytedance/sonic"
 	"github.com/cloudwego/kitex/pkg/klog"
 	"github.com/redis/go-redis/v9"
+	"strconv"
+	"time"
 )
 
 type RedisCli struct {
@@ -59,6 +59,11 @@ func (r *RedisCli) CreateGuestbook(ctx context.Context, guestbook *model.Guestbo
 	err = r.redisClient.HSet(ctx, key, strconv.FormatInt(guestbook.ID, 10), guestbookJson).Err()
 	if err != nil {
 		klog.Error("redis create guestbook failed %s", err)
+		return err
+	}
+	err = r.redisClient.Expire(ctx, key, 114514*time.Second).Err()
+	if err != nil {
+		klog.Error("redis set guestbook exceed time failed %s", err)
 		return err
 	}
 	return nil
