@@ -2,7 +2,7 @@ package main
 
 import (
 	homepage "blinkable/server/kitex_gen/Homepage/homepageservice"
-	"blinkable/server/service/api/config"
+	"blinkable/server/service/homepage/config"
 	"blinkable/server/service/homepage/dao"
 	i "blinkable/server/service/homepage/init"
 	"context"
