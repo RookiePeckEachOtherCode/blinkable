@@ -40,6 +40,8 @@ func newUser(db *gorm.DB, opts ...gen.DOOption) user {
 	_user.BackgroundImage = field.NewString(tableName, "background_image")
 	_user.Level = field.NewInt32(tableName, "level")
 	_user.Title = field.NewString(tableName, "title")
+	_user.Git = field.NewString(tableName, "git")
+	_user.Like = field.NewInt64(tableName, "like")
 
 	_user.fillFieldMap()
 
@@ -62,6 +64,8 @@ type user struct {
 	BackgroundImage field.String
 	Level           field.Int32
 	Title           field.String
+	Git             field.String
+	Like            field.Int64
 
 	fieldMap map[string]field.Expr
 }
@@ -90,6 +94,8 @@ func (u *user) updateTableName(table string) *user {
 	u.BackgroundImage = field.NewString(table, "background_image")
 	u.Level = field.NewInt32(table, "level")
 	u.Title = field.NewString(table, "title")
+	u.Git = field.NewString(table, "git")
+	u.Like = field.NewInt64(table, "like")
 
 	u.fillFieldMap()
 
@@ -106,7 +112,7 @@ func (u *user) GetFieldByName(fieldName string) (field.OrderExpr, bool) {
 }
 
 func (u *user) fillFieldMap() {
-	u.fieldMap = make(map[string]field.Expr, 12)
+	u.fieldMap = make(map[string]field.Expr, 14)
 	u.fieldMap["id"] = u.ID
 	u.fieldMap["create_at"] = u.CreateAt
 	u.fieldMap["update_at"] = u.UpdateAt
@@ -119,6 +125,8 @@ func (u *user) fillFieldMap() {
 	u.fieldMap["background_image"] = u.BackgroundImage
 	u.fieldMap["level"] = u.Level
 	u.fieldMap["title"] = u.Title
+	u.fieldMap["git"] = u.Git
+	u.fieldMap["like"] = u.Like
 }
 
 func (u user) clone(db *gorm.DB) user {

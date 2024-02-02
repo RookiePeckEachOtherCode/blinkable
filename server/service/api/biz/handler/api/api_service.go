@@ -3,17 +3,17 @@
 package api
 
 import (
-	"context"
-	"errors"
-
+	homepage "blinkable/server/kitex_gen/Homepage"
 	"blinkable/server/kitex_gen/user"
 	api "blinkable/server/service/api/biz/model/api"
 	"blinkable/server/service/api/biz/model/base"
 	"blinkable/server/service/api/config"
-
+	"context"
+	"errors"
 	"github.com/cloudwego/hertz/pkg/app"
 	"github.com/cloudwego/hertz/pkg/common/hlog"
 	"github.com/cloudwego/hertz/pkg/protocol/consts"
+	"net/http"
 )
 
 // UserLogin .
@@ -211,5 +211,101 @@ func UpdateUserPassword(ctx context.Context, c *app.RequestContext) {
 	resp.StatusMsg = res.BaseResp.StatusMsg
 	resp.Succed = res.BaseResp.Succed
 
+	c.JSON(consts.StatusOK, resp)
+}
+
+// GetHomePage .
+// @router /blinkable/homepage/get [GET]
+func GetHomePage(ctx context.Context, c *app.RequestContext) {
+	var err error
+	resp := new(api.GetHomepageResponse)
+	res, err := config.GlobalHomepageClient.GetMainview(ctx, nil)
+	if err != nil {
+		hlog.Errorf("gethomepage failed: %s", err)
+		c.String(consts.StatusBadRequest, err.Error())
+		return
+	}
+	for _, i := range res.Users {
+		k := api.Users{
+			AdminID:    i.AdminId,
+			Signature:  i.Signature,
+			Likes:      i.Likes,
+			Title:      i.Title,
+			Comments:   i.Comments,
+			Guestbooks: nil,
+			IconURL:    i.IconUrl,
+			ImageURL:   i.ImageUrl,
+			GitURL:     i.GitUrl,
+		}
+		for _, j := range i.Guestbooks {
+			g := api.Guestbook{
+				BookID:     j.BookId,
+				UserID:     j.UserId,
+				Context:    j.Context,
+				FormuserID: j.FormuserId,
+				CreateTime: j.GetCreateTime(),
+			}
+			k.Guestbooks = append(k.Guestbooks, &g)
+		}
+		resp.Users = append(resp.Users, &k)
+	}
+	resp.StatusCode = http.StatusOK
+	resp.Succed = true
+	resp.StatusMsg = "ok"
+	c.JSON(consts.StatusOK, resp)
+}
+
+// AddGuestbook .
+// @router /blinkable/homepage/guesybook [POST]
+func AddGuestbook(ctx context.Context, c *app.RequestContext) {
+	var err error
+	var req api.AddGuestbookRequest
+	err = c.BindAndValidate(&req)
+	if err != nil {
+		c.String(consts.StatusBadRequest, err.Error())
+		return
+	}
+
+	resp := new(api.AddGuestbookResponse)
+	res, err := config.GlobalHomepageClient.AddGuestbook(ctx, &homepage.AddGuestbookRequest{
+		UserId:  req.UserID,
+		AdminId: req.AdminID,
+		Context: req.Context,
+	})
+	if err != nil {
+		hlog.Errorf("addguestbook failed: %s", err)
+		c.String(consts.StatusBadRequest, err.Error())
+		return
+	}
+	resp.Succed = res.Succed
+	resp.StatusMsg = res.StatusMsg
+	resp.StatusCode = res.StatusCode
+
+	c.JSON(consts.StatusOK, resp)
+}
+
+// Like .
+// @router blinkable/homepage/like [POST]
+func Like(ctx context.Context, c *app.RequestContext) {
+	var err error
+	var req api.LikeRequest
+	err = c.BindAndValidate(&req)
+	if err != nil {
+		c.String(consts.StatusBadRequest, err.Error())
+		return
+	}
+	resp := new(api.LikeResponse)
+	res, err := config.GlobalHomepageClient.LikeAction(ctx, &homepage.LikeRequest{
+		AdminId: req.AdminID,
+		UserId:  req.UserID,
+	})
+	if err != nil {
+		hlog.Errorf("like failed: %s", err)
+		c.String(consts.StatusBadRequest, err.Error())
+		return
+	}
+	resp.Succed = res.Succed
+	resp.StatusMsg = res.StatusMsg
+	resp.StatusCode = res.StatusCode
 	c.JSON(consts.StatusOK, resp)
 }

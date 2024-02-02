@@ -50,3 +50,11 @@ func _updateuserpasswordMw() []app.HandlerFunc {
 	// your code...
 	return nil
 }
+
+func _homepageMw() []app.HandlerFunc { return nil }
+
+func _gethomepageMw() []app.HandlerFunc { return nil }
+
+func _addguestbookMw() []app.HandlerFunc { return nil }
+
+func _likeMw() []app.HandlerFunc { return nil }
