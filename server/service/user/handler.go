@@ -8,8 +8,6 @@ import (
 	"blinkable/server/service/user/config"
 	"blinkable/server/service/user/model"
 	"context"
-	"errors"
-	"fmt"
 	"time"
 
 	user "blinkable/server/kitex_gen/user"
@@ -25,12 +23,14 @@ type MysqlCen interface {
 	GetUserByUserName(ctx context.Context, Username string) (*model.User, error)
 	GetUserById(ctx context.Context, id int64) (*model.User, error)
 	UpdateUserInfo(ctx context.Context, user *model.User) error
+	GetGuestBookListByUserId(ctx context.Context, userId int64) ([]*model.Guestbook, error)
 }
 type RedisCen interface {
 	CreateUser(ctx context.Context, user *model.User) error
 	GetUserById(ctx context.Context, id int64) (*model.User, error)
-	GetUserByUserName(ctx context.Context, name string) (*model.User, error)
 	UpdateUserInfo(ctx context.Context, user *model.User) error
+	CreateGuestBooksByUserId(ctx context.Context, userId int64, guestbooks []*model.Guestbook) error
+	GetGuestBooksByUserId(ctx context.Context, userId int64) ([]*model.Guestbook, error)
 }
 
 // UserServiceImpl implements the last service interface defined in the IDL.
@@ -142,6 +142,12 @@ func (s *UserServiceImpl) UserRegister(
 		CreateAt:        time.Now(),
 		UpdateAt:        time.Now(),
 		Title:           "",
+		GithubUrl:       "",
+		LikeNum:         0,
+		ArticlesNum:     0,
+		Experience:      0,
+		Level:           0,
+		Guestbooks:      make([]model.Guestbook, 0),
 	}
 	err = s.MysqlCen.CreateUser(ctx, newUser)
 	if err != nil {
@@ -198,78 +204,61 @@ func (s *UserServiceImpl) UserRegister(
 }
 
 // GetUserInfo implements the UserServiceImpl interface.
-func (s *UserServiceImpl) GetUserInfo(
-	ctx context.Context,
-	req *user.GetUserInfoRequest,
-) (resp *user.GetUserInfoResponse, err error) {
+func (s *UserServiceImpl) GetUserInfo(ctx context.Context, req *user.GetUserInfoRequest) (resp *user.GetUserInfoResponse, err error) {
 	resp = new(user.GetUserInfoResponse)
-
-	if req.Tp == 0 {
-		user, err := s.RedisCen.GetUserById(ctx, req.UserId)
-		if err != nil {
-			klog.Errorf("redis get user by id failed,", err)
-			resp.BaseResp = &base.BaseResponse{
-				StatusCode: 500,
-				StatusMsg:  "redis get user by id failed",
-				Succed:     false,
-			}
-			return nil, err
-		}
-
-		resp.BaseResp = &base.BaseResponse{
-			StatusCode: 0,
-			StatusMsg:  "get user info by id success",
-			Succed:     true,
-		}
-		resp.UserInfo = &base.User{
-			Id:            user.ID,
-			Name:          user.Username,
-			Avatar:        user.Avatar,
-			ArticlesNum:   user.ArticlesNum,
-			Experience:    user.Experience,
-			BackgroundImg: user.BackgroundImage,
-			Level:         user.Level,
-			Signature:     user.Signature,
-			Title:         user.Title,
-		}
-	} else if req.Tp == 1 {
-		user, err := s.RedisCen.GetUserByUserName(ctx, req.UserName)
-		if err != nil {
-			klog.Errorf("redis get user by name failed,", err)
-			resp.BaseResp = &base.BaseResponse{
-				StatusCode: 500,
-				StatusMsg:  "redis get user by name failed",
-				Succed:     false,
-			}
-			return nil, err
-		}
-		resp.BaseResp = &base.BaseResponse{
-			StatusCode: 0,
-			StatusMsg:  "get user info by name success",
-			Succed:     true,
-		}
-		resp.UserInfo = &base.User{
-			Id:            user.ID,
-			Name:          user.Username,
-			Avatar:        user.Avatar,
-			ArticlesNum:   user.ArticlesNum,
-			Experience:    user.Experience,
-			BackgroundImg: user.BackgroundImage,
-			Level:         user.Level,
-			Signature:     user.Signature,
-			Title:         user.Title,
-		}
-	} else {
-		err = errors.New("undefined type")
-		klog.Errorf("get user info failed: %s", err)
+	user, err := s.RedisCen.GetUserById(ctx, req.UserId)
+	if err != nil {
+		klog.Errorf("redis get user by id failed,", err)
 		resp.BaseResp = &base.BaseResponse{
 			StatusCode: 500,
-			StatusMsg:  fmt.Sprintf("%s: %s", "get user inf failed", "undefined type"),
+			StatusMsg:  "redis get user by id failed",
 			Succed:     false,
 		}
 		return nil, err
 	}
 
+	_guestbooks, err := s.RedisCen.GetGuestBooksByUserId(ctx, req.UserId)
+
+	if err != nil {
+		klog.Errorf("redis get guestbooks by userid failed: %s", err)
+		resp.BaseResp = &base.BaseResponse{
+			StatusCode: 500,
+			StatusMsg:  "redis get guestbooks by userid failed",
+			Succed:     false,
+		}
+		return nil, err
+	}
+
+	guestbooks := make([]*base.Guestbook, len(_guestbooks))
+
+	for i := 0; i < len(guestbooks); i++ {
+		guestbooks[i].Id = _guestbooks[i].ID
+		guestbooks[i].UserId = _guestbooks[i].UserID
+		guestbooks[i].Context = _guestbooks[i].Context
+		guestbooks[i].FromUserId = _guestbooks[i].FromUserID
+		guestbooks[i].CreateTime = _guestbooks[i].CreateTime.Format("2006.01.02 15:04:05")
+	}
+
+	resp.UserInfo = &base.User{
+		Id:            user.ID,
+		Name:          user.Username,
+		Avatar:        user.Avatar,
+		ArticlesNum:   user.ArticlesNum,
+		Experience:    user.Experience,
+		BackgroundImg: user.BackgroundImage,
+		Level:         user.Level,
+		Signature:     user.Signature,
+		Title:         user.Title,
+		LikeNum:       user.LikeNum,
+		GithubUrl:     user.GithubUrl,
+		Guestbooks:    guestbooks,
+	}
+
+	resp.BaseResp = &base.BaseResponse{
+		StatusCode: 0,
+		StatusMsg:  "get user info by id success",
+		Succed:     true,
+	}
 	return resp, nil
 }
 

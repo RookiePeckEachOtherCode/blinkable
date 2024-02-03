@@ -23,6 +23,8 @@ import (
 type Querier interface {
 	// SELECT * FROM @@table WHERE name = @name{{if role !=""}} AND role = @role{{end}}
 	FilterWithNameAndRole(name, role string) ([]gen.T, error)
+	// SELECT * FROM @@table WHERE id=@id
+	GetByID(id int64) (gen.T, error) // returns struct and error
 }
 
 func InitDB() *gorm.DB {
@@ -61,13 +63,25 @@ func InitDB() *gorm.DB {
 	g.UseDB(db) // reuse your gorm db
 
 	// Generate basic type-safe DAO API for struct `model.User` following conventions
-	g.ApplyBasic(model.User{})
+	g.ApplyBasic(model.User{}, model.Guestbook{})
 
 	// Generate Type Safe API with Dynamic SQL defined on Querier interface for `model.User` and `model.Company`
-	g.ApplyInterface(func(Querier) {}, model.User{})
+	g.ApplyInterface(func(Querier) {}, model.User{}, model.Guestbook{})
 
 	// Generate the code
 	g.Execute()
+
+	m := db.Migrator()
+	if !m.HasTable(&model.User{}) {
+		if err := m.CreateTable(&model.User{}); err != nil {
+			klog.Fatalf("create user table failed: %s", err)
+		}
+	}
+	if !m.HasTable(&model.Guestbook{}) {
+		if err := m.CreateTable(&model.Guestbook{}); err != nil {
+			klog.Fatalf("create guestbook table failed: %s", err)
+		}
+	}
 
 	return db
 }
