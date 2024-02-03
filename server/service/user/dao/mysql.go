@@ -49,6 +49,7 @@ func (u MysqlCen) GetUserById(ctx context.Context, id int64) (*model.User, error
 	if err != nil {
 		return nil, err
 	}
+	user.Guestbooks, err = u.GetGuestBookListByUserId(ctx, id)
 	return user, nil
 }
 

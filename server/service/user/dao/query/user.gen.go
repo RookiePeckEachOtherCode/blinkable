@@ -42,6 +42,7 @@ func newUser(db *gorm.DB, opts ...gen.DOOption) user {
 	_user.Title = field.NewString(tableName, "title")
 	_user.GithubUrl = field.NewString(tableName, "github_url")
 	_user.LikeNum = field.NewInt64(tableName, "like_num")
+	_user.IsAdmin = field.NewBool(tableName, "is_admin")
 	_user.Guestbooks = userHasManyGuestbooks{
 		db: db.Session(&gorm.Session{}),
 
@@ -71,6 +72,7 @@ type user struct {
 	Title           field.String
 	GithubUrl       field.String
 	LikeNum         field.Int64
+	IsAdmin         field.Bool
 	Guestbooks      userHasManyGuestbooks
 
 	fieldMap map[string]field.Expr
@@ -102,6 +104,7 @@ func (u *user) updateTableName(table string) *user {
 	u.Title = field.NewString(table, "title")
 	u.GithubUrl = field.NewString(table, "github_url")
 	u.LikeNum = field.NewInt64(table, "like_num")
+	u.IsAdmin = field.NewBool(table, "is_admin")
 
 	u.fillFieldMap()
 
@@ -118,7 +121,7 @@ func (u *user) GetFieldByName(fieldName string) (field.OrderExpr, bool) {
 }
 
 func (u *user) fillFieldMap() {
-	u.fieldMap = make(map[string]field.Expr, 15)
+	u.fieldMap = make(map[string]field.Expr, 16)
 	u.fieldMap["id"] = u.ID
 	u.fieldMap["create_at"] = u.CreateAt
 	u.fieldMap["update_at"] = u.UpdateAt
@@ -133,6 +136,7 @@ func (u *user) fillFieldMap() {
 	u.fieldMap["title"] = u.Title
 	u.fieldMap["github_url"] = u.GithubUrl
 	u.fieldMap["like_num"] = u.LikeNum
+	u.fieldMap["is_admin"] = u.IsAdmin
 
 }
 

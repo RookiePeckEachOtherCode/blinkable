@@ -29,8 +29,6 @@ type RedisCen interface {
 	CreateUser(ctx context.Context, user *model.User) error
 	GetUserById(ctx context.Context, id int64) (*model.User, error)
 	UpdateUserInfo(ctx context.Context, user *model.User) error
-	CreateGuestBooksByUserId(ctx context.Context, userId int64, guestbooks []*model.Guestbook) error
-	GetGuestBooksByUserId(ctx context.Context, userId int64) ([]*model.Guestbook, error)
 }
 
 // UserServiceImpl implements the last service interface defined in the IDL.
@@ -147,7 +145,8 @@ func (s *UserServiceImpl) UserRegister(
 		ArticlesNum:     0,
 		Experience:      0,
 		Level:           0,
-		Guestbooks:      make([]model.Guestbook, 0),
+		IsAdmin:         false,
+		Guestbooks:      make([]*model.Guestbook, 0),
 	}
 	err = s.MysqlCen.CreateUser(ctx, newUser)
 	if err != nil {
@@ -206,6 +205,16 @@ func (s *UserServiceImpl) UserRegister(
 // GetUserInfo implements the UserServiceImpl interface.
 func (s *UserServiceImpl) GetUserInfo(ctx context.Context, req *user.GetUserInfoRequest) (resp *user.GetUserInfoResponse, err error) {
 	resp = new(user.GetUserInfoResponse)
+	// user, err := s.MysqlCen.GetUserById(ctx, req.UserId)
+	// if err != nil {
+	// 	klog.Errorf("mysql get userinfo is failed: %s", err)
+	// 	resp.BaseResp = &base.BaseResponse{
+	// 		StatusCode: 500,
+	// 		StatusMsg:  "mysql get user by id failed",
+	// 		Succed:     false,
+	// 	}
+	// 	return nil, err
+	// }
 	user, err := s.RedisCen.GetUserById(ctx, req.UserId)
 	if err != nil {
 		klog.Errorf("redis get user by id failed,", err)
@@ -217,26 +226,14 @@ func (s *UserServiceImpl) GetUserInfo(ctx context.Context, req *user.GetUserInfo
 		return nil, err
 	}
 
-	_guestbooks, err := s.RedisCen.GetGuestBooksByUserId(ctx, req.UserId)
-
-	if err != nil {
-		klog.Errorf("redis get guestbooks by userid failed: %s", err)
-		resp.BaseResp = &base.BaseResponse{
-			StatusCode: 500,
-			StatusMsg:  "redis get guestbooks by userid failed",
-			Succed:     false,
-		}
-		return nil, err
-	}
-
-	guestbooks := make([]*base.Guestbook, len(_guestbooks))
+	guestbooks := make([]*base.Guestbook, len(user.Guestbooks))
 
 	for i := 0; i < len(guestbooks); i++ {
-		guestbooks[i].Id = _guestbooks[i].ID
-		guestbooks[i].UserId = _guestbooks[i].UserID
-		guestbooks[i].Context = _guestbooks[i].Context
-		guestbooks[i].FromUserId = _guestbooks[i].FromUserID
-		guestbooks[i].CreateTime = _guestbooks[i].CreateTime.Format("2006.01.02 15:04:05")
+		guestbooks[i].Id = user.Guestbooks[i].ID
+		guestbooks[i].UserId = user.Guestbooks[i].ID
+		guestbooks[i].Context = user.Guestbooks[i].Context
+		guestbooks[i].FromUserId = user.Guestbooks[i].FromUserID
+		guestbooks[i].CreateTime = user.Guestbooks[i].CreateTime.Format("2006.01.02 15:04:05")
 	}
 
 	resp.UserInfo = &base.User{
