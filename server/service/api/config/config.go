@@ -1,13 +1,14 @@
 package config
 
 type ServerConfig struct {
-	Name       string          `mapstructure:"name"  json:"name"`
-	Host       string          `mapstructure:"host"  json:"host"`
-	Port       string          `mapstructure:"port"  json:"port"`
-	JWTInfo    JWTConfig       `mapstructure:"jwt" json:"jwt"`
-	OtelInfo   OtelConfig      `mapstructure:"otel"  json:"otel"`
-	UserServer RPCServerConfig `mapstructure:"user_server" json:"user_server"`
-	MinioInfo  MinioConfig     `mapstructure:"minio" json:"minio"`
+	Name           string          `mapstructure:"name"  json:"name"`
+	Host           string          `mapstructure:"host"  json:"host"`
+	Port           string          `mapstructure:"port"  json:"port"`
+	JWTInfo        JWTConfig       `mapstructure:"jwt" json:"jwt"`
+	OtelInfo       OtelConfig      `mapstructure:"otel"  json:"otel"`
+	MinioInfo      MinioConfig     `mapstructure:"minio" json:"minio"`
+	UserServer     RPCServerConfig `mapstructure:"user_server" json:"user_server"`
+	HomepageServer RPCServerConfig `mapstructure:"homepage_server" json:"homepage_server"`
 }
 
 type JWTConfig struct {

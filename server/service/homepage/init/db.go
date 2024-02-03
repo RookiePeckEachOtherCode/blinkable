@@ -54,9 +54,21 @@ func InitDB() *gorm.DB {
 	})
 	g.UseDB(db)
 	g.ApplyBasic(model.User{}, model.Guestbook{})
-	g.ApplyInterface(func(Querier) {}, model.User{})
+	g.ApplyInterface(func(Querier) {}, model.User{}, model.Guestbook{})
 	g.Execute()
 
+	m := db.Migrator()
+
+	if !m.HasTable(&model.User{}) {
+		if err := m.CreateTable(&model.User{}); err != nil {
+			klog.Errorf("create user table failed: %s", err)
+		}
+	}
+	if !m.HasTable(&model.Guestbook{}) {
+		if err := m.CreateTable(&model.Guestbook{}); err != nil {
+			klog.Errorf("create guestbook table failed: %s", err)
+		}
+	}
 	return db
 }
 func InitRedis() *redis.Client {

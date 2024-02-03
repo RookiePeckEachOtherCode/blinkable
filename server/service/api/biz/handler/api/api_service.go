@@ -9,11 +9,11 @@ import (
 	"blinkable/server/service/api/biz/model/base"
 	"blinkable/server/service/api/config"
 	"context"
-	"errors"
+	"net/http"
+
 	"github.com/cloudwego/hertz/pkg/app"
 	"github.com/cloudwego/hertz/pkg/common/hlog"
 	"github.com/cloudwego/hertz/pkg/protocol/consts"
-	"net/http"
 )
 
 // UserLogin .
@@ -93,64 +93,46 @@ func GetUserInfo(ctx context.Context, c *app.RequestContext) {
 		c.String(consts.StatusBadRequest, err.Error())
 		return
 	}
-	if req.Tp == 0 {
-		res, err := config.GlobalUserClient.GetUserInfo(ctx, &user.GetUserInfoRequest{
-			Tp:     req.Tp,
-			UserId: req.UserID,
-			Token:  req.Token,
-		})
-		if err != nil {
-			hlog.Errorf("get_user_info rpc call failed", err)
-			c.String(consts.StatusInternalServerError, err.Error())
-			return
-		}
-		resp := new(api.GetUserInfoResponse)
-		resp.User = &base.User{
-			ID:            res.UserInfo.Id,
-			Name:          req.UserName,
-			Avatar:        res.UserInfo.Avatar,
-			ArticlesNum:   res.UserInfo.ArticlesNum,
-			Level:         res.UserInfo.Level,
-			Signature:     res.UserInfo.Signature,
-			Experience:    res.UserInfo.Experience,
-			BackgroundImg: res.UserInfo.BackgroundImg,
-		}
-		resp.StatusCode = res.BaseResp.StatusCode
-		resp.StatusMsg = res.BaseResp.StatusMsg
-		resp.Succed = res.BaseResp.Succed
-		c.JSON(consts.StatusOK, resp)
-	} else if req.Tp == 1 {
-		res, err := config.GlobalUserClient.GetUserInfo(ctx, &user.GetUserInfoRequest{
-			Tp:       req.Tp,
-			UserName: req.UserName,
-			Token:    req.Token,
-		})
-		if err != nil {
-			hlog.Errorf("get_user_info rpc call failed", err)
-			c.String(consts.StatusInternalServerError, err.Error())
-			return
-		}
-		resp := new(api.GetUserInfoResponse)
-		resp.User = &base.User{
-			ID:            res.UserInfo.Id,
-			Name:          req.UserName,
-			Avatar:        res.UserInfo.Avatar,
-			ArticlesNum:   res.UserInfo.ArticlesNum,
-			Level:         res.UserInfo.Level,
-			Signature:     res.UserInfo.Signature,
-			Experience:    res.UserInfo.Experience,
-			BackgroundImg: res.UserInfo.BackgroundImg,
-		}
-		resp.StatusCode = res.BaseResp.StatusCode
-		resp.StatusMsg = res.BaseResp.StatusMsg
-		resp.Succed = res.BaseResp.Succed
-		c.JSON(consts.StatusOK, resp)
-	} else {
-		err := errors.New("undefined type")
-		hlog.Errorf("get user info failed: %s", err)
-		c.String(consts.StatusBadRequest, err.Error())
+
+	res, err := config.GlobalUserClient.GetUserInfo(ctx, &user.GetUserInfoRequest{
+		UserId: req.UserID,
+		Token:  req.Token,
+	})
+	if err != nil {
+		hlog.Errorf("get_user_info rpc call failed", err)
+		c.String(consts.StatusInternalServerError, err.Error())
 		return
 	}
+
+	guestbooks := make([]*base.Guestbook, len(res.UserInfo.Guestbooks))
+
+	for i := 0; i < len(guestbooks); i++ {
+		guestbooks[i].ID = res.UserInfo.Guestbooks[i].Id
+		guestbooks[i].UserID = res.UserInfo.Guestbooks[i].UserId
+		guestbooks[i].Context = res.UserInfo.Guestbooks[i].Context
+		guestbooks[i].FromUserID = res.UserInfo.Guestbooks[i].FromUserId
+		guestbooks[i].CreateTime = res.UserInfo.Guestbooks[i].CreateTime
+	}
+
+	resp := new(api.GetUserInfoResponse)
+	resp.User = &base.User{
+		ID:            res.UserInfo.Id,
+		Name:          res.UserInfo.Name,
+		Avatar:        res.UserInfo.Avatar,
+		ArticlesNum:   res.UserInfo.ArticlesNum,
+		Level:         res.UserInfo.Level,
+		Signature:     res.UserInfo.Signature,
+		Experience:    res.UserInfo.Experience,
+		BackgroundImg: res.UserInfo.BackgroundImg,
+		LikeNum:       res.UserInfo.LikeNum,
+		GithubURL:     res.UserInfo.GithubUrl,
+		Guestbooks:    guestbooks,
+	}
+
+	resp.StatusCode = res.BaseResp.StatusCode
+	resp.StatusMsg = res.BaseResp.StatusMsg
+	resp.Succed = res.BaseResp.Succed
+	c.JSON(consts.StatusOK, resp)
 }
 
 // UpdateUserInfo .
@@ -219,36 +201,41 @@ func UpdateUserPassword(ctx context.Context, c *app.RequestContext) {
 func GetHomePage(ctx context.Context, c *app.RequestContext) {
 	var err error
 	resp := new(api.GetHomepageResponse)
-	res, err := config.GlobalHomepageClient.GetMainview(ctx, nil)
+	res, err := config.GlobalHomepageClient.GetMainview(ctx, &homepage.GetHomepageRequest{})
 	if err != nil {
 		hlog.Errorf("gethomepage failed: %s", err)
 		c.String(consts.StatusBadRequest, err.Error())
 		return
 	}
-	for _, i := range res.Users {
-		k := api.Users{
-			AdminID:    i.AdminId,
-			Signature:  i.Signature,
-			Likes:      i.Likes,
-			Title:      i.Title,
-			Comments:   i.Comments,
-			Guestbooks: nil,
-			IconURL:    i.IconUrl,
-			ImageURL:   i.ImageUrl,
-			GitURL:     i.GitUrl,
+
+	resp.Users = make([]*base.User, len(res.Users))
+
+	for i := 0; i < len(res.Users); i++ {
+		resp.Users[i] = &base.User{
+			ID:            res.Users[i].Id,
+			Name:          res.Users[i].Name,
+			Avatar:        res.Users[i].Avatar,
+			ArticlesNum:   res.Users[i].ArticlesNum,
+			Level:         res.Users[i].Level,
+			Signature:     res.Users[i].Signature,
+			Experience:    res.Users[i].Experience,
+			BackgroundImg: res.Users[i].BackgroundImg,
+			LikeNum:       res.Users[i].LikeNum,
+			GithubURL:     res.Users[i].GithubUrl,
+			Guestbooks:    make([]*base.Guestbook, len(res.Users[i].Guestbooks)),
 		}
-		for _, j := range i.Guestbooks {
-			g := api.Guestbook{
-				BookID:     j.BookId,
-				UserID:     j.UserId,
-				Context:    j.Context,
-				FormuserID: j.FormuserId,
-				CreateTime: j.GetCreateTime(),
+
+		for j := 0; j < len(res.Users[i].Guestbooks); j++ {
+			resp.Users[i].Guestbooks[j] = &base.Guestbook{
+				ID:         res.Users[i].Guestbooks[j].Id,
+				UserID:     res.Users[i].Guestbooks[j].UserId,
+				Context:    res.Users[i].Guestbooks[j].Context,
+				FromUserID: res.Users[i].Guestbooks[j].FromUserId,
+				CreateTime: res.Users[i].Guestbooks[j].CreateTime,
 			}
-			k.Guestbooks = append(k.Guestbooks, &g)
 		}
-		resp.Users = append(resp.Users, &k)
 	}
+
 	resp.StatusCode = http.StatusOK
 	resp.Succed = true
 	resp.StatusMsg = "ok"
@@ -256,7 +243,7 @@ func GetHomePage(ctx context.Context, c *app.RequestContext) {
 }
 
 // AddGuestbook .
-// @router /blinkable/homepage/guesybook [POST]
+// @router /blinkable/homepage/guestbook [POST]
 func AddGuestbook(ctx context.Context, c *app.RequestContext) {
 	var err error
 	var req api.AddGuestbookRequest
@@ -268,9 +255,9 @@ func AddGuestbook(ctx context.Context, c *app.RequestContext) {
 
 	resp := new(api.AddGuestbookResponse)
 	res, err := config.GlobalHomepageClient.AddGuestbook(ctx, &homepage.AddGuestbookRequest{
-		UserId:  req.UserID,
-		AdminId: req.AdminID,
-		Context: req.Context,
+		UserId:     req.UserID,
+		FromUserId: req.FromUserID,
+		Context:    req.Context,
 	})
 	if err != nil {
 		hlog.Errorf("addguestbook failed: %s", err)
@@ -284,9 +271,9 @@ func AddGuestbook(ctx context.Context, c *app.RequestContext) {
 	c.JSON(consts.StatusOK, resp)
 }
 
-// Like .
+// LikeAction .
 // @router blinkable/homepage/like [POST]
-func Like(ctx context.Context, c *app.RequestContext) {
+func LikeAction(ctx context.Context, c *app.RequestContext) {
 	var err error
 	var req api.LikeRequest
 	err = c.BindAndValidate(&req)
@@ -296,8 +283,8 @@ func Like(ctx context.Context, c *app.RequestContext) {
 	}
 	resp := new(api.LikeResponse)
 	res, err := config.GlobalHomepageClient.LikeAction(ctx, &homepage.LikeRequest{
-		AdminId: req.AdminID,
-		UserId:  req.UserID,
+		UserId:     req.UserID,
+		FromUserId: req.FromUserID,
 	})
 	if err != nil {
 		hlog.Errorf("like failed: %s", err)

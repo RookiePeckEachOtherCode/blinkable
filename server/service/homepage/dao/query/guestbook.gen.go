@@ -6,6 +6,7 @@ package query
 
 import (
 	"context"
+	"strings"
 
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
@@ -30,7 +31,7 @@ func newGuestbook(db *gorm.DB, opts ...gen.DOOption) guestbook {
 	_guestbook.ID = field.NewInt64(tableName, "id")
 	_guestbook.CreateTime = field.NewTime(tableName, "create_time")
 	_guestbook.Context = field.NewString(tableName, "context")
-	_guestbook.FromuserID = field.NewInt64(tableName, "fromuser_id")
+	_guestbook.FromUserID = field.NewInt64(tableName, "from_user_id")
 	_guestbook.UserID = field.NewInt64(tableName, "user_id")
 
 	_guestbook.fillFieldMap()
@@ -45,7 +46,7 @@ type guestbook struct {
 	ID         field.Int64
 	CreateTime field.Time
 	Context    field.String
-	FromuserID field.Int64
+	FromUserID field.Int64
 	UserID     field.Int64
 
 	fieldMap map[string]field.Expr
@@ -66,7 +67,7 @@ func (g *guestbook) updateTableName(table string) *guestbook {
 	g.ID = field.NewInt64(table, "id")
 	g.CreateTime = field.NewTime(table, "create_time")
 	g.Context = field.NewString(table, "context")
-	g.FromuserID = field.NewInt64(table, "fromuser_id")
+	g.FromUserID = field.NewInt64(table, "from_user_id")
 	g.UserID = field.NewInt64(table, "user_id")
 
 	g.fillFieldMap()
@@ -88,7 +89,7 @@ func (g *guestbook) fillFieldMap() {
 	g.fieldMap["id"] = g.ID
 	g.fieldMap["create_time"] = g.CreateTime
 	g.fieldMap["context"] = g.Context
-	g.fieldMap["fromuser_id"] = g.FromuserID
+	g.fieldMap["from_user_id"] = g.FromUserID
 	g.fieldMap["user_id"] = g.UserID
 }
 
@@ -163,6 +164,27 @@ type IGuestbookDo interface {
 	Returning(value interface{}, columns ...string) IGuestbookDo
 	UnderlyingDB() *gorm.DB
 	schema.Tabler
+
+	FilterWithNameAndRole(name string, role string) (result []model.Guestbook, err error)
+}
+
+// SELECT * FROM @@table WHERE name = @name{{if role !=""}} AND role = @role{{end}}
+func (g guestbookDo) FilterWithNameAndRole(name string, role string) (result []model.Guestbook, err error) {
+	var params []interface{}
+
+	var generateSQL strings.Builder
+	params = append(params, name)
+	generateSQL.WriteString("SELECT * FROM guestbook WHERE name = ? ")
+	if role != "" {
+		params = append(params, role)
+		generateSQL.WriteString("AND role = ? ")
+	}
+
+	var executeSQL *gorm.DB
+	executeSQL = g.UnderlyingDB().Raw(generateSQL.String(), params...).Find(&result) // ignore_security_alert
+	err = executeSQL.Error
+
+	return
 }
 
 func (g guestbookDo) Debug() IGuestbookDo {
