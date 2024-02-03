@@ -7,9 +7,20 @@ import (
 	"time"
 
 	"github.com/cloudwego/hertz/pkg/common/hlog"
+	"github.com/fatih/color"
 	hertzlogrus "github.com/hertz-contrib/obs-opentelemetry/logging/logrus"
 	"github.com/natefinch/lumberjack"
+	"github.com/sirupsen/logrus"
 )
+
+type CustomTextFormatter struct {
+	logrus.TextFormatter
+	ForceColors   bool
+	ColorInfo     *color.Color
+	ColorWarning  *color.Color
+	ColorError    *color.Color
+	ColorCritical *color.Color
+}
 
 func InitLogger() {
 	logFilePath := consts.HlogFIlePath
@@ -26,6 +37,14 @@ func InitLogger() {
 	}
 
 	logger := hertzlogrus.NewLogger()
+	logger.Logger().Formatter = &CustomTextFormatter{
+		ForceColors:   true,
+		ColorInfo:     color.New(color.FgBlue),
+		ColorWarning:  color.New(color.FgYellow),
+		ColorError:    color.New(color.FgRed),
+		ColorCritical: color.New(color.BgRed, color.FgWhite),
+	}
+
 	lumberjackLogger := &lumberjack.Logger{
 		Filename:   fileName,
 		MaxSize:    20,   // A file can be up to 20M.
