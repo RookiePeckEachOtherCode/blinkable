@@ -22,8 +22,8 @@ func Register(r *server.Hertz) {
 		{
 			_homepage := _blinkable.Group("/homepage", _homepageMw()...)
 			_homepage.GET("/get", append(_gethomepageMw(), api.GetHomePage)...)
-			_homepage.POST("/guesybook", append(_addguestbookMw(), api.AddGuestbook)...)
-			_homepage.POST("/like", append(_likeMw(), api.Like)...)
+			_homepage.POST("/guestbook", append(_addguestbookMw(), api.AddGuestbook)...)
+			_homepage.POST("/like", append(_likeactionMw(), api.LikeAction)...)
 		}
 		{
 			_user := _blinkable.Group("/user", _userMw()...)

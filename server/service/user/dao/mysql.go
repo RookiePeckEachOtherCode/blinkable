@@ -11,22 +11,16 @@ import (
 	"gorm.io/gorm"
 )
 
-type User struct {
+type MysqlCen struct {
 	q *query.Query
 }
 
-func NewUser(db *gorm.DB) *User {
-	m := db.Migrator()
-	if !m.HasTable(&model.User{}) {
-		if err := m.CreateTable(&model.User{}); err != nil {
-			klog.Errorf("create user table failed: %s", err)
-		}
-	}
+func NewUser(db *gorm.DB) *MysqlCen {
 	qr := query.Use(db)
-	return &User{q: qr}
+	return &MysqlCen{q: qr}
 }
 
-func (u User) CreateUser(ctx context.Context, user *model.User) error {
+func (u MysqlCen) CreateUser(ctx context.Context, user *model.User) error {
 	_user, err := u.q.User.WithContext(ctx).Where(u.q.User.Username.Eq(user.Username)).First()
 	if err != gorm.ErrRecordNotFound && err != nil {
 		klog.Errorf(consts.ErrFindUserIsWrong, err)
@@ -43,26 +37,32 @@ func (u User) CreateUser(ctx context.Context, user *model.User) error {
 
 	return nil
 }
-func (u User) GetUserByUserName(ctx context.Context, username string) (*model.User, error) {
+func (u MysqlCen) GetUserByUserName(ctx context.Context, username string) (*model.User, error) {
 	user, err := u.q.User.WithContext(ctx).Where(u.q.User.Username.Eq(username)).First()
 	if err != nil {
 		return nil, err
 	}
 	return user, nil
 }
-func (u User) GetUserById(ctx context.Context, id int64) (*model.User, error) {
+func (u MysqlCen) GetUserById(ctx context.Context, id int64) (*model.User, error) {
 	user, err := u.q.User.WithContext(ctx).Where(u.q.User.ID.Eq(id)).First()
 	if err != nil {
 		return nil, err
 	}
+	user.Guestbooks, err = u.GetGuestBookListByUserId(ctx, id)
 	return user, nil
 }
 
-func (u User) UpdateUserInfo(ctx context.Context, user *model.User) error {
+func (u MysqlCen) UpdateUserInfo(ctx context.Context, user *model.User) error {
 	_, err := u.q.User.WithContext(ctx).Where(u.q.User.ID.Eq(user.ID)).Select(u.q.User.Username, u.q.User.Signature).Updates(map[string]interface{}{
 		"username":  user.Username,
 		"signature": user.Signature,
 		"title":     user.Title,
 	})
 	return err
+}
+
+func (u MysqlCen) GetGuestBookListByUserId(ctx context.Context, userId int64) ([]*model.Guestbook, error) {
+	query := u.q.Guestbook
+	return query.WithContext(ctx).Where(query.UserID.Eq(userId)).Find()
 }

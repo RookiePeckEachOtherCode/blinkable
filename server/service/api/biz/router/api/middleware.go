@@ -58,3 +58,8 @@ func _gethomepageMw() []app.HandlerFunc { return nil }
 func _addguestbookMw() []app.HandlerFunc { return nil }
 
 func _likeMw() []app.HandlerFunc { return nil }
+
+func _likeactionMw() []app.HandlerFunc {
+	// your code...
+	return nil
+}

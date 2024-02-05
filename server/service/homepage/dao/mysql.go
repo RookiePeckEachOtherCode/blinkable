@@ -3,7 +3,7 @@ package dao
 import (
 	"blinkable/server/common/consts"
 	"blinkable/server/service/homepage/dao/query"
-	model2 "blinkable/server/service/homepage/model"
+	"blinkable/server/service/homepage/model"
 	"context"
 	"time"
 
@@ -11,34 +11,30 @@ import (
 	"gorm.io/gorm"
 )
 
-type User struct {
+type MysqlCen struct {
 	q *query.Query
 }
 
-func NewUser(db *gorm.DB) *User {
-	m := db.Migrator()
-	if !m.HasTable(&model2.User{}) {
-		if err := m.CreateTable(&model2.User{}); err != nil {
-			klog.Errorf("create user table failed: %s", err)
-		}
-	}
-	if !m.HasTable(&model2.Guestbook{}) {
-		if err := m.CreateTable(&model2.Guestbook{}); err != nil {
-			klog.Errorf("create guestbook table failed: %s", err)
-		}
-	}
+func NewUser(db *gorm.DB) *MysqlCen {
 	qr := query.Use(db)
-	return &User{q: qr}
+	return &MysqlCen{q: qr}
 }
 
-func (u User) GetUserById(ctx context.Context, id int64) (*model2.User, error) {
+func (u MysqlCen) GetUserById(ctx context.Context, id int64) (*model.User, error) {
 	user, err := u.q.User.WithContext(ctx).Where(u.q.User.ID.Eq(id)).First()
 	if err != nil {
 		return nil, err
 	}
+	user.Guestbooks, err = u.GetGuestBookListByUserId(ctx, id)
 	return user, nil
 }
-func (u User) GetUsersByIds(ctx context.Context, ids []int64) ([]*model2.User, error) {
+
+func (u MysqlCen) GetGuestBookListByUserId(ctx context.Context, userId int64) ([]*model.Guestbook, error) {
+	query := u.q.Guestbook
+	return query.WithContext(ctx).Where(query.UserID.Eq(userId)).Find()
+}
+
+func (u MysqlCen) GetUsersByIds(ctx context.Context, ids []int64) ([]*model.User, error) {
 	users, err := u.q.User.WithContext(ctx).Where(u.q.User.ID.In(ids...)).Find()
 	if err != nil {
 		return nil, err
@@ -46,7 +42,7 @@ func (u User) GetUsersByIds(ctx context.Context, ids []int64) ([]*model2.User, e
 	return users, nil
 }
 
-func (u User) GetGuestbooksById(ctx context.Context, id int64) ([]*model2.Guestbook, error) {
+func (u MysqlCen) GetGuestbooksById(ctx context.Context, id int64) ([]*model.Guestbook, error) {
 	guestbooks, err := u.q.Guestbook.WithContext(ctx).Where(u.q.Guestbook.UserID.Eq(id)).Find()
 	if err != nil {
 		return nil, err
@@ -54,12 +50,18 @@ func (u User) GetGuestbooksById(ctx context.Context, id int64) ([]*model2.Guestb
 	return guestbooks, nil
 }
 
-func (u User) AddGuestbook(ctx context.Context, con string, userid int64, fid int64) error {
-	gbk := model2.Guestbook{
+func (u MysqlCen) GetAllAdminUserInfo(ctx context.Context) ([]*model.User, error) {
+	query := u.q.User
+	res, err := query.WithContext(ctx).Where(query.IsAdmin.Is(true)).Find()
+	return res, err
+}
+
+func (u MysqlCen) AddGuestbook(ctx context.Context, context string, userId int64, fromUserId int64) error {
+	gbk := model.Guestbook{
 		CreateTime: time.Now(),
-		Context:    con,
-		FromuserID: fid,
-		UserID:     userid,
+		Context:    context,
+		UserID:     userId,
+		FromUserID: fromUserId,
 	}
 	err := u.q.Guestbook.WithContext(ctx).Create(&gbk)
 	if err != nil {
@@ -68,7 +70,7 @@ func (u User) AddGuestbook(ctx context.Context, con string, userid int64, fid in
 	}
 	return nil
 }
-func (u User) AddLikeNumberById(ctx context.Context, id int64) error {
-	_, err := u.q.User.WithContext(ctx).Where(u.q.User.ID.Eq(id)).Update(u.q.User.Like, u.q.User.Like.Add(1))
+func (u MysqlCen) AddLikeNumberById(ctx context.Context, id int64) error {
+	_, err := u.q.User.WithContext(ctx).Where(u.q.User.ID.Eq(id)).Update(u.q.User.LikeNum, u.q.User.LikeNum.Add(1))
 	return err
 }

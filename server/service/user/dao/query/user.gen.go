@@ -40,8 +40,14 @@ func newUser(db *gorm.DB, opts ...gen.DOOption) user {
 	_user.BackgroundImage = field.NewString(tableName, "background_image")
 	_user.Level = field.NewInt32(tableName, "level")
 	_user.Title = field.NewString(tableName, "title")
-	_user.Git = field.NewString(tableName, "git")
-	_user.Like = field.NewInt64(tableName, "like")
+	_user.GithubUrl = field.NewString(tableName, "github_url")
+	_user.LikeNum = field.NewInt64(tableName, "like_num")
+	_user.IsAdmin = field.NewBool(tableName, "is_admin")
+	_user.Guestbooks = userHasManyGuestbooks{
+		db: db.Session(&gorm.Session{}),
+
+		RelationField: field.NewRelation("Guestbooks", "model.Guestbook"),
+	}
 
 	_user.fillFieldMap()
 
@@ -64,8 +70,10 @@ type user struct {
 	BackgroundImage field.String
 	Level           field.Int32
 	Title           field.String
-	Git             field.String
-	Like            field.Int64
+	GithubUrl       field.String
+	LikeNum         field.Int64
+	IsAdmin         field.Bool
+	Guestbooks      userHasManyGuestbooks
 
 	fieldMap map[string]field.Expr
 }
@@ -94,8 +102,9 @@ func (u *user) updateTableName(table string) *user {
 	u.BackgroundImage = field.NewString(table, "background_image")
 	u.Level = field.NewInt32(table, "level")
 	u.Title = field.NewString(table, "title")
-	u.Git = field.NewString(table, "git")
-	u.Like = field.NewInt64(table, "like")
+	u.GithubUrl = field.NewString(table, "github_url")
+	u.LikeNum = field.NewInt64(table, "like_num")
+	u.IsAdmin = field.NewBool(table, "is_admin")
 
 	u.fillFieldMap()
 
@@ -112,7 +121,7 @@ func (u *user) GetFieldByName(fieldName string) (field.OrderExpr, bool) {
 }
 
 func (u *user) fillFieldMap() {
-	u.fieldMap = make(map[string]field.Expr, 14)
+	u.fieldMap = make(map[string]field.Expr, 16)
 	u.fieldMap["id"] = u.ID
 	u.fieldMap["create_at"] = u.CreateAt
 	u.fieldMap["update_at"] = u.UpdateAt
@@ -125,8 +134,10 @@ func (u *user) fillFieldMap() {
 	u.fieldMap["background_image"] = u.BackgroundImage
 	u.fieldMap["level"] = u.Level
 	u.fieldMap["title"] = u.Title
-	u.fieldMap["git"] = u.Git
-	u.fieldMap["like"] = u.Like
+	u.fieldMap["github_url"] = u.GithubUrl
+	u.fieldMap["like_num"] = u.LikeNum
+	u.fieldMap["is_admin"] = u.IsAdmin
+
 }
 
 func (u user) clone(db *gorm.DB) user {
@@ -137,6 +148,77 @@ func (u user) clone(db *gorm.DB) user {
 func (u user) replaceDB(db *gorm.DB) user {
 	u.userDo.ReplaceDB(db)
 	return u
+}
+
+type userHasManyGuestbooks struct {
+	db *gorm.DB
+
+	field.RelationField
+}
+
+func (a userHasManyGuestbooks) Where(conds ...field.Expr) *userHasManyGuestbooks {
+	if len(conds) == 0 {
+		return &a
+	}
+
+	exprs := make([]clause.Expression, 0, len(conds))
+	for _, cond := range conds {
+		exprs = append(exprs, cond.BeCond().(clause.Expression))
+	}
+	a.db = a.db.Clauses(clause.Where{Exprs: exprs})
+	return &a
+}
+
+func (a userHasManyGuestbooks) WithContext(ctx context.Context) *userHasManyGuestbooks {
+	a.db = a.db.WithContext(ctx)
+	return &a
+}
+
+func (a userHasManyGuestbooks) Session(session *gorm.Session) *userHasManyGuestbooks {
+	a.db = a.db.Session(session)
+	return &a
+}
+
+func (a userHasManyGuestbooks) Model(m *model.User) *userHasManyGuestbooksTx {
+	return &userHasManyGuestbooksTx{a.db.Model(m).Association(a.Name())}
+}
+
+type userHasManyGuestbooksTx struct{ tx *gorm.Association }
+
+func (a userHasManyGuestbooksTx) Find() (result []*model.Guestbook, err error) {
+	return result, a.tx.Find(&result)
+}
+
+func (a userHasManyGuestbooksTx) Append(values ...*model.Guestbook) (err error) {
+	targetValues := make([]interface{}, len(values))
+	for i, v := range values {
+		targetValues[i] = v
+	}
+	return a.tx.Append(targetValues...)
+}
+
+func (a userHasManyGuestbooksTx) Replace(values ...*model.Guestbook) (err error) {
+	targetValues := make([]interface{}, len(values))
+	for i, v := range values {
+		targetValues[i] = v
+	}
+	return a.tx.Replace(targetValues...)
+}
+
+func (a userHasManyGuestbooksTx) Delete(values ...*model.Guestbook) (err error) {
+	targetValues := make([]interface{}, len(values))
+	for i, v := range values {
+		targetValues[i] = v
+	}
+	return a.tx.Delete(targetValues...)
+}
+
+func (a userHasManyGuestbooksTx) Clear() error {
+	return a.tx.Clear()
+}
+
+func (a userHasManyGuestbooksTx) Count() int64 {
+	return a.tx.Count()
 }
 
 type userDo struct{ gen.DO }
@@ -202,6 +284,7 @@ type IUserDo interface {
 	schema.Tabler
 
 	FilterWithNameAndRole(name string, role string) (result []model.User, err error)
+	GetByID(id int64) (result model.User, err error)
 }
 
 // SELECT * FROM @@table WHERE name = @name{{if role !=""}} AND role = @role{{end}}
@@ -218,6 +301,21 @@ func (u userDo) FilterWithNameAndRole(name string, role string) (result []model.
 
 	var executeSQL *gorm.DB
 	executeSQL = u.UnderlyingDB().Raw(generateSQL.String(), params...).Find(&result) // ignore_security_alert
+	err = executeSQL.Error
+
+	return
+}
+
+// SELECT * FROM @@table WHERE id=@id
+func (u userDo) GetByID(id int64) (result model.User, err error) {
+	var params []interface{}
+
+	var generateSQL strings.Builder
+	params = append(params, id)
+	generateSQL.WriteString("SELECT * FROM user WHERE id=? ")
+
+	var executeSQL *gorm.DB
+	executeSQL = u.UnderlyingDB().Raw(generateSQL.String(), params...).Take(&result) // ignore_security_alert
 	err = executeSQL.Error
 
 	return

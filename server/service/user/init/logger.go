@@ -9,7 +9,19 @@ import (
 	"github.com/cloudwego/kitex/pkg/klog"
 	kitexlogrus "github.com/kitex-contrib/obs-opentelemetry/logging/logrus"
 	"github.com/natefinch/lumberjack"
+	"github.com/sirupsen/logrus"
+
+	"github.com/fatih/color"
 )
+
+type CustomTextFormatter struct {
+	logrus.TextFormatter
+	ForceColors   bool
+	ColorInfo     *color.Color
+	ColorWarning  *color.Color
+	ColorError    *color.Color
+	ColorCritical *color.Color
+}
 
 func InitLogger() {
 	logFilePath := consts.KlogFilePath
@@ -26,6 +38,13 @@ func InitLogger() {
 	}
 
 	logger := kitexlogrus.NewLogger()
+	logger.Logger().Formatter = &CustomTextFormatter{
+		ForceColors:   true,
+		ColorInfo:     color.New(color.FgBlue),
+		ColorWarning:  color.New(color.FgYellow),
+		ColorError:    color.New(color.FgRed),
+		ColorCritical: color.New(color.BgRed, color.FgWhite),
+	}
 
 	lumberjackLogger := &lumberjack.Logger{
 		Filename:   fileName,

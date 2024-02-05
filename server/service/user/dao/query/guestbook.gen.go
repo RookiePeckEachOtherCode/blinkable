@@ -17,7 +17,7 @@ import (
 
 	"gorm.io/plugin/dbresolver"
 
-	"blinkable/server/service/homepage/model"
+	"blinkable/server/service/user/model"
 )
 
 func newGuestbook(db *gorm.DB, opts ...gen.DOOption) guestbook {
@@ -166,6 +166,7 @@ type IGuestbookDo interface {
 	schema.Tabler
 
 	FilterWithNameAndRole(name string, role string) (result []model.Guestbook, err error)
+	GetByID(id int64) (result model.Guestbook, err error)
 }
 
 // SELECT * FROM @@table WHERE name = @name{{if role !=""}} AND role = @role{{end}}
@@ -182,6 +183,21 @@ func (g guestbookDo) FilterWithNameAndRole(name string, role string) (result []m
 
 	var executeSQL *gorm.DB
 	executeSQL = g.UnderlyingDB().Raw(generateSQL.String(), params...).Find(&result) // ignore_security_alert
+	err = executeSQL.Error
+
+	return
+}
+
+// SELECT * FROM @@table WHERE id=@id
+func (g guestbookDo) GetByID(id int64) (result model.Guestbook, err error) {
+	var params []interface{}
+
+	var generateSQL strings.Builder
+	params = append(params, id)
+	generateSQL.WriteString("SELECT * FROM guestbook WHERE id=? ")
+
+	var executeSQL *gorm.DB
+	executeSQL = g.UnderlyingDB().Raw(generateSQL.String(), params...).Take(&result) // ignore_security_alert
 	err = executeSQL.Error
 
 	return

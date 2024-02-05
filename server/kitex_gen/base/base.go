@@ -290,16 +290,419 @@ func (p *BaseResponse) Field3DeepEqual(src bool) bool {
 	return true
 }
 
+type Guestbook struct {
+	Id         int64  `thrift:"id,1" frugal:"1,default,i64" json:"id"`
+	UserId     int64  `thrift:"user_id,2" frugal:"2,default,i64" json:"user_id"`
+	Context    string `thrift:"context,3" frugal:"3,default,string" json:"context"`
+	FromUserId int64  `thrift:"from_user_id,4" frugal:"4,default,i64" json:"from_user_id"`
+	CreateTime string `thrift:"create_time,5" frugal:"5,default,string" json:"create_time"`
+}
+
+func NewGuestbook() *Guestbook {
+	return &Guestbook{}
+}
+
+func (p *Guestbook) InitDefault() {
+	*p = Guestbook{}
+}
+
+func (p *Guestbook) GetId() (v int64) {
+	return p.Id
+}
+
+func (p *Guestbook) GetUserId() (v int64) {
+	return p.UserId
+}
+
+func (p *Guestbook) GetContext() (v string) {
+	return p.Context
+}
+
+func (p *Guestbook) GetFromUserId() (v int64) {
+	return p.FromUserId
+}
+
+func (p *Guestbook) GetCreateTime() (v string) {
+	return p.CreateTime
+}
+func (p *Guestbook) SetId(val int64) {
+	p.Id = val
+}
+func (p *Guestbook) SetUserId(val int64) {
+	p.UserId = val
+}
+func (p *Guestbook) SetContext(val string) {
+	p.Context = val
+}
+func (p *Guestbook) SetFromUserId(val int64) {
+	p.FromUserId = val
+}
+func (p *Guestbook) SetCreateTime(val string) {
+	p.CreateTime = val
+}
+
+var fieldIDToName_Guestbook = map[int16]string{
+	1: "id",
+	2: "user_id",
+	3: "context",
+	4: "from_user_id",
+	5: "create_time",
+}
+
+func (p *Guestbook) Read(iprot thrift.TProtocol) (err error) {
+
+	var fieldTypeId thrift.TType
+	var fieldId int16
+
+	if _, err = iprot.ReadStructBegin(); err != nil {
+		goto ReadStructBeginError
+	}
+
+	for {
+		_, fieldTypeId, fieldId, err = iprot.ReadFieldBegin()
+		if err != nil {
+			goto ReadFieldBeginError
+		}
+		if fieldTypeId == thrift.STOP {
+			break
+		}
+
+		switch fieldId {
+		case 1:
+			if fieldTypeId == thrift.I64 {
+				if err = p.ReadField1(iprot); err != nil {
+					goto ReadFieldError
+				}
+			} else {
+				if err = iprot.Skip(fieldTypeId); err != nil {
+					goto SkipFieldError
+				}
+			}
+		case 2:
+			if fieldTypeId == thrift.I64 {
+				if err = p.ReadField2(iprot); err != nil {
+					goto ReadFieldError
+				}
+			} else {
+				if err = iprot.Skip(fieldTypeId); err != nil {
+					goto SkipFieldError
+				}
+			}
+		case 3:
+			if fieldTypeId == thrift.STRING {
+				if err = p.ReadField3(iprot); err != nil {
+					goto ReadFieldError
+				}
+			} else {
+				if err = iprot.Skip(fieldTypeId); err != nil {
+					goto SkipFieldError
+				}
+			}
+		case 4:
+			if fieldTypeId == thrift.I64 {
+				if err = p.ReadField4(iprot); err != nil {
+					goto ReadFieldError
+				}
+			} else {
+				if err = iprot.Skip(fieldTypeId); err != nil {
+					goto SkipFieldError
+				}
+			}
+		case 5:
+			if fieldTypeId == thrift.STRING {
+				if err = p.ReadField5(iprot); err != nil {
+					goto ReadFieldError
+				}
+			} else {
+				if err = iprot.Skip(fieldTypeId); err != nil {
+					goto SkipFieldError
+				}
+			}
+		default:
+			if err = iprot.Skip(fieldTypeId); err != nil {
+				goto SkipFieldError
+			}
+		}
+
+		if err = iprot.ReadFieldEnd(); err != nil {
+			goto ReadFieldEndError
+		}
+	}
+	if err = iprot.ReadStructEnd(); err != nil {
+		goto ReadStructEndError
+	}
+
+	return nil
+ReadStructBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T read struct begin error: ", p), err)
+ReadFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T read field %d begin error: ", p, fieldId), err)
+ReadFieldError:
+	return thrift.PrependError(fmt.Sprintf("%T read field %d '%s' error: ", p, fieldId, fieldIDToName_Guestbook[fieldId]), err)
+SkipFieldError:
+	return thrift.PrependError(fmt.Sprintf("%T field %d skip type %d error: ", p, fieldId, fieldTypeId), err)
+
+ReadFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T read field end error", p), err)
+ReadStructEndError:
+	return thrift.PrependError(fmt.Sprintf("%T read struct end error: ", p), err)
+}
+
+func (p *Guestbook) ReadField1(iprot thrift.TProtocol) error {
+	if v, err := iprot.ReadI64(); err != nil {
+		return err
+	} else {
+		p.Id = v
+	}
+	return nil
+}
+
+func (p *Guestbook) ReadField2(iprot thrift.TProtocol) error {
+	if v, err := iprot.ReadI64(); err != nil {
+		return err
+	} else {
+		p.UserId = v
+	}
+	return nil
+}
+
+func (p *Guestbook) ReadField3(iprot thrift.TProtocol) error {
+	if v, err := iprot.ReadString(); err != nil {
+		return err
+	} else {
+		p.Context = v
+	}
+	return nil
+}
+
+func (p *Guestbook) ReadField4(iprot thrift.TProtocol) error {
+	if v, err := iprot.ReadI64(); err != nil {
+		return err
+	} else {
+		p.FromUserId = v
+	}
+	return nil
+}
+
+func (p *Guestbook) ReadField5(iprot thrift.TProtocol) error {
+	if v, err := iprot.ReadString(); err != nil {
+		return err
+	} else {
+		p.CreateTime = v
+	}
+	return nil
+}
+
+func (p *Guestbook) Write(oprot thrift.TProtocol) (err error) {
+	var fieldId int16
+	if err = oprot.WriteStructBegin("Guestbook"); err != nil {
+		goto WriteStructBeginError
+	}
+	if p != nil {
+		if err = p.writeField1(oprot); err != nil {
+			fieldId = 1
+			goto WriteFieldError
+		}
+		if err = p.writeField2(oprot); err != nil {
+			fieldId = 2
+			goto WriteFieldError
+		}
+		if err = p.writeField3(oprot); err != nil {
+			fieldId = 3
+			goto WriteFieldError
+		}
+		if err = p.writeField4(oprot); err != nil {
+			fieldId = 4
+			goto WriteFieldError
+		}
+		if err = p.writeField5(oprot); err != nil {
+			fieldId = 5
+			goto WriteFieldError
+		}
+
+	}
+	if err = oprot.WriteFieldStop(); err != nil {
+		goto WriteFieldStopError
+	}
+	if err = oprot.WriteStructEnd(); err != nil {
+		goto WriteStructEndError
+	}
+	return nil
+WriteStructBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write struct begin error: ", p), err)
+WriteFieldError:
+	return thrift.PrependError(fmt.Sprintf("%T write field %d error: ", p, fieldId), err)
+WriteFieldStopError:
+	return thrift.PrependError(fmt.Sprintf("%T write field stop error: ", p), err)
+WriteStructEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write struct end error: ", p), err)
+}
+
+func (p *Guestbook) writeField1(oprot thrift.TProtocol) (err error) {
+	if err = oprot.WriteFieldBegin("id", thrift.I64, 1); err != nil {
+		goto WriteFieldBeginError
+	}
+	if err := oprot.WriteI64(p.Id); err != nil {
+		return err
+	}
+	if err = oprot.WriteFieldEnd(); err != nil {
+		goto WriteFieldEndError
+	}
+	return nil
+WriteFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 1 begin error: ", p), err)
+WriteFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 1 end error: ", p), err)
+}
+
+func (p *Guestbook) writeField2(oprot thrift.TProtocol) (err error) {
+	if err = oprot.WriteFieldBegin("user_id", thrift.I64, 2); err != nil {
+		goto WriteFieldBeginError
+	}
+	if err := oprot.WriteI64(p.UserId); err != nil {
+		return err
+	}
+	if err = oprot.WriteFieldEnd(); err != nil {
+		goto WriteFieldEndError
+	}
+	return nil
+WriteFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 2 begin error: ", p), err)
+WriteFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 2 end error: ", p), err)
+}
+
+func (p *Guestbook) writeField3(oprot thrift.TProtocol) (err error) {
+	if err = oprot.WriteFieldBegin("context", thrift.STRING, 3); err != nil {
+		goto WriteFieldBeginError
+	}
+	if err := oprot.WriteString(p.Context); err != nil {
+		return err
+	}
+	if err = oprot.WriteFieldEnd(); err != nil {
+		goto WriteFieldEndError
+	}
+	return nil
+WriteFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 3 begin error: ", p), err)
+WriteFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 3 end error: ", p), err)
+}
+
+func (p *Guestbook) writeField4(oprot thrift.TProtocol) (err error) {
+	if err = oprot.WriteFieldBegin("from_user_id", thrift.I64, 4); err != nil {
+		goto WriteFieldBeginError
+	}
+	if err := oprot.WriteI64(p.FromUserId); err != nil {
+		return err
+	}
+	if err = oprot.WriteFieldEnd(); err != nil {
+		goto WriteFieldEndError
+	}
+	return nil
+WriteFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 4 begin error: ", p), err)
+WriteFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 4 end error: ", p), err)
+}
+
+func (p *Guestbook) writeField5(oprot thrift.TProtocol) (err error) {
+	if err = oprot.WriteFieldBegin("create_time", thrift.STRING, 5); err != nil {
+		goto WriteFieldBeginError
+	}
+	if err := oprot.WriteString(p.CreateTime); err != nil {
+		return err
+	}
+	if err = oprot.WriteFieldEnd(); err != nil {
+		goto WriteFieldEndError
+	}
+	return nil
+WriteFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 5 begin error: ", p), err)
+WriteFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 5 end error: ", p), err)
+}
+
+func (p *Guestbook) String() string {
+	if p == nil {
+		return "<nil>"
+	}
+	return fmt.Sprintf("Guestbook(%+v)", *p)
+}
+
+func (p *Guestbook) DeepEqual(ano *Guestbook) bool {
+	if p == ano {
+		return true
+	} else if p == nil || ano == nil {
+		return false
+	}
+	if !p.Field1DeepEqual(ano.Id) {
+		return false
+	}
+	if !p.Field2DeepEqual(ano.UserId) {
+		return false
+	}
+	if !p.Field3DeepEqual(ano.Context) {
+		return false
+	}
+	if !p.Field4DeepEqual(ano.FromUserId) {
+		return false
+	}
+	if !p.Field5DeepEqual(ano.CreateTime) {
+		return false
+	}
+	return true
+}
+
+func (p *Guestbook) Field1DeepEqual(src int64) bool {
+
+	if p.Id != src {
+		return false
+	}
+	return true
+}
+func (p *Guestbook) Field2DeepEqual(src int64) bool {
+
+	if p.UserId != src {
+		return false
+	}
+	return true
+}
+func (p *Guestbook) Field3DeepEqual(src string) bool {
+
+	if strings.Compare(p.Context, src) != 0 {
+		return false
+	}
+	return true
+}
+func (p *Guestbook) Field4DeepEqual(src int64) bool {
+
+	if p.FromUserId != src {
+		return false
+	}
+	return true
+}
+func (p *Guestbook) Field5DeepEqual(src string) bool {
+
+	if strings.Compare(p.CreateTime, src) != 0 {
+		return false
+	}
+	return true
+}
+
 type User struct {
-	Id            int64  `thrift:"id,1" frugal:"1,default,i64" json:"id"`
-	Name          string `thrift:"name,2" frugal:"2,default,string" json:"name"`
-	Avatar        string `thrift:"avatar,3" frugal:"3,default,string" json:"avatar"`
-	ArticlesNum   int32  `thrift:"articles_num,4" frugal:"4,default,i32" json:"articles_num"`
-	Experience    int32  `thrift:"experience,5" frugal:"5,default,i32" json:"experience"`
-	BackgroundImg string `thrift:"background_img,6" frugal:"6,default,string" json:"background_img"`
-	Level         int32  `thrift:"level,7" frugal:"7,default,i32" json:"level"`
-	Signature     string `thrift:"signature,8" frugal:"8,default,string" json:"signature"`
-	Title         string `thrift:"title,9" frugal:"9,default,string" json:"title"`
+	Id            int64        `thrift:"id,1" frugal:"1,default,i64" json:"id"`
+	Name          string       `thrift:"name,2" frugal:"2,default,string" json:"name"`
+	Avatar        string       `thrift:"avatar,3" frugal:"3,default,string" json:"avatar"`
+	ArticlesNum   int32        `thrift:"articles_num,4" frugal:"4,default,i32" json:"articles_num"`
+	Experience    int32        `thrift:"experience,5" frugal:"5,default,i32" json:"experience"`
+	BackgroundImg string       `thrift:"background_img,6" frugal:"6,default,string" json:"background_img"`
+	Level         int32        `thrift:"level,7" frugal:"7,default,i32" json:"level"`
+	Signature     string       `thrift:"signature,8" frugal:"8,default,string" json:"signature"`
+	Title         string       `thrift:"title,9" frugal:"9,default,string" json:"title"`
+	LikeNum       int64        `thrift:"like_num,10" frugal:"10,default,i64" json:"like_num"`
+	GithubUrl     string       `thrift:"github_url,11" frugal:"11,default,string" json:"github_url"`
+	Guestbooks    []*Guestbook `thrift:"guestbooks,12" frugal:"12,default,list<Guestbook>" json:"guestbooks"`
 }
 
 func NewUser() *User {
@@ -345,6 +748,18 @@ func (p *User) GetSignature() (v string) {
 func (p *User) GetTitle() (v string) {
 	return p.Title
 }
+
+func (p *User) GetLikeNum() (v int64) {
+	return p.LikeNum
+}
+
+func (p *User) GetGithubUrl() (v string) {
+	return p.GithubUrl
+}
+
+func (p *User) GetGuestbooks() (v []*Guestbook) {
+	return p.Guestbooks
+}
 func (p *User) SetId(val int64) {
 	p.Id = val
 }
@@ -372,17 +787,29 @@ func (p *User) SetSignature(val string) {
 func (p *User) SetTitle(val string) {
 	p.Title = val
 }
+func (p *User) SetLikeNum(val int64) {
+	p.LikeNum = val
+}
+func (p *User) SetGithubUrl(val string) {
+	p.GithubUrl = val
+}
+func (p *User) SetGuestbooks(val []*Guestbook) {
+	p.Guestbooks = val
+}
 
 var fieldIDToName_User = map[int16]string{
-	1: "id",
-	2: "name",
-	3: "avatar",
-	4: "articles_num",
-	5: "experience",
-	6: "background_img",
-	7: "level",
-	8: "signature",
-	9: "title",
+	1:  "id",
+	2:  "name",
+	3:  "avatar",
+	4:  "articles_num",
+	5:  "experience",
+	6:  "background_img",
+	7:  "level",
+	8:  "signature",
+	9:  "title",
+	10: "like_num",
+	11: "github_url",
+	12: "guestbooks",
 }
 
 func (p *User) Read(iprot thrift.TProtocol) (err error) {
@@ -487,6 +914,36 @@ func (p *User) Read(iprot thrift.TProtocol) (err error) {
 		case 9:
 			if fieldTypeId == thrift.STRING {
 				if err = p.ReadField9(iprot); err != nil {
+					goto ReadFieldError
+				}
+			} else {
+				if err = iprot.Skip(fieldTypeId); err != nil {
+					goto SkipFieldError
+				}
+			}
+		case 10:
+			if fieldTypeId == thrift.I64 {
+				if err = p.ReadField10(iprot); err != nil {
+					goto ReadFieldError
+				}
+			} else {
+				if err = iprot.Skip(fieldTypeId); err != nil {
+					goto SkipFieldError
+				}
+			}
+		case 11:
+			if fieldTypeId == thrift.STRING {
+				if err = p.ReadField11(iprot); err != nil {
+					goto ReadFieldError
+				}
+			} else {
+				if err = iprot.Skip(fieldTypeId); err != nil {
+					goto SkipFieldError
+				}
+			}
+		case 12:
+			if fieldTypeId == thrift.LIST {
+				if err = p.ReadField12(iprot); err != nil {
 					goto ReadFieldError
 				}
 			} else {
@@ -605,6 +1062,44 @@ func (p *User) ReadField9(iprot thrift.TProtocol) error {
 	return nil
 }
 
+func (p *User) ReadField10(iprot thrift.TProtocol) error {
+	if v, err := iprot.ReadI64(); err != nil {
+		return err
+	} else {
+		p.LikeNum = v
+	}
+	return nil
+}
+
+func (p *User) ReadField11(iprot thrift.TProtocol) error {
+	if v, err := iprot.ReadString(); err != nil {
+		return err
+	} else {
+		p.GithubUrl = v
+	}
+	return nil
+}
+
+func (p *User) ReadField12(iprot thrift.TProtocol) error {
+	_, size, err := iprot.ReadListBegin()
+	if err != nil {
+		return err
+	}
+	p.Guestbooks = make([]*Guestbook, 0, size)
+	for i := 0; i < size; i++ {
+		_elem := NewGuestbook()
+		if err := _elem.Read(iprot); err != nil {
+			return err
+		}
+
+		p.Guestbooks = append(p.Guestbooks, _elem)
+	}
+	if err := iprot.ReadListEnd(); err != nil {
+		return err
+	}
+	return nil
+}
+
 func (p *User) Write(oprot thrift.TProtocol) (err error) {
 	var fieldId int16
 	if err = oprot.WriteStructBegin("User"); err != nil {
@@ -645,6 +1140,18 @@ func (p *User) Write(oprot thrift.TProtocol) (err error) {
 		}
 		if err = p.writeField9(oprot); err != nil {
 			fieldId = 9
+			goto WriteFieldError
+		}
+		if err = p.writeField10(oprot); err != nil {
+			fieldId = 10
+			goto WriteFieldError
+		}
+		if err = p.writeField11(oprot); err != nil {
+			fieldId = 11
+			goto WriteFieldError
+		}
+		if err = p.writeField12(oprot); err != nil {
+			fieldId = 12
 			goto WriteFieldError
 		}
 
@@ -819,6 +1326,65 @@ WriteFieldEndError:
 	return thrift.PrependError(fmt.Sprintf("%T write field 9 end error: ", p), err)
 }
 
+func (p *User) writeField10(oprot thrift.TProtocol) (err error) {
+	if err = oprot.WriteFieldBegin("like_num", thrift.I64, 10); err != nil {
+		goto WriteFieldBeginError
+	}
+	if err := oprot.WriteI64(p.LikeNum); err != nil {
+		return err
+	}
+	if err = oprot.WriteFieldEnd(); err != nil {
+		goto WriteFieldEndError
+	}
+	return nil
+WriteFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 10 begin error: ", p), err)
+WriteFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 10 end error: ", p), err)
+}
+
+func (p *User) writeField11(oprot thrift.TProtocol) (err error) {
+	if err = oprot.WriteFieldBegin("github_url", thrift.STRING, 11); err != nil {
+		goto WriteFieldBeginError
+	}
+	if err := oprot.WriteString(p.GithubUrl); err != nil {
+		return err
+	}
+	if err = oprot.WriteFieldEnd(); err != nil {
+		goto WriteFieldEndError
+	}
+	return nil
+WriteFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 11 begin error: ", p), err)
+WriteFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 11 end error: ", p), err)
+}
+
+func (p *User) writeField12(oprot thrift.TProtocol) (err error) {
+	if err = oprot.WriteFieldBegin("guestbooks", thrift.LIST, 12); err != nil {
+		goto WriteFieldBeginError
+	}
+	if err := oprot.WriteListBegin(thrift.STRUCT, len(p.Guestbooks)); err != nil {
+		return err
+	}
+	for _, v := range p.Guestbooks {
+		if err := v.Write(oprot); err != nil {
+			return err
+		}
+	}
+	if err := oprot.WriteListEnd(); err != nil {
+		return err
+	}
+	if err = oprot.WriteFieldEnd(); err != nil {
+		goto WriteFieldEndError
+	}
+	return nil
+WriteFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 12 begin error: ", p), err)
+WriteFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 12 end error: ", p), err)
+}
+
 func (p *User) String() string {
 	if p == nil {
 		return "<nil>"
@@ -857,6 +1423,15 @@ func (p *User) DeepEqual(ano *User) bool {
 		return false
 	}
 	if !p.Field9DeepEqual(ano.Title) {
+		return false
+	}
+	if !p.Field10DeepEqual(ano.LikeNum) {
+		return false
+	}
+	if !p.Field11DeepEqual(ano.GithubUrl) {
+		return false
+	}
+	if !p.Field12DeepEqual(ano.Guestbooks) {
 		return false
 	}
 	return true
@@ -922,6 +1497,33 @@ func (p *User) Field9DeepEqual(src string) bool {
 
 	if strings.Compare(p.Title, src) != 0 {
 		return false
+	}
+	return true
+}
+func (p *User) Field10DeepEqual(src int64) bool {
+
+	if p.LikeNum != src {
+		return false
+	}
+	return true
+}
+func (p *User) Field11DeepEqual(src string) bool {
+
+	if strings.Compare(p.GithubUrl, src) != 0 {
+		return false
+	}
+	return true
+}
+func (p *User) Field12DeepEqual(src []*Guestbook) bool {
+
+	if len(p.Guestbooks) != len(src) {
+		return false
+	}
+	for i, v := range p.Guestbooks {
+		_src := src[i]
+		if !v.DeepEqual(_src) {
+			return false
+		}
 	}
 	return true
 }
