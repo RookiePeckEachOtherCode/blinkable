@@ -66,15 +66,18 @@ const form=ref<Form>({
 });
 //生成封装表单对象
 const formRef=ref<FormInstance>()
-const lin=async ()=>{
-const res=await loginApi(form.value);
- const user_id= res.user_id.toString()
-   useUserinfoStore.setAuth(res.token,user_id,res.icon_url);
-  ElMessage.success("登录成功")
-  router.push("/home/main-view")
+const lin = async () => {
+  const res = await loginApi(form.value);
+  const user_id = res.user_id.toString();
+  
+  console.log(user_id);
+  useUserinfoStore.setAuth(res.token, user_id, res.icon_url);
+  ElMessage.success("登录成功");
+  router.push("/home/main-view");
 };
 const reg=async ()=>{
   const res=await registerApi(form.value);
+  console.log(res)
   const user_id=res.user_id.toString()
   useUserinfoStore.setAuth(res.token,user_id)
   ElMessage.success("注册成功")
