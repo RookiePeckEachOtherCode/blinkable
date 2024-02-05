@@ -282,6 +282,9 @@ func (s *UserServiceImpl) UpdateUserInfo(ctx context.Context, req *user.UpdateUs
 	if dataUser.Title != req.Title {
 		dataUser.Title = req.Title
 	}
+	if dataUser.GithubUrl != req.GithubUrl {
+		dataUser.GithubUrl = req.GithubUrl
+	}
 
 	if err := s.MysqlCen.UpdateUserInfo(ctx, dataUser); err != nil {
 		klog.Errorf("update userinfo to mysql failed: %s", err)

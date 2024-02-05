@@ -47,6 +47,7 @@ struct update_user_info_request {
     3: string username (api.query = "username", api.vd = "len($)>0 && len($)<33")
     4: string signature (api.query = "signature", api.vd = "len($)>0 && len($)<100")
     5: string title (api.query = "title", api.vd = "len($)>0 && len($)<21")
+    6: string github_url (api.query = "github_url")
 }
 
 struct update_user_info_response {

@@ -152,6 +152,8 @@ func UpdateUserInfo(ctx context.Context, c *app.RequestContext) {
 		Username:  req.Username,
 		Token:     req.Token,
 		Signature: req.Signature,
+		Title:     req.Title,
+		GithubUrl: req.GithubURL,
 	})
 	if err != nil {
 		hlog.Errorf("update userinfo failed: %s", err)

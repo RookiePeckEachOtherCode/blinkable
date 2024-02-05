@@ -42,6 +42,7 @@ struct update_user_info_request {
     3: string username
     4: string signature
     5: string title
+    6: string github_url
 }
 
 struct update_user_info_response {

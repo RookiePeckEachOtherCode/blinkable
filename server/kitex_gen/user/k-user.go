@@ -1366,6 +1366,20 @@ func (p *UpdateUserInfoRequest) FastRead(buf []byte) (int, error) {
 					goto SkipFieldError
 				}
 			}
+		case 6:
+			if fieldTypeId == thrift.STRING {
+				l, err = p.FastReadField6(buf[offset:])
+				offset += l
+				if err != nil {
+					goto ReadFieldError
+				}
+			} else {
+				l, err = bthrift.Binary.Skip(buf[offset:], fieldTypeId)
+				offset += l
+				if err != nil {
+					goto SkipFieldError
+				}
+			}
 		default:
 			l, err = bthrift.Binary.Skip(buf[offset:], fieldTypeId)
 			offset += l
@@ -1471,6 +1485,20 @@ func (p *UpdateUserInfoRequest) FastReadField5(buf []byte) (int, error) {
 	return offset, nil
 }
 
+func (p *UpdateUserInfoRequest) FastReadField6(buf []byte) (int, error) {
+	offset := 0
+
+	if v, l, err := bthrift.Binary.ReadString(buf[offset:]); err != nil {
+		return offset, err
+	} else {
+		offset += l
+
+		p.GithubUrl = v
+
+	}
+	return offset, nil
+}
+
 // for compatibility
 func (p *UpdateUserInfoRequest) FastWrite(buf []byte) int {
 	return 0
@@ -1485,6 +1513,7 @@ func (p *UpdateUserInfoRequest) FastWriteNocopy(buf []byte, binaryWriter bthrift
 		offset += p.fastWriteField3(buf[offset:], binaryWriter)
 		offset += p.fastWriteField4(buf[offset:], binaryWriter)
 		offset += p.fastWriteField5(buf[offset:], binaryWriter)
+		offset += p.fastWriteField6(buf[offset:], binaryWriter)
 	}
 	offset += bthrift.Binary.WriteFieldStop(buf[offset:])
 	offset += bthrift.Binary.WriteStructEnd(buf[offset:])
@@ -1500,6 +1529,7 @@ func (p *UpdateUserInfoRequest) BLength() int {
 		l += p.field3Length()
 		l += p.field4Length()
 		l += p.field5Length()
+		l += p.field6Length()
 	}
 	l += bthrift.Binary.FieldStopLength()
 	l += bthrift.Binary.StructEndLength()
@@ -1551,6 +1581,15 @@ func (p *UpdateUserInfoRequest) fastWriteField5(buf []byte, binaryWriter bthrift
 	return offset
 }
 
+func (p *UpdateUserInfoRequest) fastWriteField6(buf []byte, binaryWriter bthrift.BinaryWriter) int {
+	offset := 0
+	offset += bthrift.Binary.WriteFieldBegin(buf[offset:], "github_url", thrift.STRING, 6)
+	offset += bthrift.Binary.WriteStringNocopy(buf[offset:], binaryWriter, p.GithubUrl)
+
+	offset += bthrift.Binary.WriteFieldEnd(buf[offset:])
+	return offset
+}
+
 func (p *UpdateUserInfoRequest) field1Length() int {
 	l := 0
 	l += bthrift.Binary.FieldBeginLength("user_id", thrift.I64, 1)
@@ -1591,6 +1630,15 @@ func (p *UpdateUserInfoRequest) field5Length() int {
 	l := 0
 	l += bthrift.Binary.FieldBeginLength("title", thrift.STRING, 5)
 	l += bthrift.Binary.StringLengthNocopy(p.Title)
+
+	l += bthrift.Binary.FieldEndLength()
+	return l
+}
+
+func (p *UpdateUserInfoRequest) field6Length() int {
+	l := 0
+	l += bthrift.Binary.FieldBeginLength("github_url", thrift.STRING, 6)
+	l += bthrift.Binary.StringLengthNocopy(p.GithubUrl)
 
 	l += bthrift.Binary.FieldEndLength()
 	return l

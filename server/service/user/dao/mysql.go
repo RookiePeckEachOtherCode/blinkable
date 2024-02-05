@@ -54,11 +54,13 @@ func (u MysqlCen) GetUserById(ctx context.Context, id int64) (*model.User, error
 }
 
 func (u MysqlCen) UpdateUserInfo(ctx context.Context, user *model.User) error {
-	_, err := u.q.User.WithContext(ctx).Where(u.q.User.ID.Eq(user.ID)).Select(u.q.User.Username, u.q.User.Signature).Updates(map[string]interface{}{
-		"username":  user.Username,
-		"signature": user.Signature,
-		"title":     user.Title,
-	})
+	_, err := u.q.User.WithContext(ctx).Where(u.q.User.ID.Eq(user.ID)).
+		Updates(map[string]interface{}{
+			"username":   user.Username,
+			"signature":  user.Signature,
+			"title":      user.Title,
+			"github_url": user.GithubUrl,
+		})
 	return err
 }
 

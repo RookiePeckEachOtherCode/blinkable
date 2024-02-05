@@ -1490,6 +1490,7 @@ type UpdateUserInfoRequest struct {
 	Username  string `thrift:"username,3" json:"username" query:"username" vd:"len($)>0 && len($)<33"`
 	Signature string `thrift:"signature,4" json:"signature" query:"signature" vd:"len($)>0 && len($)<100"`
 	Title     string `thrift:"title,5" json:"title" query:"title" vd:"len($)>0 && len($)<21"`
+	GithubURL string `thrift:"github_url,6" json:"github_url" query:"github_url"`
 }
 
 func NewUpdateUserInfoRequest() *UpdateUserInfoRequest {
@@ -1516,12 +1517,17 @@ func (p *UpdateUserInfoRequest) GetTitle() (v string) {
 	return p.Title
 }
 
+func (p *UpdateUserInfoRequest) GetGithubURL() (v string) {
+	return p.GithubURL
+}
+
 var fieldIDToName_UpdateUserInfoRequest = map[int16]string{
 	1: "user_id",
 	2: "token",
 	3: "username",
 	4: "signature",
 	5: "title",
+	6: "github_url",
 }
 
 func (p *UpdateUserInfoRequest) Read(iprot thrift.TProtocol) (err error) {
@@ -1586,6 +1592,16 @@ func (p *UpdateUserInfoRequest) Read(iprot thrift.TProtocol) (err error) {
 		case 5:
 			if fieldTypeId == thrift.STRING {
 				if err = p.ReadField5(iprot); err != nil {
+					goto ReadFieldError
+				}
+			} else {
+				if err = iprot.Skip(fieldTypeId); err != nil {
+					goto SkipFieldError
+				}
+			}
+		case 6:
+			if fieldTypeId == thrift.STRING {
+				if err = p.ReadField6(iprot); err != nil {
 					goto ReadFieldError
 				}
 			} else {
@@ -1668,6 +1684,15 @@ func (p *UpdateUserInfoRequest) ReadField5(iprot thrift.TProtocol) error {
 	return nil
 }
 
+func (p *UpdateUserInfoRequest) ReadField6(iprot thrift.TProtocol) error {
+	if v, err := iprot.ReadString(); err != nil {
+		return err
+	} else {
+		p.GithubURL = v
+	}
+	return nil
+}
+
 func (p *UpdateUserInfoRequest) Write(oprot thrift.TProtocol) (err error) {
 	var fieldId int16
 	if err = oprot.WriteStructBegin("update_user_info_request"); err != nil {
@@ -1692,6 +1717,10 @@ func (p *UpdateUserInfoRequest) Write(oprot thrift.TProtocol) (err error) {
 		}
 		if err = p.writeField5(oprot); err != nil {
 			fieldId = 5
+			goto WriteFieldError
+		}
+		if err = p.writeField6(oprot); err != nil {
+			fieldId = 6
 			goto WriteFieldError
 		}
 
@@ -1796,6 +1825,23 @@ WriteFieldBeginError:
 	return thrift.PrependError(fmt.Sprintf("%T write field 5 begin error: ", p), err)
 WriteFieldEndError:
 	return thrift.PrependError(fmt.Sprintf("%T write field 5 end error: ", p), err)
+}
+
+func (p *UpdateUserInfoRequest) writeField6(oprot thrift.TProtocol) (err error) {
+	if err = oprot.WriteFieldBegin("github_url", thrift.STRING, 6); err != nil {
+		goto WriteFieldBeginError
+	}
+	if err := oprot.WriteString(p.GithubURL); err != nil {
+		return err
+	}
+	if err = oprot.WriteFieldEnd(); err != nil {
+		goto WriteFieldEndError
+	}
+	return nil
+WriteFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 6 begin error: ", p), err)
+WriteFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 6 end error: ", p), err)
 }
 
 func (p *UpdateUserInfoRequest) String() string {
