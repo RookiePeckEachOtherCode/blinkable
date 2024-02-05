@@ -3,6 +3,9 @@
 package api
 
 import (
+	"blinkable/server/common/middleware"
+	"blinkable/server/service/api/config"
+
 	"github.com/cloudwego/hertz/pkg/app"
 )
 
@@ -37,29 +40,35 @@ func _userregisterMw() []app.HandlerFunc {
 }
 
 func _updateuserinfoMw() []app.HandlerFunc {
-	// your code...
-	return nil
+	return []app.HandlerFunc{
+		middleware.JWTAuth(config.GlobalServerConfig.JWTInfo.SigningKey),
+	}
 }
 
 func _updateMw() []app.HandlerFunc {
-	// your code...
 	return nil
 }
 
 func _updateuserpasswordMw() []app.HandlerFunc {
-	// your code...
+	return []app.HandlerFunc{
+		middleware.JWTAuth(config.GlobalServerConfig.JWTInfo.SigningKey),
+	}
+}
+
+func _homepageMw() []app.HandlerFunc {
 	return nil
 }
 
-func _homepageMw() []app.HandlerFunc { return nil }
-
 func _gethomepageMw() []app.HandlerFunc { return nil }
 
-func _addguestbookMw() []app.HandlerFunc { return nil }
-
-func _likeMw() []app.HandlerFunc { return nil }
+func _addguestbookMw() []app.HandlerFunc {
+	return []app.HandlerFunc{
+		middleware.JWTAuth(config.GlobalServerConfig.JWTInfo.SigningKey),
+	}
+}
 
 func _likeactionMw() []app.HandlerFunc {
-	// your code...
-	return nil
+	return []app.HandlerFunc{
+		middleware.JWTAuth(config.GlobalServerConfig.JWTInfo.SigningKey),
+	}
 }
