@@ -8,6 +8,7 @@
     "@tinymce/tinymce-vue": "^5.1.1",
     "bytemd": "^1.21.0",
     "highlight.js": "^11.9.0",
+    "json-bigint": "^1.0.0",
     "markdown-it": "^14.0.0",
     "mavon-editor": "^3.0.1",
     "prismjs": "^1.29.0",
