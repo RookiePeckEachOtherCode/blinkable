@@ -1,6 +1,6 @@
 import {$http} from "@/apis/index";
 
-export const Likeapi= (data: { admin_id: number; user_id: number })=>{
+export const Likeapi= (data: { user_id: string, admin_id: string })=>{
     return $http({
         method:"post",
         url:"/Main/like",
