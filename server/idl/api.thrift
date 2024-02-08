@@ -105,6 +105,69 @@ struct add_guestbook_response {
     2: string status_msg;
     3: bool   succed;
 }
+//======================================================ArticleServer======================================================================//
+struct get_articlesum_request{
+    1: string token (api.query = "token")
+}
+struct get_articlesum_response{
+    1: i32    status_code;
+    2: string status_msg;
+    3: bool   succed;
+    4: i64    sum;
+}
+struct get_articlelist_request{
+    1:i32 start (api.query="start")
+    2:i32 end (api.query="end")
+}
+struct get_articlelist_response{
+    1: i32    status_code;
+    2: string status_msg;
+    3: bool   succed;
+    4:list<base.ArticleMsg> articles
+}
+struct get_article_request{
+    1:i32 article_id (api.query = "article_id")
+}
+struct get_article_response{
+    1: i32    status_code;
+    2: string status_msg;
+    3: bool   succed;
+    4: list<base.Comment> Comments
+    5:string content
+    6:i64 creater_id
+}
+struct publish_article_request{
+    1:i64 user_id(api.qeury="user_id")
+    2:binary file (api.query="file")
+}
+struct publish_article_response{
+    1: i32    status_code;
+    2: string status_msg;
+    3: bool   succed;
+}
+
+struct add_comment_request{
+    1:i64 user_id(api.query="user_id")
+    2:i32 article_id (api.query = "article_id")
+    3:string context (api.query="context")
+}
+struct add_comment_response{
+    1: i32    status_code;
+    2: string status_msg;
+    3: bool   succed;
+}
+
+struct delete_article_request{
+    1:i64 user_id(api.query="user_id")
+    2:i32 article_id (api.query = "article_id")
+}
+struct delete_article_response{
+    1: i32    status_code;
+    2: string status_msg;
+    3: bool   succed;
+}
+
+//=======================================================================================================================================//
 
 service ApiService {
     user_login_response UserLogin(1: user_login_request req) (api.post = "/blinkable/user/login")
@@ -115,4 +178,10 @@ service ApiService {
     get_homepage_response GetHomePage(1: get_homepage_request req) (api.get = "/blinkable/homepage/get")
     add_guestbook_response AddGuestbook(1: add_guestbook_request req) (api.post = "/blinkable/homepage/guestbook")
     like_response LikeAction(1: like_request req) (api.post = "blinkable/homepage/like")
+    get_articlesum_response GetArticleSum(1:get_articlesum_request req)(api.get="blinkable/article/sum")
+    get_articlelist_response GetArtcleList(1:get_articlelist_request req)(api.get="blinkable/article/list")
+    get_article_response GetArticle(1:get_article_request req)(api.get="blinkable/article/get")
+    publish_article_response PublishArticle(1:publish_article_request req)(api.post="blinkable/article/publish")
+    add_comment_response AddComment(1:add_guestbook_request req)(api.post="blinkable/article/comment")
+    delete_article_response DeleteArticle(1:delete_article_request req)(api.post="blinkable/article/delet")
 }

@@ -29,3 +29,15 @@ struct User {
     12: list<Guestbook> guestbooks;
 }
 
+struct ArticleMsg{
+    1: string create_time
+    2: string update_time
+    3: i64 creater_id
+    4: i64 article_id
+}
+struct Comment{
+    1:i32 comment_id
+    2:i32 user_id
+    3:string context
+    4:string create_time
+}

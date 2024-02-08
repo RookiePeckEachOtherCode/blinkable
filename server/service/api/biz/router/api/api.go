@@ -20,6 +20,15 @@ func Register(r *server.Hertz) {
 	{
 		_blinkable := root.Group("/blinkable", _blinkableMw()...)
 		{
+			_article := _blinkable.Group("/article", _articleMw()...)
+			_article.POST("/comment", append(_addcommentMw(), api.AddComment)...)
+			_article.POST("/delet", append(_deletearticleMw(), api.DeleteArticle)...)
+			_article.GET("/get", append(_getarticleMw(), api.GetArticle)...)
+			_article.GET("/list", append(_getartclelistMw(), api.GetArtcleList)...)
+			_article.POST("/publish", append(_publisharticleMw(), api.PublishArticle)...)
+			_article.GET("/sum", append(_getarticlesumMw(), api.GetArticleSum)...)
+		}
+		{
 			_homepage := _blinkable.Group("/homepage", _homepageMw()...)
 			_homepage.GET("/get", append(_gethomepageMw(), api.GetHomePage)...)
 			_homepage.POST("/guestbook", append(_addguestbookMw(), api.AddGuestbook)...)

@@ -72,3 +72,43 @@ func _likeactionMw() []app.HandlerFunc {
 		middleware.JWTAuth(config.GlobalServerConfig.JWTInfo.SigningKey),
 	}
 }
+
+func _articleMw() []app.HandlerFunc {
+	// your code...
+	return nil
+}
+
+func _addcommentMw() []app.HandlerFunc {
+	// your code...
+	return nil
+}
+
+func _deletarticleMw() []app.HandlerFunc {
+	// your code...
+	return nil
+}
+
+func _getarticleMw() []app.HandlerFunc {
+	// your code...
+	return nil
+}
+
+func _getartclelistMw() []app.HandlerFunc {
+	// your code...
+	return nil
+}
+
+func _publisharticleMw() []app.HandlerFunc {
+	// your code...
+	return nil
+}
+
+func _getarticlesumMw() []app.HandlerFunc {
+	// your code...
+	return nil
+}
+
+func _deletearticleMw() []app.HandlerFunc {
+	// your code...
+	return nil
+}

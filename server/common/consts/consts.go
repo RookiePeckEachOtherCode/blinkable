@@ -6,6 +6,7 @@ const (
 	UserConfigPath     = "../../service/user/config.yaml"
 	APIConfigPath      = "../../service/api/config.yaml"
 	HomepageConfigPath = "../../service/homepage/config.yaml"
+	ArticleConfigPath  = "../../service/article/config.yaml"
 )
 
 // SnowflakeNode    = 1

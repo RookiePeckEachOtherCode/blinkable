@@ -3,6 +3,7 @@ namespace go Homepage
 include "base.thrift"
 
 struct GetHomepageRequest {
+
 }
 struct GetHomepageResponse {
     1: list<base.User> users;

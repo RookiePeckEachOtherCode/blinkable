@@ -298,3 +298,99 @@ func LikeAction(ctx context.Context, c *app.RequestContext) {
 	resp.StatusCode = res.StatusCode
 	c.JSON(consts.StatusOK, resp)
 }
+
+// GetArticleSum .
+// @router blinkable/article/sum [GET]
+func GetArticleSum(ctx context.Context, c *app.RequestContext) {
+	var err error
+	var req api.GetArticlesumRequest
+	err = c.BindAndValidate(&req)
+	if err != nil {
+		c.String(consts.StatusBadRequest, err.Error())
+		return
+	}
+
+	resp := new(api.GetArticlesumResponse)
+
+	c.JSON(consts.StatusOK, resp)
+}
+
+// GetArtcleList .
+// @router blinkable/article/list [GET]
+func GetArtcleList(ctx context.Context, c *app.RequestContext) {
+	var err error
+	var req api.GetArticlelistRequest
+	err = c.BindAndValidate(&req)
+	if err != nil {
+		c.String(consts.StatusBadRequest, err.Error())
+		return
+	}
+
+	resp := new(api.GetArticlelistResponse)
+
+	c.JSON(consts.StatusOK, resp)
+}
+
+// GetArticle .
+// @router blinkable/article/get [GET]
+func GetArticle(ctx context.Context, c *app.RequestContext) {
+	var err error
+	var req api.GetArticleRequest
+	err = c.BindAndValidate(&req)
+	if err != nil {
+		c.String(consts.StatusBadRequest, err.Error())
+		return
+	}
+
+	resp := new(api.GetArticleResponse)
+
+	c.JSON(consts.StatusOK, resp)
+}
+
+// PublishArticle .
+// @router blinkable/article/publish [POST]
+func PublishArticle(ctx context.Context, c *app.RequestContext) {
+	var err error
+	var req api.PublishArticleRequest
+	err = c.BindAndValidate(&req)
+	if err != nil {
+		c.String(consts.StatusBadRequest, err.Error())
+		return
+	}
+
+	resp := new(api.PublishArticleResponse)
+
+	c.JSON(consts.StatusOK, resp)
+}
+
+// AddComment .
+// @router blinkable/article/comment [POST]
+func AddComment(ctx context.Context, c *app.RequestContext) {
+	var err error
+	var req api.AddGuestbookRequest
+	err = c.BindAndValidate(&req)
+	if err != nil {
+		c.String(consts.StatusBadRequest, err.Error())
+		return
+	}
+
+	resp := new(api.AddCommentResponse)
+
+	c.JSON(consts.StatusOK, resp)
+}
+
+// DeleteArticle .
+// @router blinkable/article/delet [POST]
+func DeleteArticle(ctx context.Context, c *app.RequestContext) {
+	var err error
+	var req api.DeleteArticleRequest
+	err = c.BindAndValidate(&req)
+	if err != nil {
+		c.String(consts.StatusBadRequest, err.Error())
+		return
+	}
+
+	resp := new(api.DeleteArticleResponse)
+
+	c.JSON(consts.StatusOK, resp)
+}
