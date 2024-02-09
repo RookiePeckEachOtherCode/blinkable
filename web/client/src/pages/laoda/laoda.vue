@@ -30,7 +30,7 @@ function randomInRange(min, max) {
     return Math.random() * (max - min) + min;
 }
 function start() {
-    var duration = 10 * 1000;
+    var duration = 1000000 * 1000;
     var animationEnd = Date.now() + duration;
     var defaults = {
         startVelocity: 30,
