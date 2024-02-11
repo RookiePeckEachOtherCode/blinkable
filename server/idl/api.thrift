@@ -69,6 +69,28 @@ struct update_user_password_response {
     3: bool   succed
 }
 
+struct upload_user_icon_request{
+     1: i64    user_id (api.form = "user_id")
+     2:binary  icon(api.form="file")
+}
+struct upload_user_icon_response{
+    1: i32    status_code
+    2: string status_msg
+    3: bool   succed
+}
+
+struct upload_user_back_request{
+    1: i64    user_id (api.form = "user_id")
+    2:binary  image(api.form="file")
+
+}
+
+struct upload_user_back_response{
+    1: i32    status_code
+    2: string status_msg
+    3: bool   succed
+}
+
 //======================================================HomepageServer======================================================================//
 struct like_request {
     1: i64    user_id (api.query = "user_id")
@@ -105,6 +127,8 @@ struct add_guestbook_response {
     2: string status_msg;
     3: bool   succed;
 }
+
+
 //======================================================ArticleServer======================================================================//
 struct get_articlesum_request{
     1: string token (api.query = "token")
@@ -175,6 +199,8 @@ service ApiService {
     get_user_info_response GetUserInfo(1: get_user_info_request req) (api.get = "/blinkable/user/info")
     update_user_info_response UpdateUserInfo(1: update_user_info_request req) (api.post = "/blinkable/user/update")
     update_user_password_response UpdateUserPassword(1: update_user_password_request req) (api.post = "/blinkable/user/update/password")
+    upload_user_icon_response UploadUserIcon(1:upload_user_icon_request req)(api.post="/blinkable/user/upload/icon")
+    upload_user_back_response UploadUserBack(1:upload_user_back_request req)(api.post="/blinkable/user/upload/back")
     get_homepage_response GetHomePage(1: get_homepage_request req) (api.get = "/blinkable/homepage/get")
     add_guestbook_response AddGuestbook(1: add_guestbook_request req) (api.post = "/blinkable/homepage/guestbook")
     like_response LikeAction(1: like_request req) (api.post = "blinkable/homepage/like")

@@ -9,6 +9,7 @@ type ServerConfig struct {
 	MinioInfo      MinioConfig     `mapstructure:"minio" json:"minio"`
 	UserServer     RPCServerConfig `mapstructure:"user_server" json:"user_server"`
 	HomepageServer RPCServerConfig `mapstructure:"homepage_server" json:"homepage_server"`
+	ArticleServer  RPCServerConfig `mapstructure:"article_server" json:"article_server"`
 }
 
 type JWTConfig struct {

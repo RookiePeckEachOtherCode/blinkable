@@ -1,7 +1,7 @@
 package rpc
 
 import (
-	"blinkable/server/kitex_gen/Homepage/homepageservice"
+	"blinkable/server/kitex_gen/Article/articleservice"
 	"blinkable/server/service/api/config"
 	"github.com/cloudwego/kitex/client"
 	"github.com/cloudwego/kitex/pkg/klog"
@@ -15,11 +15,10 @@ import (
 	"github.com/nacos-group/nacos-sdk-go/vo"
 )
 
-func initHomepage() {
+func initArticle() {
 	sc := []constant.ServerConfig{
 		*constant.NewServerConfig(config.GlobalNacosConfig.Host, config.GlobalNacosConfig.Port),
 	}
-
 	cc := constant.ClientConfig{
 		NamespaceId:         config.GlobalNacosConfig.Namespace,
 		TimeoutMs:           5000,
@@ -28,7 +27,6 @@ func initHomepage() {
 		CacheDir:            "/tmp/nacos/cache",
 		LogLevel:            "info",
 	}
-
 	nacosCli, err := clients.NewNamingClient(
 		vo.NacosClientParam{
 			ClientConfig:  &cc,
@@ -44,16 +42,17 @@ func initHomepage() {
 		provider.WithExportEndpoint(config.GlobalServerConfig.OtelInfo.EndPoint),
 		provider.WithInsecure(),
 	)
-	c, err := homepageservice.NewClient(
-		config.GlobalServerConfig.HomepageServer.Name,
+	//fmt.Printf("dawda%s\n", config.GlobalServerConfig.ArticleServer.Name)
+	c, err := articleservice.NewClient(
+		"Blinkable-ArticleService",
 		client.WithResolver(r),
 		client.WithLoadBalancer(loadbalance.NewWeightedBalancer()),
 		client.WithMuxConnection(1),
 		client.WithSuite(tracing.NewClientSuite()),
-		client.WithClientBasicInfo(&rpcinfo.EndpointBasicInfo{ServiceName: config.GlobalServerConfig.HomepageServer.Name}),
+		client.WithClientBasicInfo(&rpcinfo.EndpointBasicInfo{ServiceName: config.GlobalServerConfig.ArticleServer.Name}),
 	)
 	if err != nil {
 		klog.Fatalf("ERROR: cannot init client: %v\n", err)
 	}
-	config.GlobalHomepageClient = c
+	config.GlobalArticleClient = c
 }

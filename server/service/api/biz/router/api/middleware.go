@@ -112,3 +112,23 @@ func _deletearticleMw() []app.HandlerFunc {
 	// your code...
 	return nil
 }
+
+func _loadMw() []app.HandlerFunc {
+	// your code...
+	return nil
+}
+
+func _uploaduserbackMw() []app.HandlerFunc {
+	// your code...
+	return nil
+}
+
+func _uploadMw() []app.HandlerFunc {
+	// your code...
+	return nil
+}
+
+func _uploadusericonMw() []app.HandlerFunc {
+	// your code...
+	return nil
+}

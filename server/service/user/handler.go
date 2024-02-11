@@ -24,6 +24,8 @@ type MysqlCen interface {
 	GetUserById(ctx context.Context, id int64) (*model.User, error)
 	UpdateUserInfo(ctx context.Context, user *model.User) error
 	GetGuestBookListByUserId(ctx context.Context, userId int64) ([]*model.Guestbook, error)
+	UploadIcon(ctx context.Context, userId int64, iconUrl string) error
+	UploadBack(ctx context.Context, userId int64, backUrl string) error
 }
 type RedisCen interface {
 	CreateUser(ctx context.Context, user *model.User) error
@@ -364,4 +366,86 @@ func (s *UserServiceImpl) UpdateUserPassword(ctx context.Context, req *user.Upda
 		Succed:     true,
 	}
 	return resp, nil
+}
+
+// UploadUserIcon implements the UserServiceImpl interface.
+func (s *UserServiceImpl) UploadUserIcon(ctx context.Context, req *user.UploadUserIconRequest) (resp *user.UploadUserIconResponse, err error) {
+	resp = new(user.UploadUserIconResponse)
+	if err := s.MysqlCen.UploadIcon(ctx, req.UserId, req.IconUrl); err != nil {
+		klog.Errorf("update user iocn to mysql is failed: %s", err)
+		resp.BaseResp = &base.BaseResponse{
+			StatusCode: 500,
+			StatusMsg:  "update user icon to database is failed",
+			Succed:     false,
+		}
+		return resp, err
+	}
+	UpdatedUser, err := s.MysqlCen.GetUserById(ctx, req.UserId)
+	if err != nil {
+		klog.Errorf("query user info failed: %s", err)
+		resp.BaseResp = &base.BaseResponse{
+			StatusCode: 500,
+			StatusMsg:  "query user info failed",
+			Succed:     false,
+		}
+		return resp, err
+	}
+	err = s.RedisCen.UpdateUserInfo(ctx, UpdatedUser)
+	if err != nil {
+		klog.Errorf("update user icon info to redis failed: %s", err)
+		resp.BaseResp = &base.BaseResponse{
+			StatusCode: 500,
+			StatusMsg:  "update user info failed",
+			Succed:     false,
+		}
+		return resp, err
+	}
+	resp.BaseResp = &base.BaseResponse{
+		StatusMsg:  "Accepted",
+		StatusCode: 0,
+		Succed:     true,
+	}
+	return resp, nil
+}
+
+// UploadUserBack implements the UserServiceImpl interface.
+func (s *UserServiceImpl) UploadUserBack(ctx context.Context, req *user.UploadUserBackRequest) (resp *user.UploadUserBackResponse, err error) {
+	resp = new(user.UploadUserBackResponse)
+	err = s.MysqlCen.UploadBack(ctx, req.UserId, req.BackUrl)
+	if err != nil {
+		klog.Errorf("update user backimage info to redis failed: %s", err)
+		resp.BaseResp = &base.BaseResponse{
+			StatusCode: 500,
+			StatusMsg:  "update user info failed",
+			Succed:     false,
+		}
+		return resp, err
+	}
+	UpdatedUser, err := s.MysqlCen.GetUserById(ctx, req.UserId)
+	if err != nil {
+		klog.Errorf("query user info failed: %s", err)
+		resp.BaseResp = &base.BaseResponse{
+			StatusCode: 500,
+			StatusMsg:  "query user info failed",
+			Succed:     false,
+		}
+		return resp, err
+	}
+	err = s.RedisCen.UpdateUserInfo(ctx, UpdatedUser)
+	if err != nil {
+		klog.Errorf("update user icon info to redis failed: %s", err)
+		resp.BaseResp = &base.BaseResponse{
+			StatusCode: 500,
+			StatusMsg:  "update user info failed",
+			Succed:     false,
+		}
+		return resp, err
+	}
+	resp.BaseResp = &base.BaseResponse{
+		StatusMsg:  "Accepted",
+		StatusCode: 0,
+		Succed:     true,
+	}
+
+	return
 }

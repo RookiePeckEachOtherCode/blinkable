@@ -5,10 +5,10 @@
             <div class="content">
                 <h1>龙年吉祥如意福满堂</h1>
                 <div class="door">
-                    <div class="door-l"></div>
+                    <div class="door-l" ></div>
                     <img src="https://th.bing.com/th/id/OIP.kAAGPgoe9-BfeecPUNgeUwAAAA?rs=1&pid=ImgDetMain" alt=""
                         class="pic">
-                    <div class="door-r"></div>
+                    <div class="door-r" ></div>
                 </div>
                 <h1>春节欢庆和谐喜盈门</h1>
             </div>
@@ -16,7 +16,8 @@
     </div>
     <div>
         <iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width=298 height=52
-            src="//music.163.com/outchain/player?type=2&id=396696&auto=1&height=32"></iframe>
+            src="//music.163.com/outchain/player?type=2&id=396696&auto=1&height=32">
+        </iframe>
     </div>
 </template>
 <script setup lang="ts">

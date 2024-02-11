@@ -68,3 +68,14 @@ func (u MysqlCen) GetGuestBookListByUserId(ctx context.Context, userId int64) ([
 	query := u.q.Guestbook
 	return query.WithContext(ctx).Where(query.UserID.Eq(userId)).Find()
 }
+
+func (u MysqlCen) UploadIcon(ctx context.Context, userId int64, iconUrl string) error {
+	_, err := u.q.User.WithContext(ctx).Where(u.q.User.ID.Eq(userId)).Update(u.q.User.Avatar, iconUrl)
+	return err
+
+}
+
+func (u MysqlCen) UploadBack(ctx context.Context, userId int64, backUrl string) error {
+	_, err := u.q.User.WithContext(ctx).Where(u.q.User.ID.Eq(userId)).Update(u.q.User.BackgroundImage, backUrl)
+	return err
+}

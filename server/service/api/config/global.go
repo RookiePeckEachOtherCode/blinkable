@@ -1,6 +1,7 @@
 package config
 
 import (
+	article "blinkable/server/kitex_gen/Article/articleservice"
 	"blinkable/server/kitex_gen/Homepage/homepageservice"
 	"blinkable/server/kitex_gen/user/userservice"
 
@@ -14,4 +15,5 @@ var (
 	GlobalUserClient     userservice.Client
 	GlobalMinioClient    minio.Client
 	GlobalHomepageClient homepageservice.Client
+	GlobalArticleClient  article.Client
 )

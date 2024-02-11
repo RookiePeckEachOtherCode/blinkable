@@ -40,7 +40,6 @@ func main() {
 		server.WithRegistry(r, info),
 		server.WithHandleMethodNotAllowed(true),
 	)
-
 	pprof.Register(h)
 	h.Use(hertzTracing.ServerMiddleware(cfg))
 	h.Use(gzip.Gzip(gzip.DefaultCompression))

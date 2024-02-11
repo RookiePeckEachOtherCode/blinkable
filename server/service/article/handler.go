@@ -5,13 +5,22 @@ import (
 	"context"
 )
 
+type MysqlCli interface {
+}
+type RedisCli interface {
+}
+
 // ArticleServiceImpl implements the last service interface defined in the IDL.
-type ArticleServiceImpl struct{}
+type ArticleServiceImpl struct {
+	MysqlCli
+	RedisCli
+}
 
 // GetArticleSum implements the ArticleServiceImpl interface.
 func (s *ArticleServiceImpl) GetArticleSum(ctx context.Context, req *article.GetArticleListRequest) (resp *article.GetArticleSumResponse, err error) {
-	// TODO: Your code here...
-	return
+	resp = new(article.GetArticleSumResponse)
+	resp.Sum = 114514
+	return resp, nil
 }
 
 // GetArticleList implements the ArticleServiceImpl interface.

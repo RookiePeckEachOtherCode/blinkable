@@ -3,18 +3,29 @@
 package api
 
 import (
+	article "blinkable/server/kitex_gen/Article"
 	homepage "blinkable/server/kitex_gen/Homepage"
 	"blinkable/server/kitex_gen/user"
 	api "blinkable/server/service/api/biz/model/api"
 	"blinkable/server/service/api/biz/model/base"
 	"blinkable/server/service/api/config"
+	"blinkable/server/service/api/pkg"
 	"context"
+	"io"
 	"net/http"
+	"os"
+	"strconv"
 
 	"github.com/cloudwego/hertz/pkg/app"
 	"github.com/cloudwego/hertz/pkg/common/hlog"
 	"github.com/cloudwego/hertz/pkg/protocol/consts"
 )
+
+type MinioCen interface {
+	UploadFile(bucketName, objectName, filePath string) (url string, err error)
+	DownloadFile(bucketName, objectName string) (*os.File, error)
+	DeleteFile(bucketName, objectName string) (bool, error)
+}
 
 // UserLogin .
 // @router /blinkable/user/login [POST]
@@ -309,8 +320,12 @@ func GetArticleSum(ctx context.Context, c *app.RequestContext) {
 		c.String(consts.StatusBadRequest, err.Error())
 		return
 	}
-
+	res, _ := config.GlobalArticleClient.GetArticleSum(ctx, &article.GetArticleListRequest{
+		Start: 2,
+		End:   3,
+	})
 	resp := new(api.GetArticlesumResponse)
+	resp.Sum = res.Sum
 
 	c.JSON(consts.StatusOK, resp)
 }
@@ -392,5 +407,158 @@ func DeleteArticle(ctx context.Context, c *app.RequestContext) {
 
 	resp := new(api.DeleteArticleResponse)
 
+	c.JSON(consts.StatusOK, resp)
+}
+
+// UploadUserIcon .
+// @router /blinkable/user/upload/icon [POST]
+func UploadUserIcon(ctx context.Context, c *app.RequestContext) {
+	var err error
+	var req api.UploadUserIconRequest
+	err = c.BindAndValidate(&req)
+	if err != nil {
+		c.String(consts.StatusBadRequest, err.Error())
+		return
+	}
+
+	iconfile, err := c.FormFile("file")
+	if err != nil {
+		hlog.Errorf("filed to get multipart%s", err)
+		c.String(consts.StatusInternalServerError, "failed to create temporary file")
+		return
+	}
+	file, err := iconfile.Open()
+	if err != nil {
+		hlog.Errorf("failde to open multipart%s", err)
+		c.String(consts.StatusInternalServerError, "failed to create temporary file")
+		return
+	}
+	iconData, err := io.ReadAll(file)
+	if err != nil {
+		hlog.Errorf("transform form-data to reader filed:%s", err)
+		c.String(consts.StatusInternalServerError, "failed to create temporary file")
+		return
+	}
+	tmpFile, err := os.CreateTemp("", "icon_")
+	if err != nil {
+		hlog.Errorf("failed to create temporary file:%s", err)
+		c.String(consts.StatusInternalServerError, "failed to create temporary file")
+		return
+	}
+	defer tmpFile.Close()
+	_, err = tmpFile.Write(iconData)
+	if err != nil {
+		c.String(consts.StatusInternalServerError, "failed to write icon data to temporary file")
+		return
+	}
+	var ext string
+	switch http.DetectContentType(iconData) {
+	case "image/png":
+		ext = "image/png"
+	case "image/jpeg":
+		ext = "image/jpeg"
+	default:
+		ext = "image/png"
+	}
+	if err != nil {
+		hlog.Errorf("failed to rename file:%s", err)
+		c.String(consts.StatusInternalServerError, "failed to rename temporary file")
+		return
+	}
+	ObjectName := strconv.FormatInt(req.UserID, 10)
+	url, err := pkg.NewMinioClient().UploadFile("icons", ObjectName, tmpFile.Name(), ext)
+	if err != nil {
+		hlog.Errorf("minio upload icon erro %s", err)
+		return
+	}
+	res, err := config.GlobalUserClient.UploadUserIcon(ctx, &user.UploadUserIconRequest{
+		UserId:  req.UserID,
+		IconUrl: url,
+	})
+	if err != nil {
+		hlog.Errorf("upload icon failed: %s", err)
+		c.String(consts.StatusBadRequest, err.Error())
+		return
+	}
+	resp := new(api.UploadUserIconResponse)
+	resp.StatusMsg = res.BaseResp.StatusMsg
+	resp.Succed = res.BaseResp.Succed
+	resp.StatusCode = res.BaseResp.StatusCode
+	c.JSON(consts.StatusOK, resp)
+}
+
+// UploadUserBack .
+// @router /blinkable/user/load/back [POST]
+func UploadUserBack(ctx context.Context, c *app.RequestContext) {
+	var err error
+	var req api.UploadUserBackRequest
+	err = c.BindAndValidate(&req)
+	if err != nil {
+		c.String(consts.StatusBadRequest, err.Error())
+		return
+	}
+	backfile, err := c.FormFile("file")
+	if err != nil {
+		hlog.Errorf("filed to get multipart%s", err)
+		c.String(consts.StatusInternalServerError, "failed to create temporary file")
+		return
+	}
+	file, err := backfile.Open()
+	if err != nil {
+		hlog.Errorf("failde to open multipart%s", err)
+		c.String(consts.StatusInternalServerError, "failed to create temporary file")
+		return
+	}
+	backData, err := io.ReadAll(file)
+	if err != nil {
+		hlog.Errorf("transform form-data to reader filed:%s", err)
+		c.String(consts.StatusInternalServerError, "failed to create temporary file")
+		return
+	}
+	tmpFile, err := os.CreateTemp("", "icon_")
+	if err != nil {
+		hlog.Errorf("failed to create temporary file:%s", err)
+		c.String(consts.StatusInternalServerError, "failed to create temporary file")
+		return
+	}
+	defer tmpFile.Close()
+	_, err = tmpFile.Write(backData)
+	if err != nil {
+		c.String(consts.StatusInternalServerError, "failed to write icon data to temporary file")
+		return
+	}
+	var ext string
+	switch http.DetectContentType(backData) {
+	case "image/png":
+		ext = "image/png"
+	case "image/jpeg":
+		ext = "image/jpeg"
+	default:
+		ext = "image/png"
+	}
+	if err != nil {
+		hlog.Errorf("failed to rename file:%s", err)
+		c.String(consts.StatusInternalServerError, "failed to rename temporary file")
+		return
+	}
+	ObjectName := strconv.FormatInt(req.UserID, 10)
+	url, err := pkg.NewMinioClient().UploadFile("backgournds", ObjectName, tmpFile.Name(), ext)
+	if err != nil {
+		hlog.Errorf("minio upload icon erro %s", err)
+		return
+	}
+	res, err := config.GlobalUserClient.UploadUserBack(ctx, &user.UploadUserBackRequest{
+		UserId:  req.UserID,
+		BackUrl: url,
+	})
+	if err != nil {
+		hlog.Errorf("upload background failed: %s", err)
+		c.String(consts.StatusBadRequest, err.Error())
+		return
+	}
+	resp := new(api.UploadUserBackResponse)
+	resp.StatusMsg = res.BaseResp.StatusMsg
+	resp.Succed = res.BaseResp.Succed
+	resp.StatusCode = res.BaseResp.StatusCode
 	c.JSON(consts.StatusOK, resp)
 }
