@@ -1,6 +1,6 @@
 module blinkable
 
-go 1.21.3
+go 1.21.6
 
 require (
 	github.com/apache/thrift v0.16.0
