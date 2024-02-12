@@ -325,6 +325,7 @@ func GetArticleSum(ctx context.Context, c *app.RequestContext) {
 		End:   3,
 	})
 	resp := new(api.GetArticlesumResponse)
+
 	resp.Sum = res.Sum
 
 	c.JSON(consts.StatusOK, resp)

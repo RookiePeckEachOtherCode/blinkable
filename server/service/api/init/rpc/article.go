@@ -3,6 +3,7 @@ package rpc
 import (
 	"blinkable/server/kitex_gen/Article/articleservice"
 	"blinkable/server/service/api/config"
+
 	"github.com/cloudwego/kitex/client"
 	"github.com/cloudwego/kitex/pkg/klog"
 	"github.com/cloudwego/kitex/pkg/loadbalance"
@@ -36,15 +37,14 @@ func initArticle() {
 		klog.Fatalf("new nacos client failed: %s", err.Error())
 	}
 
-	r := nacos.NewNacosResolver(nacosCli, nacos.WithGroup("HOMEPAGE_GROUP"))
+	r := nacos.NewNacosResolver(nacosCli, nacos.WithGroup("ARTICLE_GROUP"))
 	provider.NewOpenTelemetryProvider(
 		provider.WithServiceName(config.GlobalServerConfig.Name),
 		provider.WithExportEndpoint(config.GlobalServerConfig.OtelInfo.EndPoint),
 		provider.WithInsecure(),
 	)
-	//fmt.Printf("dawda%s\n", config.GlobalServerConfig.ArticleServer.Name)
 	c, err := articleservice.NewClient(
-		"Blinkable-ArticleService",
+		config.GlobalServerConfig.ArticleServer.Name,
 		client.WithResolver(r),
 		client.WithLoadBalancer(loadbalance.NewWeightedBalancer()),
 		client.WithMuxConnection(1),
