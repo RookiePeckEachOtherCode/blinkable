@@ -31,19 +31,34 @@ func (u MysqlCen) GetArticleList(ctx context.Context, start int64, end int64) ([
 	}
 	return ArticleList, nil
 }
+
+func (u MysqlCen) GetCommetsByArticleId(ctx context.Context, articleid int32) ([]*model.Comment, error) {
+	comments, err := u.q.Comment.WithContext(ctx).Where(u.q.Comment.ArticleId.Eq(int64(articleid))).Find()
+	if err != nil {
+		return nil, err
+	}
+	return comments, nil
+}
+
 func (u MysqlCen) GetArticle(ctx context.Context, articleid int32) (*model.Article, error) {
 	article, err := u.q.Article.WithContext(ctx).Where(u.q.Article.ID.Eq(int64(articleid))).First()
 	if err != nil {
 		return nil, err
 	}
+	comments, err := u.GetCommetsByArticleId(ctx, articleid)
+	if err != nil && err != gorm.ErrRecordNotFound {
+		return nil, err
+	}
+	article.Comments = comments
 	return article, nil
 }
-func (u MysqlCen) AddArticle(ctx context.Context, url string, createrid int64) error {
+func (u MysqlCen) AddArticle(ctx context.Context, content string, createrid int64, title string) error {
 	article := model.Article{
 		CreateTime: time.Now(),
-		Context:    url,
+		Context:    content,
 		CreaterID:  createrid,
 		Comments:   nil,
+		Title:      title,
 	}
 	err := u.q.Article.WithContext(ctx).Create(&article)
 	return err

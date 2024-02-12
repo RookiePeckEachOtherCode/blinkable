@@ -7,5 +7,6 @@ type Article struct {
 	CreateTime time.Time  `json:"create_at,omitempty"`
 	Context    string     `json:"context"`
 	CreaterID  int64      `json:"creater_id"`
+	Title      string     `json:"title"`
 	Comments   []*Comment `json:"comments"`
 }

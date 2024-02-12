@@ -70,10 +70,9 @@ export default {
     },
    async upload(){
       const content = this.text;
-      const blob = new Blob([content], { type: 'text/markdown'});
      const formData = new FormData();
      formData.append('user_id', useUserInfoStore().getUserId());
-     formData.append('file', blob, this.title+".md");
+     formData.append('content', this.text);
      formData.append('title',this.title);
      const response = await uploadmd(formData);
      if(response.status_code===0){

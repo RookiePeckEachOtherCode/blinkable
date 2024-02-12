@@ -1275,6 +1275,7 @@ type GetArticleResponse struct {
 	Comments   []*base.Comment `thrift:"Comments,4" frugal:"4,default,list<base.Comment>" json:"Comments"`
 	Content    string          `thrift:"content,5" frugal:"5,default,string" json:"content"`
 	CreaterId  int64           `thrift:"creater_id,6" frugal:"6,default,i64" json:"creater_id"`
+	Title      string          `thrift:"title,7" frugal:"7,default,string" json:"title"`
 }
 
 func NewGetArticleResponse() *GetArticleResponse {
@@ -1308,6 +1309,10 @@ func (p *GetArticleResponse) GetContent() (v string) {
 func (p *GetArticleResponse) GetCreaterId() (v int64) {
 	return p.CreaterId
 }
+
+func (p *GetArticleResponse) GetTitle() (v string) {
+	return p.Title
+}
 func (p *GetArticleResponse) SetStatusCode(val int32) {
 	p.StatusCode = val
 }
@@ -1326,6 +1331,9 @@ func (p *GetArticleResponse) SetContent(val string) {
 func (p *GetArticleResponse) SetCreaterId(val int64) {
 	p.CreaterId = val
 }
+func (p *GetArticleResponse) SetTitle(val string) {
+	p.Title = val
+}
 
 var fieldIDToName_GetArticleResponse = map[int16]string{
 	1: "status_code",
@@ -1334,6 +1342,7 @@ var fieldIDToName_GetArticleResponse = map[int16]string{
 	4: "Comments",
 	5: "content",
 	6: "creater_id",
+	7: "title",
 }
 
 func (p *GetArticleResponse) Read(iprot thrift.TProtocol) (err error) {
@@ -1408,6 +1417,16 @@ func (p *GetArticleResponse) Read(iprot thrift.TProtocol) (err error) {
 		case 6:
 			if fieldTypeId == thrift.I64 {
 				if err = p.ReadField6(iprot); err != nil {
+					goto ReadFieldError
+				}
+			} else {
+				if err = iprot.Skip(fieldTypeId); err != nil {
+					goto SkipFieldError
+				}
+			}
+		case 7:
+			if fieldTypeId == thrift.STRING {
+				if err = p.ReadField7(iprot); err != nil {
 					goto ReadFieldError
 				}
 			} else {
@@ -1510,6 +1529,15 @@ func (p *GetArticleResponse) ReadField6(iprot thrift.TProtocol) error {
 	return nil
 }
 
+func (p *GetArticleResponse) ReadField7(iprot thrift.TProtocol) error {
+	if v, err := iprot.ReadString(); err != nil {
+		return err
+	} else {
+		p.Title = v
+	}
+	return nil
+}
+
 func (p *GetArticleResponse) Write(oprot thrift.TProtocol) (err error) {
 	var fieldId int16
 	if err = oprot.WriteStructBegin("GetArticleResponse"); err != nil {
@@ -1538,6 +1566,10 @@ func (p *GetArticleResponse) Write(oprot thrift.TProtocol) (err error) {
 		}
 		if err = p.writeField6(oprot); err != nil {
 			fieldId = 6
+			goto WriteFieldError
+		}
+		if err = p.writeField7(oprot); err != nil {
+			fieldId = 7
 			goto WriteFieldError
 		}
 
@@ -1669,6 +1701,23 @@ WriteFieldEndError:
 	return thrift.PrependError(fmt.Sprintf("%T write field 6 end error: ", p), err)
 }
 
+func (p *GetArticleResponse) writeField7(oprot thrift.TProtocol) (err error) {
+	if err = oprot.WriteFieldBegin("title", thrift.STRING, 7); err != nil {
+		goto WriteFieldBeginError
+	}
+	if err := oprot.WriteString(p.Title); err != nil {
+		return err
+	}
+	if err = oprot.WriteFieldEnd(); err != nil {
+		goto WriteFieldEndError
+	}
+	return nil
+WriteFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 7 begin error: ", p), err)
+WriteFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 7 end error: ", p), err)
+}
+
 func (p *GetArticleResponse) String() string {
 	if p == nil {
 		return "<nil>"
@@ -1698,6 +1747,9 @@ func (p *GetArticleResponse) DeepEqual(ano *GetArticleResponse) bool {
 		return false
 	}
 	if !p.Field6DeepEqual(ano.CreaterId) {
+		return false
+	}
+	if !p.Field7DeepEqual(ano.Title) {
 		return false
 	}
 	return true
@@ -1751,10 +1803,18 @@ func (p *GetArticleResponse) Field6DeepEqual(src int64) bool {
 	}
 	return true
 }
+func (p *GetArticleResponse) Field7DeepEqual(src string) bool {
+
+	if strings.Compare(p.Title, src) != 0 {
+		return false
+	}
+	return true
+}
 
 type PublishArticleRequest struct {
 	UserId  int64  `thrift:"user_id,1" frugal:"1,default,i64" json:"user_id"`
-	FileUrl string `thrift:"file_url,2" frugal:"2,default,string" json:"file_url"`
+	Content string `thrift:"content,2" frugal:"2,default,string" json:"content"`
+	Title   string `thrift:"title,3" frugal:"3,default,string" json:"title"`
 }
 
 func NewPublishArticleRequest() *PublishArticleRequest {
@@ -1769,19 +1829,27 @@ func (p *PublishArticleRequest) GetUserId() (v int64) {
 	return p.UserId
 }
 
-func (p *PublishArticleRequest) GetFileUrl() (v string) {
-	return p.FileUrl
+func (p *PublishArticleRequest) GetContent() (v string) {
+	return p.Content
+}
+
+func (p *PublishArticleRequest) GetTitle() (v string) {
+	return p.Title
 }
 func (p *PublishArticleRequest) SetUserId(val int64) {
 	p.UserId = val
 }
-func (p *PublishArticleRequest) SetFileUrl(val string) {
-	p.FileUrl = val
+func (p *PublishArticleRequest) SetContent(val string) {
+	p.Content = val
+}
+func (p *PublishArticleRequest) SetTitle(val string) {
+	p.Title = val
 }
 
 var fieldIDToName_PublishArticleRequest = map[int16]string{
 	1: "user_id",
-	2: "file_url",
+	2: "content",
+	3: "title",
 }
 
 func (p *PublishArticleRequest) Read(iprot thrift.TProtocol) (err error) {
@@ -1816,6 +1884,16 @@ func (p *PublishArticleRequest) Read(iprot thrift.TProtocol) (err error) {
 		case 2:
 			if fieldTypeId == thrift.STRING {
 				if err = p.ReadField2(iprot); err != nil {
+					goto ReadFieldError
+				}
+			} else {
+				if err = iprot.Skip(fieldTypeId); err != nil {
+					goto SkipFieldError
+				}
+			}
+		case 3:
+			if fieldTypeId == thrift.STRING {
+				if err = p.ReadField3(iprot); err != nil {
 					goto ReadFieldError
 				}
 			} else {
@@ -1866,7 +1944,16 @@ func (p *PublishArticleRequest) ReadField2(iprot thrift.TProtocol) error {
 	if v, err := iprot.ReadString(); err != nil {
 		return err
 	} else {
-		p.FileUrl = v
+		p.Content = v
+	}
+	return nil
+}
+
+func (p *PublishArticleRequest) ReadField3(iprot thrift.TProtocol) error {
+	if v, err := iprot.ReadString(); err != nil {
+		return err
+	} else {
+		p.Title = v
 	}
 	return nil
 }
@@ -1883,6 +1970,10 @@ func (p *PublishArticleRequest) Write(oprot thrift.TProtocol) (err error) {
 		}
 		if err = p.writeField2(oprot); err != nil {
 			fieldId = 2
+			goto WriteFieldError
+		}
+		if err = p.writeField3(oprot); err != nil {
+			fieldId = 3
 			goto WriteFieldError
 		}
 
@@ -1922,10 +2013,10 @@ WriteFieldEndError:
 }
 
 func (p *PublishArticleRequest) writeField2(oprot thrift.TProtocol) (err error) {
-	if err = oprot.WriteFieldBegin("file_url", thrift.STRING, 2); err != nil {
+	if err = oprot.WriteFieldBegin("content", thrift.STRING, 2); err != nil {
 		goto WriteFieldBeginError
 	}
-	if err := oprot.WriteString(p.FileUrl); err != nil {
+	if err := oprot.WriteString(p.Content); err != nil {
 		return err
 	}
 	if err = oprot.WriteFieldEnd(); err != nil {
@@ -1936,6 +2027,23 @@ WriteFieldBeginError:
 	return thrift.PrependError(fmt.Sprintf("%T write field 2 begin error: ", p), err)
 WriteFieldEndError:
 	return thrift.PrependError(fmt.Sprintf("%T write field 2 end error: ", p), err)
+}
+
+func (p *PublishArticleRequest) writeField3(oprot thrift.TProtocol) (err error) {
+	if err = oprot.WriteFieldBegin("title", thrift.STRING, 3); err != nil {
+		goto WriteFieldBeginError
+	}
+	if err := oprot.WriteString(p.Title); err != nil {
+		return err
+	}
+	if err = oprot.WriteFieldEnd(); err != nil {
+		goto WriteFieldEndError
+	}
+	return nil
+WriteFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 3 begin error: ", p), err)
+WriteFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 3 end error: ", p), err)
 }
 
 func (p *PublishArticleRequest) String() string {
@@ -1954,7 +2062,10 @@ func (p *PublishArticleRequest) DeepEqual(ano *PublishArticleRequest) bool {
 	if !p.Field1DeepEqual(ano.UserId) {
 		return false
 	}
-	if !p.Field2DeepEqual(ano.FileUrl) {
+	if !p.Field2DeepEqual(ano.Content) {
+		return false
+	}
+	if !p.Field3DeepEqual(ano.Title) {
 		return false
 	}
 	return true
@@ -1969,7 +2080,14 @@ func (p *PublishArticleRequest) Field1DeepEqual(src int64) bool {
 }
 func (p *PublishArticleRequest) Field2DeepEqual(src string) bool {
 
-	if strings.Compare(p.FileUrl, src) != 0 {
+	if strings.Compare(p.Content, src) != 0 {
+		return false
+	}
+	return true
+}
+func (p *PublishArticleRequest) Field3DeepEqual(src string) bool {
+
+	if strings.Compare(p.Title, src) != 0 {
 		return false
 	}
 	return true

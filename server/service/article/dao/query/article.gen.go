@@ -32,6 +32,7 @@ func newArticle(db *gorm.DB, opts ...gen.DOOption) article {
 	_article.CreateTime = field.NewTime(tableName, "create_time")
 	_article.Context = field.NewString(tableName, "context")
 	_article.CreaterID = field.NewInt64(tableName, "creater_id")
+	_article.Title = field.NewString(tableName, "title")
 	_article.Comments = articleHasManyComments{
 		db: db.Session(&gorm.Session{}),
 
@@ -51,6 +52,7 @@ type article struct {
 	CreateTime field.Time
 	Context    field.String
 	CreaterID  field.Int64
+	Title      field.String
 	Comments   articleHasManyComments
 
 	fieldMap map[string]field.Expr
@@ -72,6 +74,7 @@ func (a *article) updateTableName(table string) *article {
 	a.CreateTime = field.NewTime(table, "create_time")
 	a.Context = field.NewString(table, "context")
 	a.CreaterID = field.NewInt64(table, "creater_id")
+	a.Title = field.NewString(table, "title")
 
 	a.fillFieldMap()
 
@@ -88,11 +91,12 @@ func (a *article) GetFieldByName(fieldName string) (field.OrderExpr, bool) {
 }
 
 func (a *article) fillFieldMap() {
-	a.fieldMap = make(map[string]field.Expr, 5)
+	a.fieldMap = make(map[string]field.Expr, 6)
 	a.fieldMap["id"] = a.ID
 	a.fieldMap["create_time"] = a.CreateTime
 	a.fieldMap["context"] = a.Context
 	a.fieldMap["creater_id"] = a.CreaterID
+	a.fieldMap["title"] = a.Title
 
 }
 

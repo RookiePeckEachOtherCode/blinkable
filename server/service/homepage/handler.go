@@ -11,8 +11,6 @@ import (
 )
 
 type MysqlCli interface {
-	// GetUsersByIds(ctx context.Context, ids []int64) ([]*model.User, error)
-	// GetGuestbooksById(ctx context.Context, id int64) ([]*model.Guestbook, error)
 	AddGuestbook(ctx context.Context, con string, userid int64, fid int64) error
 	AddLikeNumberById(ctx context.Context, id int64) error
 	GetUserById(ctx context.Context, id int64) (*model.User, error)

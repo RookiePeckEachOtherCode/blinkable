@@ -1224,6 +1224,7 @@ type ArticleMsg struct {
 	UpdateTime string `thrift:"update_time,2" form:"update_time" json:"update_time" query:"update_time"`
 	CreaterID  int64  `thrift:"creater_id,3" form:"creater_id" json:"creater_id" query:"creater_id"`
 	ArticleID  int64  `thrift:"article_id,4" form:"article_id" json:"article_id" query:"article_id"`
+	Title      string `thrift:"title,5" form:"title" json:"title" query:"title"`
 }
 
 func NewArticleMsg() *ArticleMsg {
@@ -1246,11 +1247,16 @@ func (p *ArticleMsg) GetArticleID() (v int64) {
 	return p.ArticleID
 }
 
+func (p *ArticleMsg) GetTitle() (v string) {
+	return p.Title
+}
+
 var fieldIDToName_ArticleMsg = map[int16]string{
 	1: "create_time",
 	2: "update_time",
 	3: "creater_id",
 	4: "article_id",
+	5: "title",
 }
 
 func (p *ArticleMsg) Read(iprot thrift.TProtocol) (err error) {
@@ -1305,6 +1311,16 @@ func (p *ArticleMsg) Read(iprot thrift.TProtocol) (err error) {
 		case 4:
 			if fieldTypeId == thrift.I64 {
 				if err = p.ReadField4(iprot); err != nil {
+					goto ReadFieldError
+				}
+			} else {
+				if err = iprot.Skip(fieldTypeId); err != nil {
+					goto SkipFieldError
+				}
+			}
+		case 5:
+			if fieldTypeId == thrift.STRING {
+				if err = p.ReadField5(iprot); err != nil {
 					goto ReadFieldError
 				}
 			} else {
@@ -1378,6 +1394,15 @@ func (p *ArticleMsg) ReadField4(iprot thrift.TProtocol) error {
 	return nil
 }
 
+func (p *ArticleMsg) ReadField5(iprot thrift.TProtocol) error {
+	if v, err := iprot.ReadString(); err != nil {
+		return err
+	} else {
+		p.Title = v
+	}
+	return nil
+}
+
 func (p *ArticleMsg) Write(oprot thrift.TProtocol) (err error) {
 	var fieldId int16
 	if err = oprot.WriteStructBegin("ArticleMsg"); err != nil {
@@ -1398,6 +1423,10 @@ func (p *ArticleMsg) Write(oprot thrift.TProtocol) (err error) {
 		}
 		if err = p.writeField4(oprot); err != nil {
 			fieldId = 4
+			goto WriteFieldError
+		}
+		if err = p.writeField5(oprot); err != nil {
+			fieldId = 5
 			goto WriteFieldError
 		}
 
@@ -1485,6 +1514,23 @@ WriteFieldBeginError:
 	return thrift.PrependError(fmt.Sprintf("%T write field 4 begin error: ", p), err)
 WriteFieldEndError:
 	return thrift.PrependError(fmt.Sprintf("%T write field 4 end error: ", p), err)
+}
+
+func (p *ArticleMsg) writeField5(oprot thrift.TProtocol) (err error) {
+	if err = oprot.WriteFieldBegin("title", thrift.STRING, 5); err != nil {
+		goto WriteFieldBeginError
+	}
+	if err := oprot.WriteString(p.Title); err != nil {
+		return err
+	}
+	if err = oprot.WriteFieldEnd(); err != nil {
+		goto WriteFieldEndError
+	}
+	return nil
+WriteFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 5 begin error: ", p), err)
+WriteFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 5 end error: ", p), err)
 }
 
 func (p *ArticleMsg) String() string {

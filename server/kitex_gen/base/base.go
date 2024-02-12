@@ -1533,6 +1533,7 @@ type ArticleMsg struct {
 	UpdateTime string `thrift:"update_time,2" frugal:"2,default,string" json:"update_time"`
 	CreaterId  int64  `thrift:"creater_id,3" frugal:"3,default,i64" json:"creater_id"`
 	ArticleId  int64  `thrift:"article_id,4" frugal:"4,default,i64" json:"article_id"`
+	Title      string `thrift:"title,5" frugal:"5,default,string" json:"title"`
 }
 
 func NewArticleMsg() *ArticleMsg {
@@ -1558,6 +1559,10 @@ func (p *ArticleMsg) GetCreaterId() (v int64) {
 func (p *ArticleMsg) GetArticleId() (v int64) {
 	return p.ArticleId
 }
+
+func (p *ArticleMsg) GetTitle() (v string) {
+	return p.Title
+}
 func (p *ArticleMsg) SetCreateTime(val string) {
 	p.CreateTime = val
 }
@@ -1570,12 +1575,16 @@ func (p *ArticleMsg) SetCreaterId(val int64) {
 func (p *ArticleMsg) SetArticleId(val int64) {
 	p.ArticleId = val
 }
+func (p *ArticleMsg) SetTitle(val string) {
+	p.Title = val
+}
 
 var fieldIDToName_ArticleMsg = map[int16]string{
 	1: "create_time",
 	2: "update_time",
 	3: "creater_id",
 	4: "article_id",
+	5: "title",
 }
 
 func (p *ArticleMsg) Read(iprot thrift.TProtocol) (err error) {
@@ -1630,6 +1639,16 @@ func (p *ArticleMsg) Read(iprot thrift.TProtocol) (err error) {
 		case 4:
 			if fieldTypeId == thrift.I64 {
 				if err = p.ReadField4(iprot); err != nil {
+					goto ReadFieldError
+				}
+			} else {
+				if err = iprot.Skip(fieldTypeId); err != nil {
+					goto SkipFieldError
+				}
+			}
+		case 5:
+			if fieldTypeId == thrift.STRING {
+				if err = p.ReadField5(iprot); err != nil {
 					goto ReadFieldError
 				}
 			} else {
@@ -1703,6 +1722,15 @@ func (p *ArticleMsg) ReadField4(iprot thrift.TProtocol) error {
 	return nil
 }
 
+func (p *ArticleMsg) ReadField5(iprot thrift.TProtocol) error {
+	if v, err := iprot.ReadString(); err != nil {
+		return err
+	} else {
+		p.Title = v
+	}
+	return nil
+}
+
 func (p *ArticleMsg) Write(oprot thrift.TProtocol) (err error) {
 	var fieldId int16
 	if err = oprot.WriteStructBegin("ArticleMsg"); err != nil {
@@ -1723,6 +1751,10 @@ func (p *ArticleMsg) Write(oprot thrift.TProtocol) (err error) {
 		}
 		if err = p.writeField4(oprot); err != nil {
 			fieldId = 4
+			goto WriteFieldError
+		}
+		if err = p.writeField5(oprot); err != nil {
+			fieldId = 5
 			goto WriteFieldError
 		}
 
@@ -1812,6 +1844,23 @@ WriteFieldEndError:
 	return thrift.PrependError(fmt.Sprintf("%T write field 4 end error: ", p), err)
 }
 
+func (p *ArticleMsg) writeField5(oprot thrift.TProtocol) (err error) {
+	if err = oprot.WriteFieldBegin("title", thrift.STRING, 5); err != nil {
+		goto WriteFieldBeginError
+	}
+	if err := oprot.WriteString(p.Title); err != nil {
+		return err
+	}
+	if err = oprot.WriteFieldEnd(); err != nil {
+		goto WriteFieldEndError
+	}
+	return nil
+WriteFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 5 begin error: ", p), err)
+WriteFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 5 end error: ", p), err)
+}
+
 func (p *ArticleMsg) String() string {
 	if p == nil {
 		return "<nil>"
@@ -1835,6 +1884,9 @@ func (p *ArticleMsg) DeepEqual(ano *ArticleMsg) bool {
 		return false
 	}
 	if !p.Field4DeepEqual(ano.ArticleId) {
+		return false
+	}
+	if !p.Field5DeepEqual(ano.Title) {
 		return false
 	}
 	return true
@@ -1864,6 +1916,13 @@ func (p *ArticleMsg) Field3DeepEqual(src int64) bool {
 func (p *ArticleMsg) Field4DeepEqual(src int64) bool {
 
 	if p.ArticleId != src {
+		return false
+	}
+	return true
+}
+func (p *ArticleMsg) Field5DeepEqual(src string) bool {
+
+	if strings.Compare(p.Title, src) != 0 {
 		return false
 	}
 	return true

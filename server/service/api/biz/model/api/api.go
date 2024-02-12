@@ -6216,8 +6216,9 @@ func (p *GetArticleResponse) String() string {
 }
 
 type PublishArticleRequest struct {
-	UserID int64  `thrift:"user_id,1" form:"user_id" json:"user_id" query:"user_id"`
-	File   []byte `thrift:"file,2" json:"file" query:"file"`
+	UserID  int64  `thrift:"user_id,1" form:"user_id" json:"user_id"`
+	Content string `thrift:"content,2" form:"content" json:"content"`
+	Title   string `thrift:"title,3" form:"title" json:"title"`
 }
 
 func NewPublishArticleRequest() *PublishArticleRequest {
@@ -6228,13 +6229,18 @@ func (p *PublishArticleRequest) GetUserID() (v int64) {
 	return p.UserID
 }
 
-func (p *PublishArticleRequest) GetFile() (v []byte) {
-	return p.File
+func (p *PublishArticleRequest) GetContent() (v string) {
+	return p.Content
+}
+
+func (p *PublishArticleRequest) GetTitle() (v string) {
+	return p.Title
 }
 
 var fieldIDToName_PublishArticleRequest = map[int16]string{
 	1: "user_id",
-	2: "file",
+	2: "content",
+	3: "title",
 }
 
 func (p *PublishArticleRequest) Read(iprot thrift.TProtocol) (err error) {
@@ -6269,6 +6275,16 @@ func (p *PublishArticleRequest) Read(iprot thrift.TProtocol) (err error) {
 		case 2:
 			if fieldTypeId == thrift.STRING {
 				if err = p.ReadField2(iprot); err != nil {
+					goto ReadFieldError
+				}
+			} else {
+				if err = iprot.Skip(fieldTypeId); err != nil {
+					goto SkipFieldError
+				}
+			}
+		case 3:
+			if fieldTypeId == thrift.STRING {
+				if err = p.ReadField3(iprot); err != nil {
 					goto ReadFieldError
 				}
 			} else {
@@ -6316,10 +6332,19 @@ func (p *PublishArticleRequest) ReadField1(iprot thrift.TProtocol) error {
 }
 
 func (p *PublishArticleRequest) ReadField2(iprot thrift.TProtocol) error {
-	if v, err := iprot.ReadBinary(); err != nil {
+	if v, err := iprot.ReadString(); err != nil {
 		return err
 	} else {
-		p.File = []byte(v)
+		p.Content = v
+	}
+	return nil
+}
+
+func (p *PublishArticleRequest) ReadField3(iprot thrift.TProtocol) error {
+	if v, err := iprot.ReadString(); err != nil {
+		return err
+	} else {
+		p.Title = v
 	}
 	return nil
 }
@@ -6336,6 +6361,10 @@ func (p *PublishArticleRequest) Write(oprot thrift.TProtocol) (err error) {
 		}
 		if err = p.writeField2(oprot); err != nil {
 			fieldId = 2
+			goto WriteFieldError
+		}
+		if err = p.writeField3(oprot); err != nil {
+			fieldId = 3
 			goto WriteFieldError
 		}
 
@@ -6375,10 +6404,10 @@ WriteFieldEndError:
 }
 
 func (p *PublishArticleRequest) writeField2(oprot thrift.TProtocol) (err error) {
-	if err = oprot.WriteFieldBegin("file", thrift.STRING, 2); err != nil {
+	if err = oprot.WriteFieldBegin("content", thrift.STRING, 2); err != nil {
 		goto WriteFieldBeginError
 	}
-	if err := oprot.WriteBinary([]byte(p.File)); err != nil {
+	if err := oprot.WriteString(p.Content); err != nil {
 		return err
 	}
 	if err = oprot.WriteFieldEnd(); err != nil {
@@ -6389,6 +6418,23 @@ WriteFieldBeginError:
 	return thrift.PrependError(fmt.Sprintf("%T write field 2 begin error: ", p), err)
 WriteFieldEndError:
 	return thrift.PrependError(fmt.Sprintf("%T write field 2 end error: ", p), err)
+}
+
+func (p *PublishArticleRequest) writeField3(oprot thrift.TProtocol) (err error) {
+	if err = oprot.WriteFieldBegin("title", thrift.STRING, 3); err != nil {
+		goto WriteFieldBeginError
+	}
+	if err := oprot.WriteString(p.Title); err != nil {
+		return err
+	}
+	if err = oprot.WriteFieldEnd(); err != nil {
+		goto WriteFieldEndError
+	}
+	return nil
+WriteFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 3 begin error: ", p), err)
+WriteFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 3 end error: ", p), err)
 }
 
 func (p *PublishArticleRequest) String() string {

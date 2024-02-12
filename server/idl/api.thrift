@@ -161,8 +161,9 @@ struct get_article_response{
     6:i64 creater_id
 }
 struct publish_article_request{
-    1:i64 user_id(api.qeury="user_id")
-    2:binary file (api.query="file")
+    1:i64 user_id(api.form="user_id")
+    2:string content(api.form="content")
+    3:string title(api.form="title")
 }
 struct publish_article_response{
     1: i32    status_code;

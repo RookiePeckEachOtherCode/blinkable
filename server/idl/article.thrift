@@ -29,10 +29,12 @@ struct GetArticleResponse{
     4: list<base.Comment> Comments
     5:string content
     6:i64 creater_id
+    7:string title
 }
 struct PublishArticleRequest{
     1:i64 user_id
-    2:string file_url
+    2:string content
+    3:string title
 }
 struct PublishArticleResponse{
     1: i32    status_code;
