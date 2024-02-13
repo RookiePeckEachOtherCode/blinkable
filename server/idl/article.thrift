@@ -63,7 +63,7 @@ struct DeleteArticleResponse{
     3: bool   succed;
 }
 service ArticleService{
-    GetArticleSumResponse GetArticleSum(1:GetArticleListRequest req);
+    GetArticleSumResponse GetArticleSum(1:GetArticleSumRequest req);
     GetArticleListResponse GetArticleList(1:GetArticleListRequest req);
     GetArticleResponse GetArticle(1:GetArticleRequest req);
     PublishArticleResponse PublishArticle(1:PublishArticleRequest req);

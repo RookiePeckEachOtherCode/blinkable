@@ -3445,7 +3445,7 @@ func (p *DeleteArticleResponse) Field3DeepEqual(src bool) bool {
 }
 
 type ArticleService interface {
-	GetArticleSum(ctx context.Context, req *GetArticleListRequest) (r *GetArticleSumResponse, err error)
+	GetArticleSum(ctx context.Context, req *GetArticleSumRequest) (r *GetArticleSumResponse, err error)
 
 	GetArticleList(ctx context.Context, req *GetArticleListRequest) (r *GetArticleListResponse, err error)
 
@@ -3484,7 +3484,7 @@ func (p *ArticleServiceClient) Client_() thrift.TClient {
 	return p.c
 }
 
-func (p *ArticleServiceClient) GetArticleSum(ctx context.Context, req *GetArticleListRequest) (r *GetArticleSumResponse, err error) {
+func (p *ArticleServiceClient) GetArticleSum(ctx context.Context, req *GetArticleSumRequest) (r *GetArticleSumResponse, err error) {
 	var _args ArticleServiceGetArticleSumArgs
 	_args.Req = req
 	var _result ArticleServiceGetArticleSumResult
@@ -3874,7 +3874,7 @@ func (p *articleServiceProcessorDeleteArticle) Process(ctx context.Context, seqI
 }
 
 type ArticleServiceGetArticleSumArgs struct {
-	Req *GetArticleListRequest `thrift:"req,1" frugal:"1,default,GetArticleListRequest" json:"req"`
+	Req *GetArticleSumRequest `thrift:"req,1" frugal:"1,default,GetArticleSumRequest" json:"req"`
 }
 
 func NewArticleServiceGetArticleSumArgs() *ArticleServiceGetArticleSumArgs {
@@ -3885,15 +3885,15 @@ func (p *ArticleServiceGetArticleSumArgs) InitDefault() {
 	*p = ArticleServiceGetArticleSumArgs{}
 }
 
-var ArticleServiceGetArticleSumArgs_Req_DEFAULT *GetArticleListRequest
+var ArticleServiceGetArticleSumArgs_Req_DEFAULT *GetArticleSumRequest
 
-func (p *ArticleServiceGetArticleSumArgs) GetReq() (v *GetArticleListRequest) {
+func (p *ArticleServiceGetArticleSumArgs) GetReq() (v *GetArticleSumRequest) {
 	if !p.IsSetReq() {
 		return ArticleServiceGetArticleSumArgs_Req_DEFAULT
 	}
 	return p.Req
 }
-func (p *ArticleServiceGetArticleSumArgs) SetReq(val *GetArticleListRequest) {
+func (p *ArticleServiceGetArticleSumArgs) SetReq(val *GetArticleSumRequest) {
 	p.Req = val
 }
 
@@ -3965,7 +3965,7 @@ ReadStructEndError:
 }
 
 func (p *ArticleServiceGetArticleSumArgs) ReadField1(iprot thrift.TProtocol) error {
-	p.Req = NewGetArticleListRequest()
+	p.Req = NewGetArticleSumRequest()
 	if err := p.Req.Read(iprot); err != nil {
 		return err
 	}
@@ -4037,7 +4037,7 @@ func (p *ArticleServiceGetArticleSumArgs) DeepEqual(ano *ArticleServiceGetArticl
 	return true
 }
 
-func (p *ArticleServiceGetArticleSumArgs) Field1DeepEqual(src *GetArticleListRequest) bool {
+func (p *ArticleServiceGetArticleSumArgs) Field1DeepEqual(src *GetArticleSumRequest) bool {
 
 	if !p.Req.DeepEqual(src) {
 		return false

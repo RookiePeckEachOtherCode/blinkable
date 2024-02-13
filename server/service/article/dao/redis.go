@@ -32,21 +32,37 @@ func (r *RedisCli) CreateArticle(ctx context.Context, article *model.Article) er
 }
 
 func (r *RedisCli) GetArticleById(ctx context.Context, ArticleId int64) (*model.Article, error) {
-	articleJson, err := r.redisClient.Get(ctx, "article:"+strconv.FormatInt(ArticleId, 10)).Bytes()
-	if err != nil && err != redis.Nil {
+	key := "article:" + strconv.FormatInt(ArticleId, 10)
+
+	// 检查键是否存在
+	exists, err := r.redisClient.Exists(ctx, key).Result()
+	if err != nil {
+		klog.Error("redis check key existence failed,", err)
+		return nil, err
+	}
+
+	// 如果键不存在，直接返回空
+	if exists == 0 {
+		return nil, redis.Nil
+	}
+
+	// 如果键存在，获取并反序列化文章数据
+	articleJson, err := r.redisClient.Get(ctx, key).Bytes()
+	if err != nil {
 		klog.Error("redis get article by id failed,", err)
 		return nil, err
 	}
+
 	var article *model.Article
 	err = sonic.Unmarshal(articleJson, &article)
 	if err != nil {
 		klog.Error("redis unmarshal article failed,", err)
 		return nil, err
 	}
+
 	return article, nil
 }
 
 func (r *RedisCli) DeleteArtcileById(ctx context.Context, ArticleId int64) {
-	r.redisClient.Del(ctx, "article:"+strconv.FormatInt(ArticleId, 10))
-
+	r.redisClient.SRem(ctx, "article:"+strconv.FormatInt(ArticleId, 10))
 }

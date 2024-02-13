@@ -10,12 +10,12 @@
   import { ref, defineProps } from 'vue';
   export interface Admin {
     user_id: number;
-    image_url: string;
+    background_img: string;
     signature: string;
-    icon_url: string;
+    avatar: string;
     title: string;
-    user_name:string;
-    git_url:string;
+    name:string;
+    github_url:string;
     guestbooks:Guestbook[];
   }
   export interface Guestbook {
@@ -137,6 +137,7 @@
          if(res){
            p=res.users;
          }
+         console.log(p)
         return p as Admin[];
       },
     },
@@ -189,11 +190,11 @@
       </span>
         </template>
       </el-dialog>
-    <div class="card" :style="{ 'background-image': 'url('+admins[0].image_url+')' }" >
+    <div v-if="admins[0]" class="card" :style="{ 'background-image': 'url('+admins[0].background_img+')' }" >
       <div class="xbox">
-      <el-image :src="admins[0].icon_url" fit="fill" :lazy="true" style="bottom: -36px" >
+      <el-image :src="admins[0].avatar" fit="fill" :lazy="true" style="bottom: -36px" >
       </el-image>
-      <div class="name-box" >{{admins[0].user_name}}</div>
+      <div class="name-box" >{{admins[0].name}}</div>
         <div class="good-box">
           <svg  width="45" height="45" viewBox="0 0 20 21" fill="none" ><path fill-rule="evenodd" clip-rule="evenodd" d="M8.95 2.563l-1.726 3.98-1.158.008v13.748h-.648l6.462.047c3.079-.297 5.037-1.813 5.807-4.473.805-3.99 1.317-6.347 1.538-7.075.366-1.207-.032-2.178-1.235-2.178h-4.699l-.03-3.273c0-1.552-.77-2.358-2.207-2.358-.98 0-1.714.574-2.105 1.574zM4.765 20.294V6.56l-2.14.015a1.8 1.8 0 00-1.788 1.8v10.105a1.8 1.8 0 001.787 1.8l2.14.015z" fill="#FF6880"/></svg>
         <p>114514</p>
@@ -267,10 +268,10 @@
 
 
 
-      <div class="card" :style="{ 'background-image': 'url('+admins[1].image_url+')' }">   <div class="xbox">
-      <el-image :src="admins[1].icon_url" fit="fill" :lazy="true" style="bottom: -36px" >
+      <div v-if="admins[1]" class="card" :style="{ 'background-image': 'url('+admins[1].background_img+')' }">   <div class="xbox">
+      <el-image :src="admins[1].avatar" fit="fill" :lazy="true" style="bottom: -36px" >
       </el-image>
-      <div class="name-box">{{admins[1].user_name}}</div>
+      <div class="name-box">{{admins[1].name}}</div>
       <div class="good-box">
         <svg  width="45" height="45" viewBox="0 0 20 21" fill="none"><path fill-rule="evenodd" clip-rule="evenodd" d="M8.95 2.563l-1.726 3.98-1.158.008v13.748h-.648l6.462.047c3.079-.297 5.037-1.813 5.807-4.473.805-3.99 1.317-6.347 1.538-7.075.366-1.207-.032-2.178-1.235-2.178h-4.699l-.03-3.273c0-1.552-.77-2.358-2.207-2.358-.98 0-1.714.574-2.105 1.574zM4.765 20.294V6.56l-2.14.015a1.8 1.8 0 00-1.788 1.8v10.105a1.8 1.8 0 001.787 1.8l2.14.015z" fill="#FF6880"/></svg>
         <p>114514</p>
@@ -343,10 +344,10 @@
       </el-table>
 
 
-      <div class="card" :style="{ 'background-image': 'url('+admins[2].image_url+')' }">   <div class="xbox">
-        <el-image :src="admins[2].icon_url" fit="fill" :lazy="true" style="bottom: -36px"  >
+      <div v-if="admins[2]" class="card" :style="{ 'background-image': 'url('+admins[2].background_img+')' }">   <div class="xbox">
+        <el-image :src="admins[2].avatar" fit="fill" :lazy="true" style="bottom: -36px"  >
         </el-image>
-        <div class="name-box">{{admins[2].user_name}}</div>
+        <div class="name-box">{{admins[2].name}}</div>
         <div class="good-box">
           <svg  width="45" height="45" viewBox="0 0 20 21" fill="none"><path fill-rule="evenodd" clip-rule="evenodd" d="M8.95 2.563l-1.726 3.98-1.158.008v13.748h-.648l6.462.047c3.079-.297 5.037-1.813 5.807-4.473.805-3.99 1.317-6.347 1.538-7.075.366-1.207-.032-2.178-1.235-2.178h-4.699l-.03-3.273c0-1.552-.77-2.358-2.207-2.358-.98 0-1.714.574-2.105 1.574zM4.765 20.294V6.56l-2.14.015a1.8 1.8 0 00-1.788 1.8v10.105a1.8 1.8 0 001.787 1.8l2.14.015z" fill="#FF6880"/></svg>
           <p>114514</p>

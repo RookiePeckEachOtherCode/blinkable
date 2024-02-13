@@ -77,6 +77,13 @@ struct upload_user_back_request{
 struct upload_user_back_response{
     1:base.base_response base_resp
 }
+struct be_admin_request{
+    1:i64 user_id
+}
+
+struct be_admin_response{
+    1:base.base_response base_resp
+}
 
 service UserService {
     user_login_response UserLogin(1: user_login_request req);
@@ -86,5 +93,6 @@ service UserService {
     update_user_password_response UpdateUserPassword(1: update_user_password_request req);
     upload_user_icon_response UploadUserIcon(1:upload_user_icon_request req);
     upload_user_back_response UploadUserBack(1:upload_user_back_request req);
+    be_admin_response BeAdmin(1:be_admin_request req);
 
 }

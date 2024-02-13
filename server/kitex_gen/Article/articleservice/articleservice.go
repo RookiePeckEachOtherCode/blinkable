@@ -159,7 +159,7 @@ func newServiceClient(c client.Client) *kClient {
 	}
 }
 
-func (p *kClient) GetArticleSum(ctx context.Context, req *article.GetArticleListRequest) (r *article.GetArticleSumResponse, err error) {
+func (p *kClient) GetArticleSum(ctx context.Context, req *article.GetArticleSumRequest) (r *article.GetArticleSumResponse, err error) {
 	var _args article.ArticleServiceGetArticleSumArgs
 	_args.Req = req
 	var _result article.ArticleServiceGetArticleSumResult

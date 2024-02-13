@@ -11,7 +11,7 @@ import (
 
 // Client is designed to provide IDL-compatible methods with call-option parameter for kitex framework.
 type Client interface {
-	GetArticleSum(ctx context.Context, req *article.GetArticleListRequest, callOptions ...callopt.Option) (r *article.GetArticleSumResponse, err error)
+	GetArticleSum(ctx context.Context, req *article.GetArticleSumRequest, callOptions ...callopt.Option) (r *article.GetArticleSumResponse, err error)
 	GetArticleList(ctx context.Context, req *article.GetArticleListRequest, callOptions ...callopt.Option) (r *article.GetArticleListResponse, err error)
 	GetArticle(ctx context.Context, req *article.GetArticleRequest, callOptions ...callopt.Option) (r *article.GetArticleResponse, err error)
 	PublishArticle(ctx context.Context, req *article.PublishArticleRequest, callOptions ...callopt.Option) (r *article.PublishArticleResponse, err error)
@@ -48,7 +48,7 @@ type kArticleServiceClient struct {
 	*kClient
 }
 
-func (p *kArticleServiceClient) GetArticleSum(ctx context.Context, req *article.GetArticleListRequest, callOptions ...callopt.Option) (r *article.GetArticleSumResponse, err error) {
+func (p *kArticleServiceClient) GetArticleSum(ctx context.Context, req *article.GetArticleSumRequest, callOptions ...callopt.Option) (r *article.GetArticleSumResponse, err error) {
 	ctx = client.NewCtxWithCallOptions(ctx, callOptions)
 	return p.kClient.GetArticleSum(ctx, req)
 }

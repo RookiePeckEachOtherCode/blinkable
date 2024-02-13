@@ -91,6 +91,15 @@ struct upload_user_back_response{
     3: bool   succed
 }
 
+struct be_admin_request{
+    1:string key(api.query="key")
+    2:i64 user_id(api.query="user_id")
+}
+struct be_admin_response{
+    1:base.base_response base_response
+}
+
+
 //======================================================HomepageServer======================================================================//
 struct like_request {
     1: i64    user_id (api.query = "user_id")
@@ -127,7 +136,6 @@ struct add_guestbook_response {
     2: string status_msg;
     3: bool   succed;
 }
-
 
 //======================================================ArticleServer======================================================================//
 struct get_articlesum_request{
@@ -202,6 +210,7 @@ service ApiService {
     update_user_password_response UpdateUserPassword(1: update_user_password_request req) (api.post = "/blinkable/user/update/password")
     upload_user_icon_response UploadUserIcon(1:upload_user_icon_request req)(api.post="/blinkable/user/upload/icon")
     upload_user_back_response UploadUserBack(1:upload_user_back_request req)(api.post="/blinkable/user/upload/back")
+    be_admin_response BeAdmin(1:be_admin_request req)(api.post="/blinkable/user/beadmin")
     get_homepage_response GetHomePage(1: get_homepage_request req) (api.get = "/blinkable/homepage/get")
     add_guestbook_response AddGuestbook(1: add_guestbook_request req) (api.post = "/blinkable/homepage/guestbook")
     like_response LikeAction(1: like_request req) (api.post = "blinkable/homepage/like")
@@ -209,6 +218,6 @@ service ApiService {
     get_articlelist_response GetArtcleList(1:get_articlelist_request req)(api.get="blinkable/article/list")
     get_article_response GetArticle(1:get_article_request req)(api.get="blinkable/article/get")
     publish_article_response PublishArticle(1:publish_article_request req)(api.post="blinkable/article/publish")
-    add_comment_response AddComment(1:add_guestbook_request req)(api.post="blinkable/article/comment")
+    add_comment_response AddComment(1:add_comment_request req)(api.post="blinkable/article/comment")
     delete_article_response DeleteArticle(1:delete_article_request req)(api.post="blinkable/article/delet")
 }

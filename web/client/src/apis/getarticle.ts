@@ -2,8 +2,8 @@ import {$http} from "@/apis/index";
 
 export const getarticle= (data: {article_id:number})=>{
     return $http({
-        method:"post",
-        url:"http://127.0.0.1:4523/m2/3417810-0-default/116777645",
+        method:"get",
+        url:"http://127.0.0.1:10000/blinkable/article/get",
         params: data,
     });
 }

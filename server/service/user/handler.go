@@ -26,6 +26,7 @@ type MysqlCen interface {
 	GetGuestBookListByUserId(ctx context.Context, userId int64) ([]*model.Guestbook, error)
 	UploadIcon(ctx context.Context, userId int64, iconUrl string) error
 	UploadBack(ctx context.Context, userId int64, backUrl string) error
+	GiveAdmin(ctx context.Context, userId int64) error
 }
 type RedisCen interface {
 	CreateUser(ctx context.Context, user *model.User) error
@@ -448,4 +449,25 @@ func (s *UserServiceImpl) UploadUserBack(ctx context.Context, req *user.UploadUs
 	}
 
 	return
+}
+
+// BeAdmin implements the UserServiceImpl interface.
+func (s *UserServiceImpl) BeAdmin(ctx context.Context, req *user.BeAdminRequest) (resp *user.BeAdminResponse, err error) {
+	resp = new(user.BeAdminResponse)
+	err = s.MysqlCen.GiveAdmin(ctx, req.UserId)
+	if err != nil {
+		klog.Errorf("failed to give admin:%s", err)
+		resp.BaseResp = &base.BaseResponse{
+			StatusCode: 500,
+			StatusMsg:  "give admin failed",
+			Succed:     false,
+		}
+	}
+	resp.BaseResp = &base.BaseResponse{
+		StatusMsg:  "Accepted",
+		StatusCode: 0,
+		Succed:     true,
+	}
+
+	return resp, nil
 }

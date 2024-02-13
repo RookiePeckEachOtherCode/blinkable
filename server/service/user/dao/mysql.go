@@ -6,7 +6,6 @@ import (
 	"blinkable/server/service/user/model"
 	"context"
 	"errors"
-
 	"github.com/cloudwego/kitex/pkg/klog"
 	"gorm.io/gorm"
 )
@@ -77,5 +76,10 @@ func (u MysqlCen) UploadIcon(ctx context.Context, userId int64, iconUrl string) 
 
 func (u MysqlCen) UploadBack(ctx context.Context, userId int64, backUrl string) error {
 	_, err := u.q.User.WithContext(ctx).Where(u.q.User.ID.Eq(userId)).Update(u.q.User.BackgroundImage, backUrl)
+	return err
+}
+
+func (u MysqlCen) GiveAdmin(ctx context.Context, userId int64) error {
+	_, err := u.q.User.WithContext(ctx).Where(u.q.User.ID.Eq(userId)).Update(u.q.User.IsAdmin, true)
 	return err
 }

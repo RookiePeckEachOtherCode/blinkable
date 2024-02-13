@@ -18,6 +18,7 @@ type Client interface {
 	UpdateUserPassword(ctx context.Context, req *user.UpdateUserPasswordRequest, callOptions ...callopt.Option) (r *user.UpdateUserPasswordResponse, err error)
 	UploadUserIcon(ctx context.Context, req *user.UploadUserIconRequest, callOptions ...callopt.Option) (r *user.UploadUserIconResponse, err error)
 	UploadUserBack(ctx context.Context, req *user.UploadUserBackRequest, callOptions ...callopt.Option) (r *user.UploadUserBackResponse, err error)
+	BeAdmin(ctx context.Context, req *user.BeAdminRequest, callOptions ...callopt.Option) (r *user.BeAdminResponse, err error)
 }
 
 // NewClient creates a client for the service defined in IDL.
@@ -82,4 +83,9 @@ func (p *kUserServiceClient) UploadUserIcon(ctx context.Context, req *user.Uploa
 func (p *kUserServiceClient) UploadUserBack(ctx context.Context, req *user.UploadUserBackRequest, callOptions ...callopt.Option) (r *user.UploadUserBackResponse, err error) {
 	ctx = client.NewCtxWithCallOptions(ctx, callOptions)
 	return p.kClient.UploadUserBack(ctx, req)
+}
+
+func (p *kUserServiceClient) BeAdmin(ctx context.Context, req *user.BeAdminRequest, callOptions ...callopt.Option) (r *user.BeAdminResponse, err error) {
+	ctx = client.NewCtxWithCallOptions(ctx, callOptions)
+	return p.kClient.BeAdmin(ctx, req)
 }

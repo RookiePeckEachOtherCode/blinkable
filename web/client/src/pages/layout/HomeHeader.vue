@@ -27,7 +27,7 @@
       <el-menu-item index="4" style="color:#ffd04b; font-size: 17px" @click="goToDocumentation">菜鸟营文档库</el-menu-item>
       <el-menu-item index="5" @click="goOj" style="color: #7bff91;font-size: 17px">菜鸟营Oj</el-menu-item>
       <div class="right-box">
-        <el-avatar v-if="loginstate" :src=iconurl></el-avatar>
+        <el-avatar v-if="loginstate" :src="iconurl"></el-avatar>
         <el-menu-item index="/login" v-if="!loginstate" class="custom-menu-item" >Login</el-menu-item>
       </div>
     </el-menu>

@@ -6,6 +6,7 @@
            border-radius: 20px;
 
 " :size="'large'" :rules="rules" ref="formRef">
+    <el-form-item label="用户ID" style="margin-top: 20px ;margin-left: 14px;font-size: 16px">{{user_id}}</el-form-item>
     <el-form-item label="昵称" style="margin-top: 20px ;font-size: 30px" prop="user_name">
       <el-input  v-model="form.user_name" style="margin-right: 500px" />
     </el-form-item>
@@ -21,10 +22,10 @@
             :show-file-list="false"
             :before-upload="handleUpload_icon"
         >
-          <img v-if="imageUrl" :src="imageUrl" class="avatar" alt=""/>
+          <img v-if="form.icon_url"  class="avatar" alt=""/>
           <el-icon v-else class="avatar-uploader-icon"><Plus /></el-icon>
         </el-upload>
-        <el-image :src=icon_url style="margin-left: 20px;width: 180px;height: 180px;border-radius: 5px"></el-image>
+        <el-image :src=form.icon_url style="margin-left: 20px;width: 180px;height: 180px;border-radius: 5px"></el-image>
       </div>
     </el-form-item>
     <el-form-item label="背景图">
@@ -68,7 +69,8 @@ import {UploadRawFile} from "element-plus/lib/components";
 import {ref} from "vue";
 import {uploadinfo} from "../../apis/uploadinfo"
 import {sync} from "rimraf";
-useUserInfoStore().authFromLocal();
+import {upload_backApi} from "../../apis/uploadback";
+
 const formRef=ref<FormInstance>()
 interface Form{
   user_name:string,
@@ -79,6 +81,7 @@ interface Form{
   level:number,
   git_url:string,
   background_url:string,
+  wait_up:string,
 }
 const form = reactive<Form>({
   user_name: '',
@@ -89,6 +92,7 @@ const form = reactive<Form>({
   level:0,
   git_url:'',
   background_url:'',
+  wait_up:'https://cn.bing.com/images/search?view=detailV2&ccid=3oHdobwi&id=11D4F7D1B5E2A4F571FED49840973DE0C26429F5&thid=OIP.3oHdobwioupSDbP4yFfsJgAAAA&mediaurl=https%3a%2f%2fimg-qn.51miz.com%2fElement%2f00%2f77%2f23%2f89%2f67ba1003_E772389_b2994479.png&exph=300&expw=300&q=%e5%be%85%e4%b8%8a%e4%bc%a0&simid=608051379914417009&FORM=IRPRST&ck=2EB86BFE699F89A75A3039D4A521A73F&selectedIndex=38&itb=0&ajaxhist=0&ajaxserp=0'
 });
 const rules=reactive<FormRules<Form>>({
   user_name:[
@@ -113,9 +117,7 @@ const icon_url=useUserInfoStore().getIcon();
 onBeforeMount(async () => {
   const user_id=useUserInfoStore().getUserId()
   const token=useUserInfoStore().getToken()
-  console.log(user_id,token)
   res = await getuserinfo({user_id,token})
-  console.log(res);
   form.user_name=res.user.name
   form.icon_url=res.user.avatar
   form.level=res.user.level
@@ -127,8 +129,13 @@ onBeforeMount(async () => {
 
 const user_id=useUserInfoStore().getUserId()
 const token=useUserInfoStore().getToken()
-const handleUpload_icon=(file)=>{
-   const result=upload_iconApi({"file":file,"user_id":user_id})
+const handleUpload_icon=async (file)=>{
+   const result=await upload_iconApi({"file":file,"user_id":user_id})
+  if (result.succed===true){
+    ElMessage.success(result.status_msg)
+  }else{
+    ElMessage.error(result.status_msg)
+  }
   return false
 }
 const upload = ref<UploadInstance>()
@@ -147,8 +154,14 @@ const onSubmit = async() => {
     ElMessage.error("修改失败，请检表单是否填满")
   }
 };
-const upbackgourd = (file) => {
-  upload.value!.submit()
+const upbackgourd = async(file) => {
+  const res = await upload_backApi({file:file,user_id:user_id});
+  if(res.succeed===true){
+    ElMessage.success(res.status_msg)
+  }else{
+    ElMessage.error(res.status_msg)
+  }
+  return
 }
 </script>
   

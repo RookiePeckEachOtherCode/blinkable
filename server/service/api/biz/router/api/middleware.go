@@ -5,6 +5,7 @@ package api
 import (
 	"blinkable/server/common/middleware"
 	"blinkable/server/service/api/config"
+	"github.com/hertz-contrib/gzip"
 
 	"github.com/cloudwego/hertz/pkg/app"
 )
@@ -120,8 +121,12 @@ func _loadMw() []app.HandlerFunc {
 }
 
 func _uploaduserbackMw() []app.HandlerFunc {
+
 	// your code...
-	return nil
+
+	return []app.HandlerFunc{
+		gzip.Gzip(gzip.DefaultCompression, gzip.WithExcludedExtensions([]string{".jpg", "png"})),
+	}
 }
 
 func _uploadMw() []app.HandlerFunc {
@@ -130,6 +135,12 @@ func _uploadMw() []app.HandlerFunc {
 }
 
 func _uploadusericonMw() []app.HandlerFunc {
+	return []app.HandlerFunc{
+		gzip.Gzip(gzip.DefaultCompression, gzip.WithExcludedExtensions([]string{".jpg", "png"})),
+	}
+}
+
+func _beadminMw() []app.HandlerFunc {
 	// your code...
 	return nil
 }

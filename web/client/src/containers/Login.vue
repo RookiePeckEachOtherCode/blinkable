@@ -53,6 +53,7 @@ import  {registerApi} from "@/apis/registe";
 import {useUserInfoStore} from "@/stores/userinfo";
 import {ElMessage} from "element-plus";
 import router from "@/router";
+import {getuserinfo} from "../apis/getuserinfo";
 import $ from 'jquery';
 const useUserinfoStore=useUserInfoStore();
 
@@ -69,15 +70,17 @@ const formRef=ref<FormInstance>()
 const lin = async () => {
   const res = await loginApi(form.value);
   const user_id = res.user_id.toString();
-  
-  console.log(user_id);
-  useUserinfoStore.setAuth(res.token, user_id, res.icon_url);
-  ElMessage.success("登录成功");
-  router.push("/home/main-view");
+  if (res.succed===true) {
+    const info= await getuserinfo({token:res.token,user_id:user_id})
+    useUserinfoStore.setAuth(res.token, user_id, info.user.avatar);
+    ElMessage.success("登录成功");
+    router.push("/home/main-view");
+  }else{
+    ElMessage.error("登陆失败:"+res.status_msg)
+  }
 };
 const reg=async ()=>{
   const res=await registerApi(form.value);
-  console.log(res)
   const user_id=res.user_id.toString()
   useUserinfoStore.setAuth(res.token,user_id)
   ElMessage.success("注册成功")

@@ -137,6 +137,7 @@ func GetUserInfo(ctx context.Context, c *app.RequestContext) {
 		BackgroundImg: res.UserInfo.BackgroundImg,
 		LikeNum:       res.UserInfo.LikeNum,
 		GithubURL:     res.UserInfo.GithubUrl,
+		Title:         res.UserInfo.Title,
 		Guestbooks:    guestbooks,
 	}
 
@@ -156,7 +157,6 @@ func UpdateUserInfo(ctx context.Context, c *app.RequestContext) {
 		c.String(consts.StatusBadRequest, err.Error())
 		return
 	}
-
 	resp := new(api.UpdateUserInfoResponse)
 	res, err := config.GlobalUserClient.UpdateUserInfo(ctx, &user.UpdateUserInfoRequest{
 		UserId:    req.UserID,
@@ -235,6 +235,7 @@ func GetHomePage(ctx context.Context, c *app.RequestContext) {
 			BackgroundImg: res.Users[i].BackgroundImg,
 			LikeNum:       res.Users[i].LikeNum,
 			GithubURL:     res.Users[i].GithubUrl,
+			Title:         res.Users[i].Title,
 			Guestbooks:    make([]*base.Guestbook, len(res.Users[i].Guestbooks)),
 		}
 
@@ -320,14 +321,19 @@ func GetArticleSum(ctx context.Context, c *app.RequestContext) {
 		c.String(consts.StatusBadRequest, err.Error())
 		return
 	}
-	res, _ := config.GlobalArticleClient.GetArticleSum(ctx, &article.GetArticleListRequest{
-		Start: 2,
-		End:   3,
-	})
+	res, err := config.GlobalArticleClient.GetArticleSum(ctx, &article.GetArticleSumRequest{Token: req.Token})
+	if err != nil {
+		hlog.Errorf("get article sum failed: %s", err)
+		c.String(consts.StatusBadRequest, err.Error())
+		return
+	}
 	resp := new(api.GetArticlesumResponse)
-
-	resp.Sum = res.Sum
-
+	resp = &api.GetArticlesumResponse{
+		StatusCode: res.StatusCode,
+		StatusMsg:  res.StatusMsg,
+		Succed:     res.Succed,
+		Sum:        res.Sum,
+	}
 	c.JSON(consts.StatusOK, resp)
 }
 
@@ -342,8 +348,33 @@ func GetArtcleList(ctx context.Context, c *app.RequestContext) {
 		return
 	}
 
+	res, err := config.GlobalArticleClient.GetArticleList(ctx, &article.GetArticleListRequest{
+		Start: req.Start,
+		End:   req.End,
+	})
+	if err != nil {
+		hlog.Errorf("get article list failed: %s", err)
+		c.String(consts.StatusBadRequest, err.Error())
+		return
+	}
+
 	resp := new(api.GetArticlelistResponse)
 
+	resp.Articles = make([]*base.ArticleMsg, len(res.Articles))
+
+	for i := 0; i < len(res.Articles); i++ {
+		resp.Articles[i] = &base.ArticleMsg{
+			CreateTime: res.Articles[i].CreateTime,
+			UpdateTime: res.Articles[i].UpdateTime,
+			CreaterID:  res.Articles[i].CreaterId,
+			ArticleID:  res.Articles[i].ArticleId,
+			Title:      res.Articles[i].Title,
+		}
+	}
+
+	resp.Succed = res.Succed
+	resp.StatusCode = res.StatusCode
+	resp.StatusMsg = res.StatusMsg
 	c.JSON(consts.StatusOK, resp)
 }
 
@@ -359,7 +390,28 @@ func GetArticle(ctx context.Context, c *app.RequestContext) {
 	}
 
 	resp := new(api.GetArticleResponse)
-
+	res, err := config.GlobalArticleClient.GetArticle(ctx, &article.GetArticleRequest{ArticleId: req.ArticleID})
+	if err != nil {
+		hlog.Errorf("get article Msg failed: %s", err)
+		c.String(consts.StatusBadRequest, err.Error())
+		return
+	}
+	resp = &api.GetArticleResponse{
+		StatusCode: res.StatusCode,
+		StatusMsg:  res.StatusMsg,
+		Succed:     res.Succed,
+		Content:    res.Content,
+		CreaterID:  res.CreaterId,
+	}
+	resp.Comments = make([]*base.Comment, len(res.Comments))
+	for i := 0; i < len(res.Comments); i++ {
+		resp.Comments[i] = &base.Comment{
+			CommentID:  res.Comments[i].CommentId,
+			UserID:     res.Comments[i].UserId,
+			Context:    res.Comments[i].Context,
+			CreateTime: res.Comments[i].CreateTime,
+		}
+	}
 	c.JSON(consts.StatusOK, resp)
 }
 
@@ -373,9 +425,22 @@ func PublishArticle(ctx context.Context, c *app.RequestContext) {
 		c.String(consts.StatusBadRequest, err.Error())
 		return
 	}
-
+	res, err := config.GlobalArticleClient.PublishArticle(ctx, &article.PublishArticleRequest{
+		UserId:  req.UserID,
+		Content: req.Content,
+		Title:   req.Title,
+	})
+	if err != nil {
+		hlog.Errorf("publish article  failed: %s", err)
+		c.String(consts.StatusBadRequest, err.Error())
+		return
+	}
 	resp := new(api.PublishArticleResponse)
-
+	resp = &api.PublishArticleResponse{
+		StatusCode: res.StatusCode,
+		StatusMsg:  res.StatusMsg,
+		Succed:     res.Succed,
+	}
 	c.JSON(consts.StatusOK, resp)
 }
 
@@ -383,15 +448,28 @@ func PublishArticle(ctx context.Context, c *app.RequestContext) {
 // @router blinkable/article/comment [POST]
 func AddComment(ctx context.Context, c *app.RequestContext) {
 	var err error
-	var req api.AddGuestbookRequest
+	var req api.AddCommentRequest
 	err = c.BindAndValidate(&req)
 	if err != nil {
 		c.String(consts.StatusBadRequest, err.Error())
 		return
 	}
-
 	resp := new(api.AddCommentResponse)
-
+	res, err := config.GlobalArticleClient.AddComment(ctx, &article.AddCommentRequest{
+		UserId:    req.UserID,
+		ArticleId: req.ArticleID,
+		Context:   req.Context,
+	})
+	if err != nil {
+		hlog.Errorf("add article comment failed: %s", err)
+		c.String(consts.StatusBadRequest, err.Error())
+		return
+	}
+	resp = &api.AddCommentResponse{
+		StatusCode: res.StatusCode,
+		StatusMsg:  res.StatusMsg,
+		Succed:     res.Succed,
+	}
 	c.JSON(consts.StatusOK, resp)
 }
 
@@ -405,9 +483,21 @@ func DeleteArticle(ctx context.Context, c *app.RequestContext) {
 		c.String(consts.StatusBadRequest, err.Error())
 		return
 	}
-
+	res, err := config.GlobalArticleClient.DeleteArticle(ctx, &article.DeleteArticleRequest{
+		UserId:    req.UserID,
+		ArticleId: req.ArticleID,
+	})
+	if err != nil {
+		hlog.Errorf("delete article failed: %s", err)
+		c.String(consts.StatusBadRequest, err.Error())
+		return
+	}
 	resp := new(api.DeleteArticleResponse)
-
+	resp = &api.DeleteArticleResponse{
+		StatusCode: res.StatusCode,
+		StatusMsg:  res.StatusMsg,
+		Succed:     res.Succed,
+	}
 	c.JSON(consts.StatusOK, resp)
 }
 
@@ -489,7 +579,7 @@ func UploadUserIcon(ctx context.Context, c *app.RequestContext) {
 }
 
 // UploadUserBack .
-// @router /blinkable/user/load/back [POST]
+// @router /blinkable/user/upload/back [POST]
 func UploadUserBack(ctx context.Context, c *app.RequestContext) {
 	var err error
 	var req api.UploadUserBackRequest
@@ -561,5 +651,34 @@ func UploadUserBack(ctx context.Context, c *app.RequestContext) {
 	resp.StatusMsg = res.BaseResp.StatusMsg
 	resp.Succed = res.BaseResp.Succed
 	resp.StatusCode = res.BaseResp.StatusCode
+	c.JSON(consts.StatusOK, resp)
+}
+
+// BeAdmin .
+// @router /blinkable/user/beadmin [POST]
+func BeAdmin(ctx context.Context, c *app.RequestContext) {
+	var err error
+	var req api.BeAdminRequest
+	err = c.BindAndValidate(&req)
+	if err != nil {
+		c.String(consts.StatusBadRequest, err.Error())
+		return
+	}
+	if req.Key != "RookieCoven" {
+		c.String(consts.StatusBadRequest, "密钥错误")
+		return
+	}
+	resp := new(api.BeAdminResponse)
+	res, err := config.GlobalUserClient.BeAdmin(ctx, &user.BeAdminRequest{UserId: req.UserID})
+	if err != nil {
+		hlog.Errorf("give admin failed: %s", err)
+		c.String(consts.StatusBadRequest, err.Error())
+		return
+	}
+	resp.BaseResponse = &base.BaseResponse{
+		StatusCode: res.BaseResp.StatusCode,
+		StatusMsg:  res.BaseResp.StatusMsg,
+		Succed:     res.BaseResp.Succed,
+	}
 	c.JSON(consts.StatusOK, resp)
 }

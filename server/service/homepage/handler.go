@@ -98,6 +98,7 @@ func (s *HomepageServiceImpl) GetMainview(ctx context.Context, req *homepage.Get
 			BackgroundImg: res[i].BackgroundImage,
 			LikeNum:       res[i].LikeNum,
 			GithubUrl:     res[i].GithubUrl,
+			Title:         res[i].Title,
 			Guestbooks:    make([]*base.Guestbook, len(res[i].Guestbooks)),
 		}
 		for j := 0; j < len(res[i].Guestbooks); j++ {

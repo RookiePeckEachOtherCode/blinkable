@@ -32,7 +32,7 @@ type ArticleServiceImpl struct {
 }
 
 // GetArticleSum implements the ArticleServiceImpl interface.
-func (s *ArticleServiceImpl) GetArticleSum(ctx context.Context, req *article.GetArticleListRequest) (resp *article.GetArticleSumResponse, err error) {
+func (s *ArticleServiceImpl) GetArticleSum(ctx context.Context, req *article.GetArticleSumRequest) (resp *article.GetArticleSumResponse, err error) {
 	resp = new(article.GetArticleSumResponse)
 	sum, err := s.MysqlCli.GetArticleSum(ctx)
 	if err != nil {
@@ -62,59 +62,30 @@ func (s *ArticleServiceImpl) GetArticleList(ctx context.Context, req *article.Ge
 		Succed:     false,
 		Articles:   nil,
 	}
-	for i := req.Start; i <= req.End; i++ {
-		result, err := s.RedisCli.GetArticleById(ctx, int64(i))
-		if err != nil && err != redis.Nil {
-			klog.Errorf("get articleList failed:%s", err)
-			resp = &article.GetArticleListResponse{
-				StatusCode: http.StatusBadRequest,
-				StatusMsg:  "query failed in redis",
-				Succed:     false,
-				Articles:   nil,
-			}
-			return resp, err
-		}
-		if err == redis.Nil {
-			resl, err := s.MysqlCli.GetArticle(ctx, i)
-			if err != nil {
-				klog.Errorf("get articleList failed:%s", err)
-				resp = &article.GetArticleListResponse{
-					StatusCode: http.StatusBadRequest,
-					StatusMsg:  "query failed in database",
-					Succed:     false,
-					Articles:   nil,
-				}
-				return resp, err
-			}
-			resp.Articles = append(resp.Articles, &base.ArticleMsg{
-				CreateTime: resl.CreateTime.String(),
-				UpdateTime: resl.CreateTime.String(),
-				CreaterId:  resl.CreaterID,
-				ArticleId:  resl.ID,
-				Title:      resl.Title,
-			})
-			err = s.RedisCli.CreateArticle(ctx, resl)
-			if err != nil {
-				klog.Errorf("create article in redis failed:%s", err)
-				resp = &article.GetArticleListResponse{
-					StatusCode: http.StatusBadRequest,
-					StatusMsg:  "create article failed",
-					Succed:     false,
-					Articles:   nil,
-				}
-				return resp, err
-			}
-		} else {
-			resp.Articles = append(resp.Articles, &base.ArticleMsg{
-				CreateTime: result.CreateTime.String(),
-				UpdateTime: result.CreateTime.String(),
-				CreaterId:  result.CreaterID,
-				ArticleId:  result.ID,
-				Title:      result.Title,
-			})
+	resp.Articles = make([]*base.ArticleMsg, 0)
+	sum, _ := s.MysqlCli.GetArticleSum(ctx)
+	articleList, err := s.MysqlCli.GetArticleList(ctx, int64(req.Start), int64(min(req.End, int32(sum))))
+	if err != nil {
+		klog.Errorf("Get articlelist failed:%s", err)
+		resp = &article.GetArticleListResponse{
+			StatusCode: http.StatusBadRequest,
+			StatusMsg:  "get articlelist failed",
+			Succed:     false,
+			Articles:   nil,
 		}
 	}
-
+	for i := 0; i < len(articleList); i++ {
+		resp.Articles = append(resp.Articles, &base.ArticleMsg{
+			CreateTime: articleList[i].CreateTime.String(),
+			UpdateTime: "",
+			CreaterId:  articleList[i].CreaterID,
+			ArticleId:  articleList[i].ID,
+			Title:      articleList[i].Title,
+		})
+	}
+	resp.StatusMsg = "Accept"
+	resp.Succed = true
+	resp.StatusCode = 200
 	return resp, nil
 }
 
@@ -128,6 +99,7 @@ func (s *ArticleServiceImpl) GetArticle(ctx context.Context, req *article.GetArt
 		Content:    "",
 		CreaterId:  0,
 	}
+	resp.Comments = make([]*base.Comment, 0)
 	result, err := s.RedisCli.GetArticleById(ctx, int64(req.ArticleId))
 	if err != nil && err != redis.Nil {
 		klog.Errorf("get article failed:%s", err)

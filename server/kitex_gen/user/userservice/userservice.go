@@ -26,6 +26,7 @@ func NewServiceInfo() *kitex.ServiceInfo {
 		"UpdateUserPassword": kitex.NewMethodInfo(updateUserPasswordHandler, newUserServiceUpdateUserPasswordArgs, newUserServiceUpdateUserPasswordResult, false),
 		"UploadUserIcon":     kitex.NewMethodInfo(uploadUserIconHandler, newUserServiceUploadUserIconArgs, newUserServiceUploadUserIconResult, false),
 		"UploadUserBack":     kitex.NewMethodInfo(uploadUserBackHandler, newUserServiceUploadUserBackArgs, newUserServiceUploadUserBackResult, false),
+		"BeAdmin":            kitex.NewMethodInfo(beAdminHandler, newUserServiceBeAdminArgs, newUserServiceBeAdminResult, false),
 	}
 	extra := map[string]interface{}{
 		"PackageName":     "user",
@@ -168,6 +169,24 @@ func newUserServiceUploadUserBackResult() interface{} {
 	return user.NewUserServiceUploadUserBackResult()
 }
 
+func beAdminHandler(ctx context.Context, handler interface{}, arg, result interface{}) error {
+	realArg := arg.(*user.UserServiceBeAdminArgs)
+	realResult := result.(*user.UserServiceBeAdminResult)
+	success, err := handler.(user.UserService).BeAdmin(ctx, realArg.Req)
+	if err != nil {
+		return err
+	}
+	realResult.Success = success
+	return nil
+}
+func newUserServiceBeAdminArgs() interface{} {
+	return user.NewUserServiceBeAdminArgs()
+}
+
+func newUserServiceBeAdminResult() interface{} {
+	return user.NewUserServiceBeAdminResult()
+}
+
 type kClient struct {
 	c client.Client
 }
@@ -243,6 +262,16 @@ func (p *kClient) UploadUserBack(ctx context.Context, req *user.UploadUserBackRe
 	_args.Req = req
 	var _result user.UserServiceUploadUserBackResult
 	if err = p.c.Call(ctx, "UploadUserBack", &_args, &_result); err != nil {
+		return
+	}
+	return _result.GetSuccess(), nil
+}
+
+func (p *kClient) BeAdmin(ctx context.Context, req *user.BeAdminRequest) (r *user.BeAdminResponse, err error) {
+	var _args user.UserServiceBeAdminArgs
+	_args.Req = req
+	var _result user.UserServiceBeAdminResult
+	if err = p.c.Call(ctx, "BeAdmin", &_args, &_result); err != nil {
 		return
 	}
 	return _result.GetSuccess(), nil

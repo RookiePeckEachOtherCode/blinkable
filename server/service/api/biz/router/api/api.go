@@ -36,6 +36,7 @@ func Register(r *server.Hertz) {
 		}
 		{
 			_user := _blinkable.Group("/user", _userMw()...)
+			_user.POST("/beadmin", append(_beadminMw(), api.BeAdmin)...)
 			_user.GET("/info", append(_getuserinfoMw(), api.GetUserInfo)...)
 			_user.POST("/login", append(_userloginMw(), api.UserLogin)...)
 			_user.POST("/register", append(_userregisterMw(), api.UserRegister)...)

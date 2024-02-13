@@ -25,7 +25,11 @@ func (u MysqlCen) GetArticleSum(ctx context.Context) (sum int64, err error) {
 	return count, nil
 }
 func (u MysqlCen) GetArticleList(ctx context.Context, start int64, end int64) ([]*model.Article, error) {
-	ArticleList, err := u.q.Article.WithContext(ctx).Select(u.q.Article.ID, u.q.Article.CreateTime, u.q.Article.CreaterID).Limit(int(start - end)).Offset(int(start)).Find()
+	ArticleList, err := u.q.Article.
+		WithContext(ctx).
+		Select(u.q.Article.ID, u.q.Article.CreateTime, u.q.Article.CreaterID, u.q.Article.Title).
+		Order(u.q.Article.ID).Limit(int(start - end)).
+		Offset(int(start)).Find()
 	if err != nil {
 		return nil, err
 	}

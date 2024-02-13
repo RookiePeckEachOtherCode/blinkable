@@ -85,7 +85,6 @@ import { getarticle } from "../../apis/getarticle";
 import {getuserinfo} from "../../apis/getuserinfo";
 import {useUserInfoStore} from "../../stores/userinfo";
 import {ElMessage} from "element-plus";
-import {getarticlecomments}from "../../apis/getairiclecomments"
 import{Likeapi} from"../../apis/likeaction"
 import {addComment} from "../../apis/addComment";
 
@@ -118,6 +117,7 @@ export default {
       var res = await getarticle({article_id: n})
       this.markdown = res.content
       this.creater.id = res.creater_id
+      this.comments=res.comments
       res = await getuserinfo({user_id: this.creater.id, token: useUserInfoStore().getToken()})
       if (res.succed === false) {
         ElMessage.error("获取作者信息失败")
@@ -128,8 +128,6 @@ export default {
       this.creater.level = res.user.level
       this.creater.article_num = res.user.articles_num
       this.creater.icon_url=res.user.avatar
-      res = await getarticlecomments({article_id: n})
-      this.comments = res.comment_list
       for (const comment of this.comments) {
         const userInfo = await getuserinfo({user_id: comment.user_id, token: useUserInfoStore().getToken()});
         if (userInfo.succed) {

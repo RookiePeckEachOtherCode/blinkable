@@ -2858,7 +2858,7 @@ ReadStructEndError:
 func (p *ArticleServiceGetArticleSumArgs) FastReadField1(buf []byte) (int, error) {
 	offset := 0
 
-	tmp := NewGetArticleListRequest()
+	tmp := NewGetArticleSumRequest()
 	if l, err := tmp.FastRead(buf[offset:]); err != nil {
 		return offset, err
 	} else {
