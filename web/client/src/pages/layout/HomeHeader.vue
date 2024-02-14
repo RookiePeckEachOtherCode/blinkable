@@ -12,16 +12,19 @@
       <div class="logo-box">CRK菜鸟营</div>
       <el-menu-item index="/home/main-view">主页</el-menu-item>
       <el-sub-menu index="2">
-        <template #title  >组件</template>
-        <el-menu-item index="/home/admin-home" >个人信息</el-menu-item>
-        <el-menu-item index="/home/paper-list">文章列表</el-menu-item>
-        <el-menu-item index="/home/paper-edit">文章发布</el-menu-item>
-        <el-sub-menu index="2-4">
-          <template #title>item four</template>
-          <el-menu-item index="2-4-1">item one</el-menu-item>
-          <el-menu-item index="2-4-2">item two</el-menu-item>
-          <el-menu-item index="2-4-3">item three</el-menu-item>
+        <template #title  >功能</template>
+        <el-sub-menu index="2-1">
+          <template #title>用户组件</template>
+          <el-menu-item index="/home/admin-home" >个人信息</el-menu-item>
+          <el-menu-item @click="exit">退出登录</el-menu-item>
         </el-sub-menu>
+        <el-sub-menu index="2-2">
+          <template #title>文章组件</template>
+          <el-menu-item index="/home/paper-list">文章列表</el-menu-item>
+          <el-menu-item index="/home/paper-edit">文章发布</el-menu-item>
+        </el-sub-menu>
+
+        <el-menu-item index="/laoda">孩子们，我回来啦</el-menu-item>
       </el-sub-menu>
       <el-menu-item index="3" disabled style="font-size: 17px">关于站点</el-menu-item>
       <el-menu-item index="4" style="color:#ffd04b; font-size: 17px" @click="goToDocumentation">菜鸟营文档库</el-menu-item>
@@ -37,7 +40,7 @@
 
 <script setup>
 import { ref } from 'vue'
-import {useUserInfoStore} from "@/stores/userinfo";
+import {useUserInfoStore} from "../../stores/userinfo"
 import router from "@/router";
 const  defaultAcitve=ref<String>(router.currentRoute.value.path)
 
@@ -51,6 +54,9 @@ const goToDocumentation = () => {
 
   window.location.href =documentationLink
 };
+const exit=()=>{
+  useUserInfoStore().removeAuth()
+}
 const goOj=()=>{
   const ojlink="http://122.51.56.135:8888/"
   window.location.href =ojlink

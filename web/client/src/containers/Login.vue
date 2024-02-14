@@ -17,7 +17,7 @@
           <el-input class="input" v-model="form.username" placeholder="用户名" :prefix-icon="User"></el-input>
         </el-form-item>
         <el-form-item prop="password">
-        <el-input class="input" v-model="form.password" placeholder="密码" :prefix-icon="Lock"></el-input>
+        <el-input class="input" v-model="form.password" placeholder="密码" :prefix-icon="Lock"  show-password></el-input>
          </el-form-item>
         <div class="btns">
           <el-button type="primary" class="btn" @click="lin" >登录</el-button>
@@ -33,7 +33,7 @@
           <el-input class="input" v-model="form.username" placeholder="用户名" :prefix-icon="User"></el-input>
         </el-form-item>
         <el-form-item prop="password">
-          <el-input class="input" v-model="form.password" placeholder="密码" :prefix-icon="Lock"></el-input>
+          <el-input class="input" v-model="form.password" placeholder="密码" :prefix-icon="Lock"  show-password></el-input>
         </el-form-item>
         <div class="btns">
           <el-button type="primary" class="btn" @click="reg" >注册</el-button>

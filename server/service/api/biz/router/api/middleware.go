@@ -101,8 +101,9 @@ func _getartclelistMw() []app.HandlerFunc {
 }
 
 func _publisharticleMw() []app.HandlerFunc {
-	// your code...
-	return nil
+	return []app.HandlerFunc{
+		middleware.JWTAuth(config.GlobalServerConfig.JWTInfo.SigningKey),
+	}
 }
 
 func _getarticlesumMw() []app.HandlerFunc {

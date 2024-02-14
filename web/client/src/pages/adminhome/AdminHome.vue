@@ -1,4 +1,18 @@
 <template>
+  <el-dialog v-model="vi" title="更改密码" style="width: 420px;">
+  <el-form :model="passowrdform" :rules="PassowrdRules" ref="formRef">
+  <el-form-item label="旧密码" prop="OuldPassword" style="width: 320px" show-password  >
+    <el-input v-model="passowrdform.OuldPassword"  show-password></el-input>
+  </el-form-item>
+   <el-form-item label="新密码" prop="OuldPassword" style="width: 320px" >
+     <el-input v-model="passowrdform.NewPassword" show-password></el-input>
+   </el-form-item>
+  </el-form>
+    <el-row>
+      <el-button @click="vi=!vi" style="width: 70px;height: 35px;margin-left: 150px" >取消</el-button>
+      <el-button @click="chapa();vi=!vi" style="width: 70px;height: 35px;margin-left: 30px" type="primary">确定</el-button>
+    </el-row>
+  </el-dialog>
   <el-form :model="form" label-width="120px"
            style="background-color: rgb(255,255,255);
            width: 800px;z-index: 1;
@@ -55,6 +69,7 @@
     <el-form-item>
       <el-button type="primary" @click="onSubmit">Save</el-button>
       <el-button>Cancel</el-button>
+      <el-button round style="margin-left: 350px" @click="vi=!vi" >修改密码</el-button>
     </el-form-item>
   </el-form>
 </template>
@@ -70,6 +85,7 @@ import {ref} from "vue";
 import {uploadinfo} from "../../apis/uploadinfo"
 import {sync} from "rimraf";
 import {upload_backApi} from "../../apis/uploadback";
+import {changepassowrd} from "../../apis/changepassowrd";
 
 const formRef=ref<FormInstance>()
 interface Form{
@@ -94,6 +110,14 @@ const form = reactive<Form>({
   background_url:'',
   wait_up:'https://cn.bing.com/images/search?view=detailV2&ccid=3oHdobwi&id=11D4F7D1B5E2A4F571FED49840973DE0C26429F5&thid=OIP.3oHdobwioupSDbP4yFfsJgAAAA&mediaurl=https%3a%2f%2fimg-qn.51miz.com%2fElement%2f00%2f77%2f23%2f89%2f67ba1003_E772389_b2994479.png&exph=300&expw=300&q=%e5%be%85%e4%b8%8a%e4%bc%a0&simid=608051379914417009&FORM=IRPRST&ck=2EB86BFE699F89A75A3039D4A521A73F&selectedIndex=38&itb=0&ajaxhist=0&ajaxserp=0'
 });
+interface passowrdForm{
+  OuldPassword:string,
+  NewPassword:string,
+}
+const passowrdform=reactive<passowrdForm>({
+  OuldPassword:"",
+  NewPassword:"",
+});
 const rules=reactive<FormRules<Form>>({
   user_name:[
     { required: true, message: 'WHO ARE YOU?', trigger: 'blur' },
@@ -112,12 +136,17 @@ const rules=reactive<FormRules<Form>>({
     { min: 1, max: 114514, message: '?谁家网页这么离谱？', trigger:'blur' },
   ]
 })
-let res;
+const PassowrdRules=reactive<FormRules<passowrdForm>>({
+  OuldPassword:[
+    { required: true, message: 'Oiiii', trigger: 'blur' },
+    { min: 6, max: 114514, message: '密码介于6-114514个字符之间', trigger: 'blur' },
+  ]
+})
 const icon_url=useUserInfoStore().getIcon();
 onBeforeMount(async () => {
   const user_id=useUserInfoStore().getUserId()
   const token=useUserInfoStore().getToken()
-  res = await getuserinfo({user_id,token})
+  const res = await getuserinfo({user_id, token});
   form.user_name=res.user.name
   form.icon_url=res.user.avatar
   form.level=res.user.level
@@ -126,7 +155,7 @@ onBeforeMount(async () => {
   form.title=res.user.title
   form.git_url=res.user.github_url
 });
-
+const vi=ref(false)
 const user_id=useUserInfoStore().getUserId()
 const token=useUserInfoStore().getToken()
 const handleUpload_icon=async (file)=>{
@@ -154,6 +183,19 @@ const onSubmit = async() => {
     ElMessage.error("修改失败，请检表单是否填满")
   }
 };
+const chapa=async ()=>{
+  const res= await changepassowrd({
+    old_password:passowrdform.OuldPassword,
+    new_password:passowrdform.NewPassword,
+    user_id:user_id,
+    token:token,
+  })
+  if(res.succeed===true){
+    ElMessage.success(res.status_msg)
+  }else{
+    ElMessage.error(res.status_msg)
+  }
+}
 const upbackgourd = async(file) => {
   const res = await upload_backApi({file:file,user_id:user_id});
   if(res.succeed===true){

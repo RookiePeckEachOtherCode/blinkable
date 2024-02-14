@@ -37,10 +37,10 @@
 
 <script>
 import Editor from "@/App.vue";
-import {useUserInfoStore} from "@/stores/userinfo";
 import {ElMessage} from "element-plus";
 import {uploadmd} from "../../apis/uploadmd"
 import { ref } from 'vue';
+import {useUserInfoStore} from "../../stores/userinfo"
 export default {
   components: { Editor },
   setup(props, context){
@@ -74,6 +74,7 @@ export default {
      formData.append('user_id', useUserInfoStore().getUserId());
      formData.append('content', this.text);
      formData.append('title',this.title);
+     formData.append('token',useUserInfoStore().getToken());
      const response = await uploadmd(formData);
      if(response.status_code===0){
        ElMessage.success("上传成功")
