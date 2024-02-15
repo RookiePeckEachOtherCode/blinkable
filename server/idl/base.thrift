@@ -38,7 +38,7 @@ struct ArticleMsg{
 }
 struct Comment{
     1:i32 comment_id
-    2:i32 user_id
+    2:i64 user_id
     3:string context
     4:string create_time
 }

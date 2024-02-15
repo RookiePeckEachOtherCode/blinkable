@@ -1930,7 +1930,7 @@ func (p *ArticleMsg) Field5DeepEqual(src string) bool {
 
 type Comment struct {
 	CommentId  int32  `thrift:"comment_id,1" frugal:"1,default,i32" json:"comment_id"`
-	UserId     int32  `thrift:"user_id,2" frugal:"2,default,i32" json:"user_id"`
+	UserId     int64  `thrift:"user_id,2" frugal:"2,default,i64" json:"user_id"`
 	Context    string `thrift:"context,3" frugal:"3,default,string" json:"context"`
 	CreateTime string `thrift:"create_time,4" frugal:"4,default,string" json:"create_time"`
 }
@@ -1947,7 +1947,7 @@ func (p *Comment) GetCommentId() (v int32) {
 	return p.CommentId
 }
 
-func (p *Comment) GetUserId() (v int32) {
+func (p *Comment) GetUserId() (v int64) {
 	return p.UserId
 }
 
@@ -1961,7 +1961,7 @@ func (p *Comment) GetCreateTime() (v string) {
 func (p *Comment) SetCommentId(val int32) {
 	p.CommentId = val
 }
-func (p *Comment) SetUserId(val int32) {
+func (p *Comment) SetUserId(val int64) {
 	p.UserId = val
 }
 func (p *Comment) SetContext(val string) {
@@ -2008,7 +2008,7 @@ func (p *Comment) Read(iprot thrift.TProtocol) (err error) {
 				}
 			}
 		case 2:
-			if fieldTypeId == thrift.I32 {
+			if fieldTypeId == thrift.I64 {
 				if err = p.ReadField2(iprot); err != nil {
 					goto ReadFieldError
 				}
@@ -2077,7 +2077,7 @@ func (p *Comment) ReadField1(iprot thrift.TProtocol) error {
 }
 
 func (p *Comment) ReadField2(iprot thrift.TProtocol) error {
-	if v, err := iprot.ReadI32(); err != nil {
+	if v, err := iprot.ReadI64(); err != nil {
 		return err
 	} else {
 		p.UserId = v
@@ -2162,10 +2162,10 @@ WriteFieldEndError:
 }
 
 func (p *Comment) writeField2(oprot thrift.TProtocol) (err error) {
-	if err = oprot.WriteFieldBegin("user_id", thrift.I32, 2); err != nil {
+	if err = oprot.WriteFieldBegin("user_id", thrift.I64, 2); err != nil {
 		goto WriteFieldBeginError
 	}
-	if err := oprot.WriteI32(p.UserId); err != nil {
+	if err := oprot.WriteI64(p.UserId); err != nil {
 		return err
 	}
 	if err = oprot.WriteFieldEnd(); err != nil {
@@ -2247,7 +2247,7 @@ func (p *Comment) Field1DeepEqual(src int32) bool {
 	}
 	return true
 }
-func (p *Comment) Field2DeepEqual(src int32) bool {
+func (p *Comment) Field2DeepEqual(src int64) bool {
 
 	if p.UserId != src {
 		return false

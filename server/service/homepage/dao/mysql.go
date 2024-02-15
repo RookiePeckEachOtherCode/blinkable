@@ -53,6 +53,16 @@ func (u MysqlCen) GetGuestbooksById(ctx context.Context, id int64) ([]*model.Gue
 func (u MysqlCen) GetAllAdminUserInfo(ctx context.Context) ([]*model.User, error) {
 	query := u.q.User
 	res, err := query.WithContext(ctx).Where(query.IsAdmin.Is(true)).Find()
+	for i := 0; i < len(res); i++ {
+		res[i].Guestbooks = make([]*model.Guestbook, 0)
+		guestbooks, err := u.GetGuestbooksById(ctx, res[i].ID)
+		if err != nil {
+			return nil, err
+		}
+		for j := 0; j < len(guestbooks); j++ {
+			res[i].Guestbooks = append(res[i].Guestbooks, guestbooks[j])
+		}
+	}
 	return res, err
 }
 

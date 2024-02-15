@@ -61,7 +61,7 @@
     <el-button  style="margin-left: 60px;width: 120px;margin-top: 30px;height: 50px;border-radius: 10px" color="LightSkyBlue"  @click="Commentbutton"><svg t="1707210801696" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="2636" width="32" height="32"><path d="M520.533333 866.133333c-17.066667 0-29.866667-4.266667-38.4-17.066666l-38.4-38.4H166.4c-38.4 0-68.266667-29.866667-68.266667-68.266667V243.2c0-38.4 29.866667-68.266667 68.266667-68.266667h712.533333c38.4 0 68.266667 29.866667 68.266667 68.266667v494.933333c0 38.4-29.866667 68.266667-68.266667 68.266667h-277.333333l-38.4 38.4c-12.8 17.066667-25.6 21.333333-42.666667 21.333333zM166.4 234.666667c-4.266667 0-12.8 4.266667-12.8 12.8v494.933333c0 4.266667 4.266667 12.8 12.8 12.8H469.333333l55.466667 55.466667 51.2-55.466667h302.933333c4.266667 0 12.8-4.266667 12.8-12.8V243.2c0-4.266667-4.266667-12.8-12.8-12.8H166.4z" fill="#6A3906" p-id="2637"></path><path d="M797.866667 682.666667h-554.666667c-21.333333 0-34.133333-17.066667-34.133333-34.133334V337.066667c0-21.333333 17.066667-38.4 34.133333-38.4h554.666667c21.333333 0 34.133333 17.066667 34.133333 34.133333v311.466667c4.266667 21.333333-12.8 38.4-34.133333 38.4z" fill="#F5CB2B" p-id="2638"></path><path d="M708.266667 443.733333H337.066667c-17.066667 0-29.866667-12.8-29.866667-29.866666 0-17.066667 12.8-29.866667 29.866667-29.866667h371.2c17.066667 0 29.866667 12.8 29.866666 29.866667 0 17.066667-12.8 29.866667-29.866666 29.866666zM512 622.933333H337.066667c-17.066667 0-29.866667-12.8-29.866667-29.866666 0-17.066667 12.8-29.866667 29.866667-29.866667H512c17.066667 0 29.866667 12.8 29.866667 29.866667 0 17.066667-12.8 29.866667-29.866667 29.866666z" fill="#6A3906" p-id="2639"></path></svg></el-button>
   </div>
   <ul class="infinite-list" style="overflow:auto; margin-top: 50px; margin-left: 13%; width: 960px; z-index: 1; background-color: rgb(255,255,255,0.1);border-radius: 10px;box-shadow: 0 0 0 2px rgb(129,41,176)">
-    <li v-for="comment in comments" :key="comment.comment.comment_id" class="infinite-list-item" style="display: flex; border-bottom: 2px solid #ffffff;margin-top: 20px;width: 92%">
+    <li v-for="comment in comments" :key="comment.comment_id" class="infinite-list-item" style="display: flex; border-bottom: 2px solid #ffffff;margin-top: 20px;width: 92%">
       <el-row>
       <el-avatar :size="60" style="margin-top: -30px" :src="comment.icon_url"></el-avatar>
       </el-row>
@@ -69,9 +69,9 @@
         <el-row style="margin-top: -85px">
       <el-text style="margin-top: 50px; margin-left: 10px;color: white;font-size: 16px" size="default" >{{comment.name}}</el-text>
         </el-row>
-        <el-text style="margin-left: 10px;margin-top: 45px;margin-bottom: 40px;white-space: normal;width: 800px;color: white;font-size: 18px" size="large">{{comment.comment.context}}</el-text>
+        <el-text style="margin-left: 10px;margin-top: 45px;margin-bottom: 40px;white-space: normal;width: 800px;color: white;font-size: 18px" size="large">{{comment.context}}</el-text>
         <el-row>
-          <el-text style="margin-bottom: -65px;margin-left: 680px ;color: white" >{{comment.comment.create_time}}</el-text>
+          <el-text style="margin-bottom: -65px;margin-left: 680px ;color: white" >{{comment.create_time}}</el-text>
         </el-row>
       </el-col>
     </li>
@@ -114,10 +114,10 @@ export default {
     async loadMarkdownFile() {
       const n = this.$route.query.article_id
       this.aid=n
-      var res = await getarticle({article_id: n})
+      let res = await getarticle({article_id: n})
       this.markdown = res.content
       this.creater.id = res.creater_id
-      this.comments=res.comments
+      this.comments=res.Comments
       res = await getuserinfo({user_id: this.creater.id, token: useUserInfoStore().getToken()})
       if (res.succed === false) {
         ElMessage.error("获取作者信息失败")
@@ -128,7 +128,7 @@ export default {
       this.creater.level = res.user.level
       this.creater.article_num = res.user.articles_num
       this.creater.icon_url=res.user.avatar
-      for (const comment of this.comments) {
+      for (let comment of this.comments) {
         const userInfo = await getuserinfo({user_id: comment.user_id, token: useUserInfoStore().getToken()});
         if (userInfo.succed) {
           comment.user_id=userInfo.user.id.toString()
@@ -149,8 +149,9 @@ export default {
       }
 },
     async AddComment(){
+     // console.log(useUserInfoStore().getUserId())
       const res=addComment({user_id:useUserInfoStore().getUserId(),article_id:this.aid,context:this.says})
-      if(res.succed===true){
+      if(res.status_code===200){
         ElMessage.success("Accepted")
       }
       else{

@@ -5,7 +5,7 @@
           class="list" @click="goview(backendArticles.article_id)">
         <span>{{ backendArticles.title }}</span>
         <div>
-        <span style="font-size: 20px;margin-top: 15px;margin-right: 70px;color:#7fb80e ">{{ backendArticles.time }}</span>
+        <span style="font-size: 20px;margin-top: 15px;margin-right: 70px;color:#7fb80e ">{{ backendArticles.create_time }}</span>
           <el-avatar :size="50" style="position: absolute;right: 1%"
               :src=backendArticles.icon_url></el-avatar>
         </div>
@@ -29,6 +29,9 @@
 <script>
 import {getarticlelist} from "../../apis/getarticlelist"
 import {getarticlesum} from "../../apis/getarticlesum"
+import {useUserInfoStore} from"../../stores/userinfo"
+import {getuserinfo} from "../../apis/getuserinfo";
+
 export default {
   computed: {
     paginatedArticles() {
@@ -66,6 +69,11 @@ export default {
       const endIndex = startIndex + this.pageSize;
       const result=await getarticlelist({start:startIndex,end:endIndex});
       this.backendArticles=result.articles;
+      for(let artciles of this.backendArticles){
+        const userInfo = await getuserinfo({user_id: artciles.creater_id, token: useUserInfoStore().getToken()});
+        console.log(userInfo)
+        artciles.icon_url=userInfo.user.avatar;
+      }
     },
     async getsum(){
       const result= await getarticlesum();

@@ -8,6 +8,7 @@
   import router from "@/router";
   import {ElMessage} from "element-plus";
   import {ref, defineProps, reactive} from 'vue';
+  import {getuserinfo}from"../../apis/getuserinfo"
   export interface Admin {
     user_id: string;
     background_img: string;
@@ -20,12 +21,12 @@
     guestbooks:Guestbook[];
   }
   export interface Guestbook {
-    admin_id: string;
+    from_user_id: string;
     book_id: number;
     context: string;
     avatar_url:string
     create_time: string;
-    user_id: number;
+    user_id: string;
     user_name:string;
   }
 
@@ -120,7 +121,7 @@
          return;
       },
       gogit(admin_id:number){
-        window.location.href=this.admins[admin_id].git_url;
+        window.location.href=this.admins[admin_id].github_url;
       },
       async guestbookbut(){
         const uid=this.admins[this.guestbookfrom.admin_id].id.toString()
@@ -140,7 +141,16 @@
          if(res){
            p=res.users;
          }
-         console.log(p)
+         //console.log(p)
+        for(let i of p){
+            for(let j of i.guestbooks){
+              const userinfo = getuserinfo({user_id:j.from_user_id.toString(),token:useUserInfoStore().getToken()});
+              if (userinfo) {
+                j.avatar_url=userinfo.user.avatar
+                j.user_name=userinfo.user.name
+              }
+            }
+        }
         return p as Admin[];
       },
 

@@ -143,7 +143,7 @@ func (s *ArticleServiceImpl) GetArticle(ctx context.Context, req *article.GetArt
 		for _, i := range resl.Comments {
 			resp.Comments = append(resp.Comments, &base.Comment{
 				CommentId:  int32(i.ID),
-				UserId:     int32(i.UserID),
+				UserId:     i.UserID,
 				Context:    i.Context,
 				CreateTime: i.CreateTime.String(),
 			})
@@ -157,7 +157,7 @@ func (s *ArticleServiceImpl) GetArticle(ctx context.Context, req *article.GetArt
 		for _, i := range result.Comments {
 			resp.Comments = append(resp.Comments, &base.Comment{
 				CommentId:  int32(i.ID),
-				UserId:     int32(i.UserID),
+				UserId:     i.UserID,
 				Context:    i.Context,
 				CreateTime: i.CreateTime.String(),
 			})

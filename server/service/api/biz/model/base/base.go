@@ -1542,7 +1542,7 @@ func (p *ArticleMsg) String() string {
 
 type Comment struct {
 	CommentID  int32  `thrift:"comment_id,1" form:"comment_id" json:"comment_id" query:"comment_id"`
-	UserID     int32  `thrift:"user_id,2" form:"user_id" json:"user_id" query:"user_id"`
+	UserID     int64  `thrift:"user_id,2" form:"user_id" json:"user_id" query:"user_id"`
 	Context    string `thrift:"context,3" form:"context" json:"context" query:"context"`
 	CreateTime string `thrift:"create_time,4" form:"create_time" json:"create_time" query:"create_time"`
 }
@@ -1555,7 +1555,7 @@ func (p *Comment) GetCommentID() (v int32) {
 	return p.CommentID
 }
 
-func (p *Comment) GetUserID() (v int32) {
+func (p *Comment) GetUserID() (v int64) {
 	return p.UserID
 }
 
@@ -1604,7 +1604,7 @@ func (p *Comment) Read(iprot thrift.TProtocol) (err error) {
 				}
 			}
 		case 2:
-			if fieldTypeId == thrift.I32 {
+			if fieldTypeId == thrift.I64 {
 				if err = p.ReadField2(iprot); err != nil {
 					goto ReadFieldError
 				}
@@ -1673,7 +1673,7 @@ func (p *Comment) ReadField1(iprot thrift.TProtocol) error {
 }
 
 func (p *Comment) ReadField2(iprot thrift.TProtocol) error {
-	if v, err := iprot.ReadI32(); err != nil {
+	if v, err := iprot.ReadI64(); err != nil {
 		return err
 	} else {
 		p.UserID = v
@@ -1758,10 +1758,10 @@ WriteFieldEndError:
 }
 
 func (p *Comment) writeField2(oprot thrift.TProtocol) (err error) {
-	if err = oprot.WriteFieldBegin("user_id", thrift.I32, 2); err != nil {
+	if err = oprot.WriteFieldBegin("user_id", thrift.I64, 2); err != nil {
 		goto WriteFieldBeginError
 	}
-	if err := oprot.WriteI32(p.UserID); err != nil {
+	if err := oprot.WriteI64(p.UserID); err != nil {
 		return err
 	}
 	if err = oprot.WriteFieldEnd(); err != nil {

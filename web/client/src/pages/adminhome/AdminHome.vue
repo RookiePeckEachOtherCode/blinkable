@@ -46,7 +46,7 @@
       <el-upload
           ref="upload"
           class="upload-demo"
-          action="http://127.0.0.1:10000/blinkable/user/background"
+          action="http://127.0.0.1:10000/blinkable/user/upload/back"
           :limit="1"
           :on-exceed="handleExceed"
           :auto-upload="false"
@@ -174,6 +174,9 @@ const handleExceed: UploadProps['onExceed'] = (files) => {
   file.uid = genFileId()
   upload.value!.handleStart(file)
 }
+const upbackgourd = async() => {
+  upload.value!.submit()
+}
 const onSubmit = async() => {
   const result= await uploadinfo({signature: form.signature, title: form.title, token: token, username: form.user_name, user_id:user_id,git_url:form.git_url})
   if(result.succed==true){
@@ -196,15 +199,8 @@ const chapa=async ()=>{
     ElMessage.error(res.status_msg)
   }
 }
-const upbackgourd = async(file) => {
-  const res = await upload_backApi({file:file,user_id:user_id});
-  if(res.succeed===true){
-    ElMessage.success(res.status_msg)
-  }else{
-    ElMessage.error(res.status_msg)
-  }
-  return
-}
+
+
 </script>
   
 <style scoped>
