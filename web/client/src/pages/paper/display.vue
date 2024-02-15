@@ -140,7 +140,7 @@ export default {
       }
     },
     async Like(){
-      const res=Likeapi({user_id:useUserInfoStore().getUserId(),admin_id:this.creater.id})
+      const res= await Likeapi({user_id:useUserInfoStore().getUserId(),admin_id:this.creater.id,token:useUserInfoStore().getToken()})
       if (res.succed===true){
         ElMessage.success("点赞成功")
       }
@@ -150,7 +150,7 @@ export default {
 },
     async AddComment(){
      // console.log(useUserInfoStore().getUserId())
-      const res=addComment({user_id:useUserInfoStore().getUserId(),article_id:this.aid,context:this.says})
+      const res=await addComment({user_id:useUserInfoStore().getUserId(),article_id:this.aid,context:this.says})
       if(res.status_code===200){
         ElMessage.success("Accepted")
       }

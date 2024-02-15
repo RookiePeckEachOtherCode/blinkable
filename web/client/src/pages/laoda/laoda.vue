@@ -102,8 +102,8 @@ const Keyform=reactive<Key>({
   passkey:""
 })
 const hitbutn=async ()=>{
-  const res = beadmin({user_id:useUserInfoStore().getUserId(),key:Keyform.passkey});
-  if(res.succeed===true){
+  const res = await beadmin({user_id:useUserInfoStore().getUserId(),key:Keyform.passkey});
+  if(res.succed===true){
     ElMessage.success("成功")
   }
 }

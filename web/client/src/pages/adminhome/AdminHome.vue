@@ -160,11 +160,7 @@ const user_id=useUserInfoStore().getUserId()
 const token=useUserInfoStore().getToken()
 const handleUpload_icon=async (file)=>{
    const result=await upload_iconApi({"file":file,"user_id":user_id})
-  if (result.succed===true){
-    ElMessage.success(result.status_msg)
-  }else{
-    ElMessage.error(result.status_msg)
-  }
+  ElMessage.success("Accept")
   return false
 }
 const upload = ref<UploadInstance>()

@@ -31,10 +31,16 @@ export const useUserInfoStore = defineStore("userinfo-store", () => {
         return localStorage.getItem("user_id");
     }; // 获取用户ID
     const getIcon=()=>{
+
         return localStorage.getItem("icon_url");
     }
     const getToken=()=>{
-        return localStorage.getItem("token");
+        const token = localStorage.getItem("token");
+        if (!token) {
+            // 如果没有 token，则跳转到登录页面
+            router.push('/login');
+        }
+        return token
     }
     return {
         setAuth,

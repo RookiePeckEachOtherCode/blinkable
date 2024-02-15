@@ -76,10 +76,7 @@ export default {
      formData.append('title',this.title);
      formData.append('token',useUserInfoStore().getToken());
      const response = await uploadmd(formData);
-     if(response.status_code===0){
        ElMessage.success("上传成功")
-       return;
-     }
     },
   }
 };

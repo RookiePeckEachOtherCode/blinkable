@@ -229,7 +229,7 @@ func (s *UserServiceImpl) GetUserInfo(ctx context.Context, req *user.GetUserInfo
 		return nil, err
 	}
 
-	guestbooks := make([]*base.Guestbook, len(user.Guestbooks))
+	/*guestbooks := make([]*base.Guestbook, len(user.Guestbooks))
 
 	for i := 0; i < len(guestbooks); i++ {
 		guestbooks[i].Id = user.Guestbooks[i].ID
@@ -238,7 +238,7 @@ func (s *UserServiceImpl) GetUserInfo(ctx context.Context, req *user.GetUserInfo
 		guestbooks[i].FromUserId = user.Guestbooks[i].FromUserID
 		guestbooks[i].CreateTime = user.Guestbooks[i].CreateTime.Format("2006.01.02 15:04:05")
 	}
-
+	resp.UserInfo.Guestbooks = make([]*base.Guestbook, len(user.Guestbooks))*/
 	resp.UserInfo = &base.User{
 		Id:            user.ID,
 		Name:          user.Username,
@@ -251,7 +251,8 @@ func (s *UserServiceImpl) GetUserInfo(ctx context.Context, req *user.GetUserInfo
 		Title:         user.Title,
 		LikeNum:       user.LikeNum,
 		GithubUrl:     user.GithubUrl,
-		Guestbooks:    guestbooks,
+		Guestbooks:    make([]*base.Guestbook, 0),
+		//Guestbooks:    guestbooks,
 	}
 
 	resp.BaseResp = &base.BaseResponse{

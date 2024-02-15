@@ -1490,7 +1490,7 @@ type UpdateUserInfoRequest struct {
 	Username  string `thrift:"username,3" json:"username" query:"username" vd:"len($)>0 && len($)<33"`
 	Signature string `thrift:"signature,4" json:"signature" query:"signature" vd:"len($)>0 && len($)<100"`
 	Title     string `thrift:"title,5" json:"title" query:"title" vd:"len($)>0 && len($)<21"`
-	GithubURL string `thrift:"github_url,6" json:"github_url" query:"github_url"`
+	GithubURL string `thrift:"github_url,6" json:"github_url" query:"git_url"`
 }
 
 func NewUpdateUserInfoRequest() *UpdateUserInfoRequest {

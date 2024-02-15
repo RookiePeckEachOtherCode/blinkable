@@ -115,7 +115,7 @@ func GetUserInfo(ctx context.Context, c *app.RequestContext) {
 		return
 	}
 
-	guestbooks := make([]*base.Guestbook, len(res.UserInfo.Guestbooks))
+	/*guestbooks := make([]*base.Guestbook, len(res.UserInfo.Guestbooks))
 
 	for i := 0; i < len(guestbooks); i++ {
 		guestbooks[i].ID = res.UserInfo.Guestbooks[i].Id
@@ -123,9 +123,12 @@ func GetUserInfo(ctx context.Context, c *app.RequestContext) {
 		guestbooks[i].Context = res.UserInfo.Guestbooks[i].Context
 		guestbooks[i].FromUserID = res.UserInfo.Guestbooks[i].FromUserId
 		guestbooks[i].CreateTime = res.UserInfo.Guestbooks[i].CreateTime
-	}
+	}*/
 
 	resp := new(api.GetUserInfoResponse)
+	resp.User = new(base.User)
+	resp.User.Guestbooks = make([]*base.Guestbook, 0)
+	/*make([]*base.Guestbook, len(guestbooks))*/
 	resp.User = &base.User{
 		ID:            res.UserInfo.Id,
 		Name:          res.UserInfo.Name,
@@ -138,7 +141,7 @@ func GetUserInfo(ctx context.Context, c *app.RequestContext) {
 		LikeNum:       res.UserInfo.LikeNum,
 		GithubURL:     res.UserInfo.GithubUrl,
 		Title:         res.UserInfo.Title,
-		Guestbooks:    guestbooks,
+		Guestbooks:    make([]*base.Guestbook, 0),
 	}
 
 	resp.StatusCode = res.BaseResp.StatusCode
