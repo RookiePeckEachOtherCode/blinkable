@@ -29,8 +29,8 @@
       <el-menu-item index="3" disabled style="font-size: 17px">关于站点</el-menu-item>
       <el-menu-item index="4" style="color:#ffd04b; font-size: 17px" @click="goToDocumentation">菜鸟营文档库</el-menu-item>
       <el-menu-item index="5" @click="goOj" style="color: #7bff91;font-size: 17px">菜鸟营Oj</el-menu-item>
-      <div class="right-box">
-        <el-avatar v-if="loginstate" :src="iconurl"></el-avatar>
+      <div class="right-box" @click="clickicon">
+        <el-avatar v-if="loginstate" :src="Icon.iconurl" ></el-avatar>
         <el-menu-item index="/login" v-if="!loginstate" class="custom-menu-item" >Login</el-menu-item>
       </div>
     </el-menu>
@@ -39,29 +39,44 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
-import {useUserInfoStore} from "../../stores/userinfo"
-import router from "@/router";
-const  defaultAcitve=ref<String>(router.currentRoute.value.path)
+import {ref, onMounted, reactive} from 'vue'
+import { useUserInfoStore } from "../../stores/userinfo"
+import { useRouter } from 'vue-router'
+import {getuserinfo} from "../../apis/getuserinfo";
 
-const loginstate=useUserInfoStore().authFromLocal();
-const iconurl=useUserInfoStore().getIcon()
-console.log(iconurl)
+const router = useRouter()
+const loginstate = useUserInfoStore().authFromLocal()
+let iconurl = ref(useUserInfoStore().getIcon())
+const Icon=reactive({iconurl})
 const activeIndex = ref('1')
 const activeIndex2 = ref('1')
+const clickicon =async () => {
+  const res=await getuserinfo({user_id:useUserInfoStore().getUserId(),token:useUserInfoStore().getToken()})
+  iconurl=res.user.avatar
+  console.log(iconurl)
+  router.push({
+    name: 'admin-home'
+  })
+}
+
 const goToDocumentation = () => {
   const documentationLink = "https://rookiepeckeachothercode.github.io/RookiableDoc/#/md/%E7%BC%96%E5%86%99%E5%85%A5%E9%97%A8";
-
-  window.location.href =documentationLink
+  window.location.href = documentationLink
 };
-const exit=()=>{
+
+const exit = () => {
   useUserInfoStore().removeAuth()
 }
-const goOj=()=>{
-  const ojlink="http://122.51.56.135:8888/"
-  window.location.href =ojlink
+
+const goOj = () => {
+  const ojlink = "http://122.51.56.135:8888/"
+  window.location.href = ojlink
 }
+
+onMounted(() => {
+})
 </script>
+
 
 <style scoped lang="scss">
 #header {
