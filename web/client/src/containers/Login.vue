@@ -1,18 +1,22 @@
 <template>
   <div id="login">
-    <div class="login-box" >
+    <el-row style="position: absolute;margin-bottom: 700px;font-size: 50px;color: white;opacity: 0.5;margin-right: 600px">兄弟你好香<el-col style="margin-left: 500px">114514  </el-col></el-row>
+    <el-row style="position: absolute;margin-bottom: 550px;margin-right: -1000px;font-size: 30px;color: white;opacity: 0.7">复活吧，我的牢大!</el-row>
+    <el-row style="position:absolute;margin-bottom: 300px;margin-right: 1000px;color: white;font-size: 38px;opacity: 0.3">你是真的饿了</el-row>
+    <el-row style="position:absolute;margin-right: -1200px;font-size: 48px;color: white;opacity: 0.5">写不了一点</el-row>
+    <el-row style="position:absolute;margin-bottom: -250px;font-size: 30px;color: white;margin-right: 1300px;opacity: 0.7">哼哼哼啊啊啊啊啊啊啊</el-row>
+    <el-row style="position:absolute;margin-bottom: -500px;font-size: 36px;color: white;margin-right: -900px;opacity: 0.7">你有这么高速运转的机械进入中国</el-row>
+    <el-row style="position:absolute;margin-bottom: -800px;font-size: 28px;color: white;margin-right: 300px;opacity: 0.5">你抓不住我，我是山里灵活的狗</el-row>
+    <div class="login-box" style="z-index: 1">
       <div class="pre-box" @click="mySwitch">
         <h1>Welcome</h1>
-        <p>join us</p>
+        <p>join rookie coven</p>
         <div class="img-box">
-        <img src="http://localhost:8080/image">
+        <img src="https://img2.imgtp.com/2024/02/18/lqITKSYc.png">
         </div>
       </div>
       <el-form ref="formRef" :model="form" :rules="rules" >
-        <div class="logo">
-          <el-image src="https://tse1-mm.cn.bing.net/th/id/OIP-C.4dcJ_AHTJ81dikKbJ_xBtgHaGw?pid=ImgDet&rs=1" fit="fill" :lazy="true">
-          </el-image>
-        </div>
+        <el-avatar src="https://img2.imgtp.com/2024/02/18/F4XSS1gL.jpg" :size="100" style="margin-bottom: 40px;box-shadow: 0 0 4px 2px rgba(0, 0, 4, 0.5);"></el-avatar>
         <el-form-item prop="username">
           <el-input class="input" v-model="form.username" placeholder="用户名" :prefix-icon="User"></el-input>
         </el-form-item>
@@ -25,10 +29,7 @@
         </div>
       </el-form>
       <el-form ref="formRef" :model="form" :rules="rules">
-        <div class="logo">
-          <el-image src="https://tse1-mm.cn.bing.net/th/id/OIP-C.4dcJ_AHTJ81dikKbJ_xBtgHaGw?pid=ImgDet&rs=1" fit="fill" :lazy="true">
-          </el-image>
-        </div>
+        <el-avatar src="https://img2.imgtp.com/2024/02/18/rsUqM5wz.jpg" :size="100" style="margin-bottom: 40px;box-shadow: 0 0 4px 2px rgba(0, 0, 4, 0.5);"></el-avatar>
         <el-form-item prop="username">
           <el-input class="input" v-model="form.username" placeholder="用户名" :prefix-icon="User"></el-input>
         </el-form-item>

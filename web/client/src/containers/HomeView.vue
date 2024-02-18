@@ -253,7 +253,7 @@ export default {
 .home-background {
   position: fixed;
   width: 100%;
-  height: 900px;
+  height: 100%;
   background-image: linear-gradient(-225deg, #231557 0%, #43107a 29%, #FF1361 100%);
   z-index: -1;
 }
@@ -261,8 +261,8 @@ export default {
   .home {
     .canvas {
     position: fixed;
-    width: auto;
-    height: auto;
+    width: 100%;
+    height: 100%;
     z-index: 0;
 
   }
