@@ -1,8 +1,9 @@
 version: "3.7"
 services:
   db:
-    # container_name: blinkable-mysql image: mysql
+    # container_name: blinkable-mysql 
     # restart: always
+    image: mysql
     environment:
       MYSQL_ROOT_PASSWORD: blinkable
       MYSQL_DATABASE: blinkable
@@ -14,7 +15,7 @@ services:
       timeout: 10s
       retries: 10
     ports:
-      - 3306:3306
+      - 3306
     networks:
       - blink
 
@@ -22,7 +23,7 @@ services:
     image: redis
     # restart: always
     ports:
-      - 6379:6379
+      - 6379
     networks:
       - blink
     command: redis-server --requirepass blinkable
@@ -110,6 +111,22 @@ services:
     networks:
         - blink
 
+  api_srv:
+    image: blink-api:v1
+    networks:
+        - blink
+  user_srv:
+    image: blink-user:v1
+    networks:
+        - blink
+  homepage_srv:
+    image: blink-homepage:v1
+    networks:
+        - blink
+  article_srv:
+    image: blink-article:v1
+    networks:
+        - blink
 networks:
   blink:
     external: true
