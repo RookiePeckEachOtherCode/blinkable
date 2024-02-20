@@ -46,7 +46,7 @@
       <el-upload
           ref="upload"
           class="upload-demo"
-          action="http://127.0.0.1:10000/blinkable/user/upload/back"
+          action="https://211.149.141.23:17767/blinkable/user/upload/back"
           :limit="1"
           :on-exceed="handleExceed"
           :auto-upload="false"
