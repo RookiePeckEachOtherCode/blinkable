@@ -1,7 +1,8 @@
 version: "3.7"
 services:
   db:
-    # container_name: blinkable-mysql 
+    image: mysql
+    # container_name: blinkable-mysql image: mysql
     # restart: always
     image: mysql
     environment:

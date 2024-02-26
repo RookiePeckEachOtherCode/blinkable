@@ -112,8 +112,8 @@
         return;
         }
         const form={
-          admin_id:adimin_id,
-          user_id:user_id,
+          user_id:adimin_id,
+          from_user_id:user_id,
           token:useUserInfoStore().getToken(),
         }
         const res=await Likeapi(form)
