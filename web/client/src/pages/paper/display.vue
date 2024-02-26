@@ -152,7 +152,7 @@ export default {
       }
     },
     async Like(){
-      const res= await Likeapi({user_id:useUserInfoStore().getUserId(),admin_id:this.creater.id,token:useUserInfoStore().getToken()})
+      const res= await Likeapi({from_user_id:useUserInfoStore().getUserId(),user_id:this.creater.id,token:useUserInfoStore().getToken()})
       if (res.succed===true){
         ElMessage.success("点赞成功")
       }

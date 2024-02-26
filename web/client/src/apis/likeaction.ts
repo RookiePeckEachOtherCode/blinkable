@@ -1,9 +1,9 @@
 import {$http} from "@/apis/index";
 
-export const Likeapi= (data: { user_id: string, admin_id: string,token:string })=>{
+export const Likeapi= (data: { from_user_id: string, user_id: string,token:string })=>{
     return $http({
         method:"post",
-        url:"https://211.149.141.23:17767/blinkable/homepage/like",
+        url:"http://39.107.70.238:10000/blinkable/homepage/like",
         params: data,
     });
 }

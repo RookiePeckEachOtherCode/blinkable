@@ -84,8 +84,13 @@ const reg=async ()=>{
   const res=await registerApi(form.value);
   const user_id=res.user_id.toString()
   useUserinfoStore.setAuth(res.token,user_id)
-  ElMessage.success("注册成功")
-  router.push("/home/main-view")
+  if(res.succed===true){
+    ElMessage.success("注册成功")
+    router.push("/home/main-view")
+  }
+  else{
+    ElMessage.error(res.status_msg)
+  }
 }
 const reset=()=>{
   formRef.value?.resetFields();//el自带的清空表单函数

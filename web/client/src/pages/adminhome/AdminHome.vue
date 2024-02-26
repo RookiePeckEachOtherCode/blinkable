@@ -32,7 +32,7 @@
         <el-upload
             class="avatar-uploader"
             :auto-upload="true"
-            action="http://127.0.0.1:10000/blinkable/user/update/avatar"
+            action="http://39.107.70.238:10000/blinkable/user/update/avatar"
             :show-file-list="false"
             :before-upload="handleUpload_icon"
         >
@@ -46,7 +46,7 @@
       <el-upload
           ref="upload"
           class="upload-demo"
-          action="https://211.149.141.23:17767/blinkable/user/upload/back"
+          action="http://39.107.70.238:10000/blinkable/user/upload/back"
           :limit="1"
           :on-exceed="handleExceed"
           :auto-upload="false"

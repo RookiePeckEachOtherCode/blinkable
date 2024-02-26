@@ -51,9 +51,8 @@ export const $http = async (config: AxiosRequestConfig) => {
     } catch (err) {
         if (err instanceof AxiosError) {
             console.log(err)
-            ElMessage.error('网络错误');
+            ElMessage.error('请求失败');
         }
-         throw err;
     } finally {
         loadingInstance.close();
     }

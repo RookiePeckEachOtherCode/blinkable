@@ -32,7 +32,7 @@ func (q MinioCen) UploadFile(bucketName, objectName, filePath, contentType strin
 	defer file.Close()
 	// 上传文件到存储桶
 	_, err = q.m.PutObject(context.Background(), bucketName, objectName, file, -1, minio.PutObjectOptions{ContentType: contentType})
-	url = fmt.Sprintf("https://61.132.231.213:43396/%s/%s", bucketName, objectName)
+	url = fmt.Sprintf("http://39.107.70.238:9000/%s/%s", bucketName, objectName)
 	return url, err
 }
 
